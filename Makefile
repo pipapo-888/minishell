@@ -1,3 +1,0 @@
-minishel
-jfjfjfjf
-fjfjfjf
