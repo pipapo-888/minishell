@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/28 13:00:22 by habe              #+#    #+#             */
+/*   Updated: 2025/12/28 13:05:21 by habe             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <aio.h>
 #include <readline/readline.h>
 #include <stdio.h>
@@ -5,7 +17,7 @@
 #include <sys/wait.h> // wait用
 #include <unistd.h>
 
-void	prompt(char **env)
+void	prompt(char **ev)
 {
 	char	*input;
 	char	*argv[3];
@@ -25,7 +37,7 @@ void	prompt(char **env)
 			{
 				// printf("%d\n", pid);
 				// ここは子プロセス：lsに変身する
-				execve(argv[0], argv, env);
+				execve(argv[0], argv, ev);
 				// もしexecveが失敗したらここに来る
 				perror("execve");
 				exit(1);
@@ -48,6 +60,9 @@ int	main(int ac, char **av, char **ev)
 	char	*program_name;
 
 	// program_name = av[0];
+	(void)ac;
+	(void)av;
+	(void)program_name;
 	while (1)
 	{
 		prompt(ev);
