@@ -6,7 +6,7 @@
 #    By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/12/28 13:02:10 by habe              #+#    #+#              #
-#    Updated: 2025/12/28 13:51:29 by habe             ###   ########.fr        #
+#    Updated: 2025/12/28 15:25:11 by habe             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,9 +32,11 @@ $(LIBFT):
 
 clean:
 	rm -f $(OBJS)
+	make -C libft clean
 
 fclean: clean
 	rm -f $(NAME)
+	make -C libft fclean
 
 re: fclean all
 

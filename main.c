@@ -6,7 +6,7 @@
 /*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 13:00:22 by habe              #+#    #+#             */
-/*   Updated: 2025/12/28 15:29:09 by knomura          ###   ########.fr       */
+/*   Updated: 2025/12/28 15:57:45 by knomura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,11 @@ void	prompt(char **ev)
 	input = readline("minishell$ ");
 	// printf("path: %s\n", path);
 	if (*input)
+	argv = space_tab_split(input);
+	printf("input: %s\n", input);
+	path = search_path(argv[0], ev);
+	printf("path: %s\n", path);
+	if (input != NULL && path != NULL)
 	{
 		printf("input[0]: %s\n", input);
 		argv = space_tab_split(input);
