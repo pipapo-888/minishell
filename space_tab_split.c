@@ -3,14 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   space_tab_split.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: babe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
+/*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 17:37:49 by habe              #+#    #+#             */
-/*   Updated: 2025/09/24 16:23:58 by babe             ###   ########.fr       */
+/*   Updated: 2025/12/28 13:48:30 by habe             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../pipex.h"
+#include "./minishell.h"
+
+static void	free_split(char **sp)
+{
+	int	i;
+
+	if (sp == NULL)
+		return ;
+	i = 0;
+	while (sp[i] != NULL)
+	{
+		free(sp[i]);
+		i++;
+	}
+	free(sp);
+}
 
 static size_t	space_tab_check(char c)
 {

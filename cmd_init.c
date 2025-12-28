@@ -6,11 +6,26 @@
 /*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 12:03:15 by babe              #+#    #+#             */
-/*   Updated: 2025/09/28 11:11:48 by habe             ###   ########.fr       */
+/*   Updated: 2025/12/28 13:49:46 by habe             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../pipex.h"
+#include "./minishell.h"
+
+static void	free_split(char **sp)
+{
+	int	i;
+
+	if (sp == NULL)
+		return ;
+	i = 0;
+	while (sp[i] != NULL)
+	{
+		free(sp[i]);
+		i++;
+	}
+	free(sp);
+}
 
 static char	*get_env_value(char *const envp[], const char *key)
 {
@@ -43,7 +58,7 @@ static char	*try_join_exec(const char *dir, const char *bin)
 	return (full);
 }
 
-static char	*search_path(const char *cmd, char *const envp[])
+char	*search_path(const char *cmd, char *const envp[])
 {
 	char	*path;
 	char	**dirs;
@@ -70,51 +85,51 @@ static char	*search_path(const char *cmd, char *const envp[])
 	return (free_split(dirs), NULL);
 }
 
-static void	get_the_path(t_cmd *cmd, char **argv, char *const envp[])
-{
-	if (argv == NULL || argv[0] == NULL || argv[0][0] == '\0')
-	{
-		cmd->path = NULL;
-		return ;
-	}
-	if (has_slash(argv[0]) != 0)
-	{
-		if (access(argv[0], X_OK) != 0)
-		{
-			cmd->path = NULL;
-			if (cmd->flag != 1)
-			{
-				cmd->flag = 1;
-				write(2, "pipex: ", 7);
-				perror(cmd->argv[0]);
-			}
-			return ;
-		}
-		cmd->path = ft_strdup(argv[0]);
-		return ;
-	}
-	cmd->path = search_path(argv[0], envp);
-	if (cmd->path == NULL && cmd->flag != 1)
-		cmd_not_print(cmd);
-}
+// static void	get_the_path(t_cmd *cmd, char **argv, char *const envp[])
+// {
+// 	if (argv == NULL || argv[0] == NULL || argv[0][0] == '\0')
+// 	{
+// 		cmd->path = NULL;
+// 		return ;
+// 	}
+// 	if (has_slash(argv[0]) != 0)
+// 	{
+// 		if (access(argv[0], X_OK) != 0)
+// 		{
+// 			cmd->path = NULL;
+// 			if (cmd->flag != 1)
+// 			{
+// 				cmd->flag = 1;
+// 				write(2, "pipex: ", 7);
+// 				perror(cmd->argv[0]);
+// 			}
+// 			return ;
+// 		}
+// 		cmd->path = ft_strdup(argv[0]);
+// 		return ;
+// 	}
+// 	cmd->path = search_path(argv[0], envp);
+// 	if (cmd->path == NULL && cmd->flag != 1)
+// 		cmd_not_print(cmd);
+// }
 
-int	cmd_init(t_cmd *cmd, const char *cmdline, char *const envp[])
-{
-	if (cmd == NULL || cmdline == NULL || cmdline[0] == '\0')
-		return (-1);
-	cmd->argv = space_tab_split(cmdline);
-	if (cmd->argv == NULL)
-	{
-		cmd->path = NULL;
-		return (-1);
-	}
-	if (cmd->argv[0] == NULL)
-	{
-		free_split(cmd->argv);
-		cmd->argv = NULL;
-		cmd->path = NULL;
-		return (-1);
-	}
-	get_the_path(cmd, cmd->argv, envp);
-	return (0);
-}
+// int	cmd_init(t_cmd *cmd, const char *cmdline, char *const envp[])
+// {
+// 	if (cmd == NULL || cmdline == NULL || cmdline[0] == '\0')
+// 		return (-1);
+// 	cmd->argv = space_tab_split(cmdline);
+// 	if (cmd->argv == NULL)
+// 	{
+// 		cmd->path = NULL;
+// 		return (-1);
+// 	}
+// 	if (cmd->argv[0] == NULL)
+// 	{
+// 		free_split(cmd->argv);
+// 		cmd->argv = NULL;
+// 		cmd->path = NULL;
+// 		return (-1);
+// 	}
+// 	get_the_path(cmd, cmd->argv, envp);
+// 	return (0);
+// }
