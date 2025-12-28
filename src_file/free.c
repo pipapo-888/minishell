@@ -3,29 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: babe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
+/*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 12:00:15 by babe              #+#    #+#             */
-/*   Updated: 2025/09/24 12:02:10 by babe             ###   ########.fr       */
+/*   Updated: 2025/12/28 13:48:22 by habe             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
 
-void	free_split(char **sp)
-{
-	int	i;
 
-	if (sp == NULL)
-		return ;
-	i = 0;
-	while (sp[i] != NULL)
-	{
-		free(sp[i]);
-		i++;
-	}
-	free(sp);
-}
 
 static void	free_single(t_cmd *cmd)
 {
