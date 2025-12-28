@@ -22,20 +22,23 @@ void	prompt(char **ev)
 	input = readline("minishell$ ");
 	// printf("path: %s\n", path);
 	if (*input)
-	argv = space_tab_split(input);
+		argv = space_tab_split(input);
 	printf("input: %s\n", input);
 	path = search_path(argv[0], ev);
 	printf("path: %s\n", path);
-	if (input != NULL && path != NULL)
+	if (input != NULL)
 	{
 		printf("input[0]: %s\n", input);
 		argv = space_tab_split(input);
 		path = search_path(argv[0], ev);
-
-		if (argv[0][0] == 'c')
+		if (!ft_strcmp(argv[0], "cd"))
 		{
 			chdir(argv[1]);
-			return;
+			return ;
+		}
+		if (!ft_strcmp(argv[0], "exit"))
+		{
+			exit(1);
 		}
 		pid = fork();
 		printf("%d\n", pid);
@@ -49,8 +52,6 @@ void	prompt(char **ev)
 		{
 			wait(NULL);
 		}
-		// execve(input, argv, env);
-
 	}
 	else
 	{
@@ -59,7 +60,7 @@ void	prompt(char **ev)
 	free(input);
 }
 
-int	main(int ac, char **av, char **ev)
+int	main(int ac, char **av, char **envp)
 {
 	char	*program_name;
 	// t_data	data;
@@ -79,6 +80,7 @@ int	main(int ac, char **av, char **ev)
 	(void)ac;
 	(void)av;
 	(void)program_name;
+
 	while (1)
 	{
 		prompt(ev);
@@ -86,3 +88,5 @@ int	main(int ac, char **av, char **ev)
 	// exit(1);
 	return (0);
 }
+
+// cd exit history echo
