@@ -6,17 +6,11 @@
 /*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 09:49:48 by habe              #+#    #+#             */
-/*   Updated: 2025/09/28 12:23:52 by habe             ###   ########.fr       */
+/*   Updated: 2025/12/28 16:57:02 by habe             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
-
-void	usage_print_exit(void)
-{
-	write(2, "Usage: ./pipex file1 cmd1 cmd2 file2\n", 38);
-	exit(1);
-}
 
 void	cmd_not_print(t_cmd *cmd)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 13:00:22 by habe              #+#    #+#             */
-/*   Updated: 2025/12/28 19:00:53 by knomura          ###   ########.fr       */
+/*   Updated: 2025/12/28 19:47:44 by habe             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,18 @@ void	prompt(char **ev)
 int	main(int ac, char **av, char **envp)
 {
 	char	*program_name;
+	// t_data	data;
+	// int	i;
+	// int	length;
+
+	// i = 0;
+	// data.cmd = NULL;
+	// while (ev[i] != NULL)
+	// {
+	// 	length = ft_strlen(ev[i]);
+	// 	data.env = ft_substr(ev[i], 0, length);
+	// 	i++;
+	// }
 
 	// program_name = av[0];
 	(void)ac;
