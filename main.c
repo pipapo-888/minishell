@@ -6,7 +6,7 @@
 /*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 13:00:22 by habe              #+#    #+#             */
-/*   Updated: 2025/12/28 14:00:27 by habe             ###   ########.fr       */
+/*   Updated: 2025/12/28 15:00:58 by habe             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ void	prompt(char **ev)
 
 	input = readline("minishell$ ");
 	argv = space_tab_split(input);
-	printf("input[0]: %s\n", input);
+	printf("input: %s\n", input);
 	path = search_path(argv[0], ev);
 	printf("path: %s\n", path);
-	if (*input)
+	if (input != NULL && path != NULL)
 	{
 		pid = fork();
 		printf("%d\n", pid);
