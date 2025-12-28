@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
+/*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 13:00:22 by habe              #+#    #+#             */
-/*   Updated: 2025/12/28 14:00:27 by habe             ###   ########.fr       */
+/*   Updated: 2025/12/28 15:29:09 by knomura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,20 @@ void	prompt(char **ev)
 	pid_t	pid;
 
 	input = readline("minishell$ ");
-	argv = space_tab_split(input);
-	printf("input[0]: %s\n", input);
-	path = search_path(argv[0], ev);
-	printf("path: %s\n", path);
+	// printf("path: %s\n", path);
 	if (*input)
 	{
+		printf("input[0]: %s\n", input);
+		argv = space_tab_split(input);
+		path = search_path(argv[0], ev);
+
+		if (argv[0][0] == 'c')
+		{
+			chdir(argv[1]);
+			return;
+		}
 		pid = fork();
 		printf("%d\n", pid);
-
 		if (pid == 0)
 		{
 			execve(path, argv, ev);
