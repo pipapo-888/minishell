@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/28 13:00:22 by habe              #+#    #+#             */
-/*   Updated: 2025/12/28 19:47:44 by habe             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "./minishell.h"
 
 void	prompt(char **ev)
@@ -80,10 +68,11 @@ int	main(int ac, char **av, char **envp)
 	(void)ac;
 	(void)av;
 	(void)program_name;
+	(void)envp;
 
 	while (1)
 	{
-		prompt(ev);
+		prompt(envp);
 	}
 	// exit(1);
 	return (0);
