@@ -10,11 +10,21 @@
 # include <readline/history.h>
 # include "libft/libft.h"
 
-
+typedef enum e_token_type
+{
+	WORD,
+	PIPE,
+	REDIR_IN,
+	REDIR_OUT,
+	REDIR_APPEND,
+	HEREDOC
+}	t_token_type;
 typedef struct s_cmd
 {
-	char	**argv;
-	char	*path;
+	char			**argv;
+	char			*path;
+	t_token_type	type;
+	struct s_cmd	*next;
 }	t_cmd;
 
 typedef struct s_env
@@ -27,6 +37,7 @@ typedef struct s_data
 {
 	t_cmd	*cmd;
 	t_env	*env;
+	char	*input;
 
 }	t_data;
 
