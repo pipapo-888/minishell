@@ -1,6 +1,6 @@
 #include "./minishell.h"
 
-void	ft_execve(char *path, char **argv, char **ev)
+void	ft_execve(t_cmd *cmd, char **ev)
 {
 	pid_t	pid;
 
@@ -8,7 +8,7 @@ void	ft_execve(char *path, char **argv, char **ev)
 	printf("%d\n", pid);
 	if (pid == 0)
 	{
-		execve(path, argv, ev);
+		execve(cmd->path, cmd->argv, ev);
 		perror("execve");
 		exit(1);
 	}
@@ -18,74 +18,78 @@ void	ft_execve(char *path, char **argv, char **ev)
 	}
 }
 
-int	check_input(char *input, char **argv)
+int	built_in_check(t_cmd *cmd)
 {
-	(void)input;
-	if (!ft_strcmp(argv[0], "cd"))
-	{
-		chdir(argv[1]);
-		return (0);
-	}
-	if (!ft_strcmp(argv[0], "exit"))
-	{
+	if (!ft_strcmp(cmd->argv[0], "cd"))
+		return (chdir(cmd->argv[1]), 0);
+	if (!ft_strcmp(cmd->argv[0], "exit"))
 		exit(1);
-	}
-	if (!ft_strcmp(argv[0], "export"))
-	{
-		printf("export実装前\n");
-		return (0);
-	}
-	if (!ft_strcmp(argv[0], "echo"))
-	{
-		printf("echo実装前\n");
-		return (0);
-	}
+	if (!ft_strcmp(cmd->argv[0], "echo"))
+		return (printf("echo実装前\n"), 0);
+	if (!ft_strcmp(cmd->argv[0], "export"))
+		return (printf("export実装前\n"), 0);
+	if (!ft_strcmp(cmd->argv[0], "unset"))
+		return (printf("unset実装前\n"), 0);
 	return (1);
+}
+
+
+void	cmd_init(t_cmd *cmd, char *input, char **ev)
+{
+	char	**argv;
+
+	argv = space_tab_split(input);
+	if (argv == NULL)
+	{
+		cmd->argv = NULL;
+		cmd->path = NULL;
+		cmd->next = NULL;
+		cmd->type = WORD;
+		return ;
+	}
+	cmd->argv = argv;
+	cmd->next = NULL;
+	cmd->type = WORD;
+	if (built_in_check(cmd) != 0)
+		cmd->path = search_path(cmd->argv[0], ev);
+	else
+		cmd->path = NULL;
 }
 
 void	prompt(char **ev)
 {
-	char	*input;
-	char	**argv;
-	char	*path;
+	t_data	data;
 
-	input = readline("minishell$ ");
-	// printf("input: %s\n", input);
-	if (*input)
-		argv = space_tab_split(input);
-	// printf("path: %s\n", path);
-	path = search_path(argv[0], ev);
-	if (input != NULL)
+	data.cmd = malloc(sizeof(t_cmd));
+	if (data.cmd == NULL)
+		return ;
+	data.input = readline("minishell$ ");
+	if (data.input == NULL || data.input[0] == '\0')
 	{
-		// printf("input[0]: %s\n", input);
-		path = search_path(argv[0], ev);
-		if (!check_input(input, argv))
-			return ;
-		ft_execve(path, argv, ev);
+		free(data.input);
+		free(data.cmd);
+		return ;
 	}
-	else
+	cmd_init(data.cmd, data.input, ev);
+	if (data.cmd->argv == NULL)
 	{
-		printf("%s\n", input);
+		free(data.input);
+		free(data.cmd);
+		return ;
 	}
-	free(input);
+	if (built_in_check(data.cmd) != 0)
+		ft_execve(data.cmd, ev);
+	free_split(data.cmd->argv);
+	free(data.cmd->path);
+	free(data.cmd);
+	free(data.input);
 }
 
 int	main(int ac, char **av, char **envp)
 {
 	char	*program_name;
 
-	// t_data	data;
-	// int	i;
-	// int	length;
-	// i = 0;
-	// data.cmd = NULL;
-	// while (ev[i] != NULL)
-	// {
-	// 	length = ft_strlen(ev[i]);
-	// 	data.env = ft_substr(ev[i], 0, length);
-	// 	i++;
-	// }
-	// program_name = av[0];
+	// TODO:envpのコピー
 	(void)ac;
 	(void)av;
 	(void)program_name;
