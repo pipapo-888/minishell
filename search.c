@@ -1,31 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   cmd_init.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/24 12:03:15 by babe              #+#    #+#             */
-/*   Updated: 2025/12/28 13:49:46 by habe             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "./minishell.h"
-
-static void	free_split(char **sp)
-{
-	int	i;
-
-	if (sp == NULL)
-		return ;
-	i = 0;
-	while (sp[i] != NULL)
-	{
-		free(sp[i]);
-		i++;
-	}
-	free(sp);
-}
 
 static char	*get_env_value(char *const envp[], const char *key)
 {
