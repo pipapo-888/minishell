@@ -15,32 +15,45 @@ int	built_in_check(t_cmd *cmd)
 	return (1);
 }
 
+static char	**piped_split(const char *str)
+{
+	char	**result;
+
+	result = ft_split(str, '|');
+	if (result == NULL)
+		return (NULL);
+	return (result);
+}
+
+static void	command_setup(t_cmd *cmd, char *argv, char **env)
+{
+	char	**filtered_argv;
+	char	**temp;
+
+	if (cmd == NULL || argv == NULL || env == NULL)
+		return ;
+	temp = space_tab_split(argv);
+	if (temp == NULL)
+		return ;
+	parse_redirects(cmd, temp);
+	filtered_argv = filter_redirects(temp);
+	cmd->argv = filtered_argv;
+	cmd->path = search_path(cmd->argv[0], env);
+	free_split(temp);
+}
+
 void	cmd_init(t_cmd *cmd, char *input, char **ev)
 {
-	char	**argv;
-	char	**filtered_argv;
+	char	**piped_argv;
+	int		i;
 
-	argv = space_tab_split(input);
-	if (argv == NULL)
+	piped_argv = piped_split(input);
+	i = 0;
+	while (piped_argv != NULL && piped_argv[i] != NULL)
 	{
-		cmd->argv = NULL;
-		cmd->path = NULL;
+		command_setup(cmd, piped_argv[i], ev);
 		cmd->next = NULL;
-		return ;
+		i++;
 	}
-	parse_redirects(cmd, argv);
-	filtered_argv = filter_redirects(argv);
-	free_split(argv);
-	if (filtered_argv == NULL || filtered_argv[0] == NULL)
-	{
-		if (filtered_argv)
-			free(filtered_argv);
-		cmd->argv = NULL;
-		cmd->path = NULL;
-		cmd->next = NULL;
-		return ;
-	}
-	cmd->argv = filtered_argv;
-	cmd->next = NULL;
-	cmd->path = search_path(cmd->argv[0], ev);
+	free_split(piped_argv);
 }

@@ -67,6 +67,8 @@ static void	redirect_input(t_cmd *cmd, char *redir, char *filename)
 		cmd->outfile = ft_strdup(filename);
 		cmd->type = REDIR_APPEND;
 	}
+	else
+		cmd->type = NO_REDIR;
 }
 
 void	parse_redirects(t_cmd *cmd, char **argv)
@@ -90,4 +92,6 @@ void	parse_redirects(t_cmd *cmd, char **argv)
 		else
 			i++;
 	}
+	if (cmd->infile == NULL && cmd->outfile == NULL)
+		cmd->type = NO_REDIR;
 }
