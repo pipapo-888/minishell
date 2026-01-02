@@ -44,7 +44,7 @@ static int	handle_redirects(char *argv)
 	return (1);
 }
 
-static void	set_redirect(t_cmd *cmd, char *redir, char *filename)
+static void	redirect_input(t_cmd *cmd, char *redir, char *filename)
 {
 	if (ft_strcmp(redir, "<") == 0)
 	{
@@ -84,7 +84,7 @@ void	parse_redirects(t_cmd *cmd, char **argv)
 		{
 			if (argv[i + 1] == NULL)
 				return ;
-			set_redirect(cmd, argv[i], argv[i + 1]);
+			redirect_input(cmd, argv[i], argv[i + 1]);
 			i += 2;
 		}
 		else
