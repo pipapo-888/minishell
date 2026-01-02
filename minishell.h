@@ -55,7 +55,7 @@ char	*get_env_value(char *const envp[], const char *key);
 void	parse_redirects(t_cmd *cmd, char **argv);
 void	setup_redirects(t_cmd *cmd);
 char	**filter_redirects(char **argv);
-int		built_in_check(t_cmd *cmd);
+int		built_in_check(t_cmd *cmd, char **ev);
 void	cmd_init(t_cmd *cmd, char *input, char **ev);
 char	**filter_redirects(char **argv);
 
