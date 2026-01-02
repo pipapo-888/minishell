@@ -16,7 +16,8 @@ typedef enum e_redir_type
 	REDIR_IN,
 	REDIR_OUT,
 	REDIR_APPEND,
-	HEREDOC
+	HEREDOC,
+	NO_REDIR
 }	t_redir_type;
 
 typedef struct s_cmd
