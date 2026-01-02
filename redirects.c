@@ -44,14 +44,30 @@ static int	handle_redirects(char *argv)
 	return (1);
 }
 
-static void	redirect_input(t_cmd *cmd, char *filename)
+static void	redirect_input(t_cmd *cmd, char *redir, char *filename)
 {
-	if (cmd->infile != NULL)
-		free(cmd->infile);
-	cmd->infile = ft_strdup(filename);
-	cmd->type = REDIR_IN;
+	if (ft_strcmp(redir, "<") == 0)
+	{
+		if (cmd->infile != NULL)
+			free(cmd->infile);
+		cmd->infile = ft_strdup(filename);
+		cmd->type = REDIR_IN;
+	}
+	else if (ft_strcmp(redir, ">") == 0)
+	{
+		if (cmd->outfile != NULL)
+			free(cmd->outfile);
+		cmd->outfile = ft_strdup(filename);
+		cmd->type = REDIR_OUT;
+	}
+	else if (ft_strcmp(redir, ">>") == 0)
+	{
+		if (cmd->outfile != NULL)
+			free(cmd->outfile);
+		cmd->outfile = ft_strdup(filename);
+		cmd->type = REDIR_APPEND;
+	}
 }
-
 
 void	parse_redirects(t_cmd *cmd, char **argv)
 {
@@ -68,7 +84,7 @@ void	parse_redirects(t_cmd *cmd, char **argv)
 		{
 			if (argv[i + 1] == NULL)
 				return ;
-			redirect_input(cmd, argv[i + 1]);
+			redirect_input(cmd, argv[i], argv[i + 1]);
 			i += 2;
 		}
 		else

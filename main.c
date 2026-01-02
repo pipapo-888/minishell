@@ -6,10 +6,6 @@ void	ft_execve(t_cmd *cmd, char **ev)
 	pid_t	pid;
 
 	pid = fork();
-	printf("%d\n", pid);
-	// printf("PATH: %s\n", cmd->path);
-	// printf("ARGV[0]: %s\n", cmd->argv[0]);
-	// printf("ARGV[1]: %s\n", cmd->argv[1]);
 	if (built_in_check(cmd) == 0)
 		return ;
 	if (pid == 0)

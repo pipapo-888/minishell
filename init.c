@@ -42,12 +42,5 @@ void	cmd_init(t_cmd *cmd, char *input, char **ev)
 	}
 	cmd->argv = filtered_argv;
 	cmd->next = NULL;
-	printf("cmd->argv[0]: %s\n", cmd->argv[0]);
-	printf("cmd->argv[1]: %s\n", cmd->argv[1]);
-	printf("cmd->infile: %s\n", cmd->infile);
-	printf("cmd->outfile: %s\n", cmd->outfile);
-	if (built_in_check(cmd) != 0)
-		cmd->path = search_path(cmd->argv[0], ev);
-	else
-		cmd->path = NULL;
+	cmd->path = search_path(cmd->argv[0], ev);
 }
