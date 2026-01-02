@@ -4,7 +4,10 @@ CFLAGS = -Wall -Wextra -Werror
 
 SRCS = main.c\
 		search.c\
-		space_tab_split.c
+		space_tab_split.c\
+		redirects.c\
+		init.c\
+		filter.c
 OBJS = $(SRCS:.c=.o)
 
 LIBFT = libft/libft.a

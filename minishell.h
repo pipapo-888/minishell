@@ -9,21 +9,23 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
+# include <fcntl.h>
 
-typedef enum e_token_type
+typedef enum e_redir_type
 {
-	WORD,
-	PIPE,
 	REDIR_IN,
 	REDIR_OUT,
 	REDIR_APPEND,
 	HEREDOC
-}	t_token_type;
+}	t_redir_type;
+
 typedef struct s_cmd
 {
 	char			**argv;
 	char			*path;
-	t_token_type	type;
+	char			*infile;
+	char			*outfile;
+	t_redir_type	type;
 	struct s_cmd	*next;
 }	t_cmd;
 
@@ -48,5 +50,12 @@ int		main(int ac, char **av, char **ev);
 char	*search_path(const char *cmd, char *const envp[]);
 char	**space_tab_split(const char *str);
 void	free_split(char **sp);
+char	*get_env_value(char *const envp[], const char *key);
+void	parse_redirects(t_cmd *cmd, char **argv);
+void	setup_redirects(t_cmd *cmd);
+char	**filter_redirects(char **argv);
+int		built_in_check(t_cmd *cmd);
+void	cmd_init(t_cmd *cmd, char *input, char **ev);
+char	**filter_redirects(char **argv);
 
 #endif

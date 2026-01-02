@@ -7,10 +7,16 @@ void	ft_execve(t_cmd *cmd, char **ev)
 
 	pid = fork();
 	printf("%d\n", pid);
+	// printf("PATH: %s\n", cmd->path);
+	// printf("ARGV[0]: %s\n", cmd->argv[0]);
+	// printf("ARGV[1]: %s\n", cmd->argv[1]);
+	if (built_in_check(cmd) == 0)
+		return ;
 	if (pid == 0)
 	{
 		signal(SIGQUIT, SIG_DFL); // SIGQUIT
 		signal(2, SIG_DFL);       // SIGINT
+		setup_redirects(cmd);
 		execve(cmd->path, cmd->argv, ev);
 		perror("execve");
 		exit(1);
@@ -19,43 +25,6 @@ void	ft_execve(t_cmd *cmd, char **ev)
 	{
 		wait(NULL);
 	}
-}
-
-int	built_in_check(t_cmd *cmd)
-{
-	if (!ft_strcmp(cmd->argv[0], "cd"))
-		return (chdir(cmd->argv[1]), 0);
-	if (!ft_strcmp(cmd->argv[0], "exit"))
-		exit(1);
-	if (!ft_strcmp(cmd->argv[0], "echo"))
-		return (printf("echo実装前\n"), 0);
-	if (!ft_strcmp(cmd->argv[0], "export"))
-		return (printf("export実装前\n"), 0);
-	if (!ft_strcmp(cmd->argv[0], "unset"))
-		return (printf("unset実装前\n"), 0);
-	return (1);
-}
-
-void	cmd_init(t_cmd *cmd, char *input, char **ev)
-{
-	char	**argv;
-
-	argv = space_tab_split(input);
-	if (argv == NULL)
-	{
-		cmd->argv = NULL;
-		cmd->path = NULL;
-		cmd->next = NULL;
-		cmd->type = WORD;
-		return ;
-	}
-	cmd->argv = argv;
-	cmd->next = NULL;
-	cmd->type = WORD;
-	if (built_in_check(cmd) != 0)
-		cmd->path = search_path(cmd->argv[0], ev);
-	else
-		cmd->path = NULL;
 }
 
 void	prompt(char **ev)
@@ -79,8 +48,7 @@ void	prompt(char **ev)
 		free(data.cmd);
 		return ;
 	}
-	if (built_in_check(data.cmd) != 0)
-		ft_execve(data.cmd, ev);
+	ft_execve(data.cmd, ev);
 	free_split(data.cmd->argv);
 	free(data.cmd->path);
 	free(data.cmd);
