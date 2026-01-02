@@ -1,6 +1,6 @@
 #include "./minishell.h"
 
-static char	*get_env_value(char *const envp[], const char *key)
+char	*get_env_value(char *const envp[], const char *key)
 {
 	size_t	klen;
 	int		i;
