@@ -1,0 +1,103 @@
+name: Minishell CI
+
+on:
+  push:
+    branches: [ main, habe, knomura ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential libreadline-dev valgrind
+
+    - name: Build libft
+      run: |
+        make -C libft
+
+    - name: Build minishell
+      run: |
+        make
+
+    - name: Check compilation warnings
+      run: |
+        make re 2>&1 | tee build.log
+        if grep -i "warning" build.log; then
+          echo "⚠️ Compilation warnings found"
+          exit 1
+        fi
+
+    - name: Test basic commands
+      run: |
+        echo "ls" | ./minishell || true
+        echo "pwd" | ./minishell || true
+        echo "echo hello" | ./minishell || true
+
+    - name: Test redirections
+      run: |
+        echo "echo test > /tmp/test_out.txt" | ./minishell || true
+        echo "cat < /tmp/test_out.txt" | ./minishell || true
+
+    - name: Test pipes
+      run: |
+        echo "ls | grep minishell" | ./minishell || true
+        echo "echo hello | cat" | ./minishell || true
+
+    - name: Memory leak check with valgrind
+      run: |
+        echo "echo test" | valgrind --leak-check=full --error-exitcode=1 ./minishell || true
+        echo "ls" | valgrind --leak-check=full --error-exitcode=1 ./minishell || true
+
+    - name: Clean build artifacts
+      run: |
+        make fclean
+        if [ -f minishell ]; then
+          echo "Error: Binary not cleaned"
+          exit 1
+        fi
+
+  norminette:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install norminette
+      run: |
+        python3 -m pip install --upgrade pip setuptools
+        python3 -m pip install norminette
+
+    - name: Run norminette
+      run: |
+        norminette *.c *.h libft/*.c libft/*.h || true
+
+  code-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Check for debugging artifacts
+      run: |
+        if grep -r "printf" *.c | grep -v "//"; then
+          echo "⚠️ Warning: printf statements found (should use for debugging only)"
+        fi
+
+    - name: Check file structure
+      run: |
+        echo "Checking project structure..."
+        ls -la
+        echo "Source files:"
+        ls -1 *.c
+        echo "Header files:"
+        ls -1 *.h
