@@ -134,7 +134,18 @@ void	cmd_init(t_cmd *cmd, char *input, char **ev)
 	while (piped_argv != NULL && piped_argv[i] != NULL)
 	{
 		command_setup(cmd, piped_argv[i], ev);
-		cmd->next = NULL;
+		if (piped_argv[i + 1] != NULL)
+		{
+			cmd->next = malloc(sizeof(t_cmd));
+			if (cmd->next == NULL)
+			{
+				free_split(piped_argv);
+				return ;
+			}
+			cmd = cmd->next;
+		}
+		else
+			cmd->next = NULL;
 		i++;
 	}
 	free_split(piped_argv);
