@@ -65,22 +65,22 @@ void	handler(int sig)
 	rl_redisplay();
 }
 
-void	env_init(t_data data, char **envp)
-{
-	t_env	*head;
-	t_env	*new_node;
-	int		i;
+// void	env_init(t_data data, char **envp)
+// {
+// 	t_env	*head;
+// 	t_env	*new_node;
+// 	int		i;
 
-	i = 0;
-	head = NULL;
+// 	i = 0;
+// 	head = NULL;
 
-	while(envp[i])
-	{
-		new_node = split_key_and_value(envp[i]);
-		ft_lstadd_back(&head, new_node); // 方が違う、使用不可
-		i++;
-	}
-}
+// 	while(envp[i])
+// 	{
+// 		new_node = split_key_and_value(envp[i]);
+// 		ft_lstadd_back(&head, new_node); // 方が違う、使用不可
+// 		i++;
+// 	}
+// }
 
 int	main(int ac, char **av, char **envp)
 {
