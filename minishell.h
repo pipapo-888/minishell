@@ -32,7 +32,8 @@ typedef struct s_cmd
 
 typedef struct s_env
 {
-	char			*env;
+	char			*key;
+	char			*value;
 	struct s_env	*next;
 }	t_env;
 
@@ -46,7 +47,7 @@ typedef struct s_data
 
 
 
-void	prompt(char **ev);
+void	prompt(char **ev, t_data data);
 int		main(int ac, char **av, char **ev);
 char	*search_path(const char *cmd, char *const envp[]);
 char	**space_tab_split(const char *str);

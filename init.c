@@ -2,6 +2,24 @@
 
 #define PATHNAME_SIZE 1024
 
+static int	is_n_flag(char *str)
+{
+	int	i;
+
+	if (str == NULL || str[0] != '-')
+		return (0);
+	i = 1;
+	if (str[i] == '\0')
+		return (0);
+	while(str[i])
+	{
+		if (str[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 void	built_in_echo(t_cmd *cmd)
 {
 	int	i;
@@ -11,33 +29,30 @@ void	built_in_echo(t_cmd *cmd)
 	saved_stdout = -1;
 	i = 1;
 	n_flag = 0;
-	while (cmd->argv[i] && ft_strcmp(cmd->argv[i], "-n") == 0)
+	while (cmd->argv[i] && is_n_flag(cmd->argv[i]))
 	{
 		n_flag = 1;
 		i++;
 	}
 	if (cmd->type != NO_REDIR)
 	{
-
-		printf("aaaa%s", cmd->outfile);
 		saved_stdout = dup(STDOUT_FILENO);
 		setup_redirects(cmd);
 	}
 	while (cmd->argv[i])
 	{
-		printf("%s", cmd->argv[i]);
+		ft_putstr_fd(cmd->argv[i], 1);
 		if (cmd->argv[i + 1])
-			printf(" ");
+			write(1, " ", 1);
 		i++;
 	}
 	if (!n_flag)
-		printf("\n");
+		write(1, "\n", 1);
 	if (saved_stdout != -1)
 	{
 		dup2(saved_stdout, STDOUT_FILENO);
 		close(saved_stdout);
 	}
-	return ;
 }
 
 void	built_in_pwd(t_cmd *cmd)
@@ -51,6 +66,11 @@ void	built_in_pwd(t_cmd *cmd)
 	{
 		saved_stdout = dup(STDOUT_FILENO);
 		setup_redirects(cmd);
+	}
+	if (getcwd(pathName, PATHNAME_SIZE))
+	{
+		ft_putstr_fd(pathName, 1);
+		write(1, "\n", 1);
 	}
 	if (getcwd(pathName, PATHNAME_SIZE))
 		printf("%s\n", pathName);
@@ -92,8 +112,8 @@ int	built_in_check(t_cmd *cmd, char **ev)
 		return (printf("unset実装前\n"), 0);
 	if (!ft_strcmp(cmd->argv[0], "env"))
 		return (built_in_env(ev), 0);
-	// if (!ft_strcmp(cmd->argv[0], "exit"))
-	// 	exit(1);
+	if (!ft_strcmp(cmd->argv[0], "exit"))
+		exit(1);
 	return (1);
 }
 
