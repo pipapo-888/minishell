@@ -72,6 +72,8 @@ void	built_in_pwd(t_cmd *cmd)
 		ft_putstr_fd(pathName, 1);
 		write(1, "\n", 1);
 	}
+	if (getcwd(pathName, PATHNAME_SIZE))
+		printf("%s\n", pathName);
 	else
 		perror("pwd");
 	if (saved_stdout != -1)
