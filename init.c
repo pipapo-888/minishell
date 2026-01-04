@@ -218,23 +218,70 @@ static t_token	*tokenize(const char *input)
 	return (head);
 }
 
-// 一時的にコメントアウト(後でトークンベースに書き直す)
-// static void	command_setup(t_cmd *cmd, char *argv, char **env)
-// {
-// 	char	**filtered_argv;
-// 	char	**temp;
+static void	setup_word(t_cmd *cmd, t_token *tokens)
+{
+	int		count;
+	int		i;
+	char	**argv;
 
-// 	if (cmd == NULL || argv == NULL || env == NULL)
-// 		return ;
-// 	temp = space_tab_split(argv);
-// 	if (temp == NULL)
-// 		return ;
-// 	parse_redirects(cmd, temp);
-// 	filtered_argv = filter_redirects(temp);
-// 	cmd->argv = filtered_argv;
-// 	cmd->path = search_path(cmd->argv[0], env);
-// 	free_split(temp);
-// }
+	if (cmd == NULL || tokens == NULL || tokens->type != WORD)
+		return ;
+	while (tokens != NULL || tokens->type != WORD)
+	{
+		count++;
+		tokens = tokens->next;
+	}
+	argv = malloc(sizeof(char *) * (count + 1));
+	if (argv == NULL)
+		return ;
+	i = 0;
+	while (tokens != NULL && tokens->type == WORD)
+	{
+		argv[i] = ft_strdup(tokens->value);
+		if (argv[i] == NULL)
+		{
+			free_split(argv);
+			return ;
+		}
+		i++;
+		tokens = tokens->next;
+	}
+	argv[i] = NULL;
+	cmd->argv = argv;
+}
+
+static void	command_setup(t_cmd *cmd, t_token *tokens)
+{
+	char	**temp;
+	size_t	count;
+
+	if (cmd == NULL || tokens == NULL || tokens->type != REDIR_IN
+		&& tokens->type != REDIR_OUT && tokens->type != REDIR_APPEND)
+		return ;
+	while (tokens != NULL)
+	{
+		if (tokens->type == REDIR_IN)
+		{
+			tokens = tokens->next;
+			if (tokens != NULL && tokens->type == WORD)
+			{
+				cmd->infile = ft_strdup(tokens->value);
+				tokens = tokens->next;
+			}
+		}
+		else if (tokens->type == REDIR_OUT || tokens->type == REDIR_APPEND)
+		{
+			tokens = tokens->next;
+			if (tokens != NULL && tokens->type == WORD)
+			{
+				cmd->outfile = ft_strdup(tokens->value);
+				tokens = tokens->next;
+			}
+		}
+		else
+			tokens = tokens->next;
+	}
+}
 
 void	cmd_init(t_cmd *cmd, char *input, char **ev)
 {
@@ -243,17 +290,11 @@ void	cmd_init(t_cmd *cmd, char *input, char **ev)
 	tokens = tokenize(input);
 	if (tokens == NULL)
 		return ;
-	(void)ev;
-	(void)cmd;
-	// TODO: トークンリストから t_cmd 構造を構築
-	// 今はトークナイザのテストのみ実装
-
-	// デバッグ出力(後で削除)
-	t_token *tmp = tokens;
-	while (tmp != NULL)
+	while (tokens != NULL)
 	{
-		printf("Token: type=%d, value='%s'\n", tmp->type, tmp->value);
-		tmp = tmp->next;
+		setup_word(cmd, tokens);
+		command_setup(cmd, tokens);
+		tokens = tokens->next;
 	}
 
 	// メモリ解放(後で free_tokens 関数として分離)
