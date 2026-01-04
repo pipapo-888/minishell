@@ -32,7 +32,8 @@ typedef struct s_cmd
 
 typedef struct s_env
 {
-	char			*env;
+	char			*key;
+	char			*value;
 	struct s_env	*next;
 }	t_env;
 
