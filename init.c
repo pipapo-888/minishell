@@ -66,56 +66,202 @@ int	built_in_check(t_cmd *cmd, char **ev)
 	return (1);
 }
 
-static char	**piped_split(const char *str)
+int	skip_spaces(const char *input)
 {
-	char	**result;
+	int	i;
 
-	result = ft_split(str, '|');
-	if (result == NULL)
+	i = 0;
+	while (ft_isspace(input[i]) == 1)
+		i++;
+	return (i);
+}
+
+t_token	*extract_quoted_token(const char *input, int *len)
+{
+	t_token	*token;
+	int		end_quote;
+	char	c;
+
+	end_quote = 1;
+	c = input[0];
+	while (input[end_quote] != '\0' && input[end_quote] != c)
+		end_quote++;
+	if (input[end_quote] != c)
 		return (NULL);
-	return (result);
+	token = malloc(sizeof(t_token));
+	if (!token)
+		return (NULL);
+	token->type = WORD;
+	token->value = ft_substr(input, 1, end_quote - 1);
+	token->next = NULL;
+	*len = end_quote + 1;
+	return (token);
 }
 
-static void	command_setup(t_cmd *cmd, char *argv, char **env)
+t_token	*extract_pipe_token(const char *input, int *len)
 {
-	char	**filtered_argv;
-	char	**temp;
+	t_token	*token;
 
-	if (cmd == NULL || argv == NULL || env == NULL)
-		return ;
-	temp = space_tab_split(argv);
-	if (temp == NULL)
-		return ;
-	parse_redirects(cmd, temp);
-	filtered_argv = filter_redirects(temp);
-	cmd->argv = filtered_argv;
-	cmd->path = search_path(cmd->argv[0], env);
-	free_split(temp);
+	if (input[0] != '|')
+		return (NULL);
+	token = malloc(sizeof(t_token));
+	if (!token)
+		return (NULL);
+	token->type = PIPE;
+	token->value = ft_substr(input, 0, 1);
+	token->next = NULL;
+	*len = 1;
+	return (token);
 }
+
+t_token	*extract_redirect_token(const char *input, int *len)
+{
+	t_token	*token;
+
+	token = malloc(sizeof(t_token));
+	if (!token)
+		return (NULL);
+	token->next = NULL;
+	if (input[0] == '<')
+	{
+		if (input[1] == '<')
+		{
+			token->type = HEREDOC;
+			token->value = ft_substr(input, 0, 2);
+			*len = 2;
+		}
+		else
+		{
+			token->type = REDIR_IN;
+			token->value = ft_substr(input, 0, 1);
+			*len = 1;
+		}
+	}
+	else if (input[0] == '>')
+	{
+		if (input[1] == '>')
+		{
+			token->type = REDIR_APPEND;
+			token->value = ft_substr(input, 0, 2);
+			*len = 2;
+		}
+		else
+		{
+			token->type = REDIR_OUT;
+			token->value = ft_substr(input, 0, 1);
+			*len = 1;
+		}
+	}
+	else
+	{
+		free(token);
+		return (NULL);
+	}
+	return (token);
+}
+
+t_token	*extract_word_token(const char *input, int *len)
+{
+	t_token	*token;
+	int		end;
+
+	end = 0;
+	while (input[end] != '\0' && ft_isspace(input[end]) == 0
+		&& input[end] != '|' && input[end] != '<' && input[end] != '>')
+		end++;
+	if (end == 0)
+		return (NULL);
+	token = malloc(sizeof(t_token));
+	if (!token)
+		return (NULL);
+	token->type = WORD;
+	token->value = ft_substr(input, 0, end);
+	token->next = NULL;
+	*len = end;
+	return (token);
+}
+
+static t_token	*tokenize(const char *input)
+{
+	t_token	*head;
+	t_token	*current;
+	t_token	*new_token;
+	int		i;
+	int		len;
+
+	head = NULL;
+	current = NULL;
+	i = 0;
+	while (input[i] != '\0')
+	{
+		i += skip_spaces(&input[i]);
+		if (input[i] == '\0')
+			break ;
+		len = 0;
+		if (input[i] == '"' || input[i] == '\'')
+			new_token = extract_quoted_token(&input[i], &len);
+		else if (input[i] == '|')
+			new_token = extract_pipe_token(&input[i], &len);
+		else if (input[i] == '<' || input[i] == '>')
+			new_token = extract_redirect_token(&input[i], &len);
+		else
+			new_token = extract_word_token(&input[i], &len);
+		if (new_token == NULL)
+			break ;
+		if (head == NULL)
+			head = new_token;
+		else
+			current->next = new_token;
+		current = new_token;
+		i += len;
+	}
+	return (head);
+}
+
+// 一時的にコメントアウト(後でトークンベースに書き直す)
+// static void	command_setup(t_cmd *cmd, char *argv, char **env)
+// {
+// 	char	**filtered_argv;
+// 	char	**temp;
+
+// 	if (cmd == NULL || argv == NULL || env == NULL)
+// 		return ;
+// 	temp = space_tab_split(argv);
+// 	if (temp == NULL)
+// 		return ;
+// 	parse_redirects(cmd, temp);
+// 	filtered_argv = filter_redirects(temp);
+// 	cmd->argv = filtered_argv;
+// 	cmd->path = search_path(cmd->argv[0], env);
+// 	free_split(temp);
+// }
 
 void	cmd_init(t_cmd *cmd, char *input, char **ev)
 {
-	char	**piped_argv;
-	int		i;
+	t_token	*tokens;
 
-	piped_argv = piped_split(input);
-	i = 0;
-	while (piped_argv != NULL && piped_argv[i] != NULL)
+	tokens = tokenize(input);
+	if (tokens == NULL)
+		return ;
+	(void)ev;
+	(void)cmd;
+	// TODO: トークンリストから t_cmd 構造を構築
+	// 今はトークナイザのテストのみ実装
+
+	// デバッグ出力(後で削除)
+	t_token *tmp = tokens;
+	while (tmp != NULL)
 	{
-		command_setup(cmd, piped_argv[i], ev);
-		if (piped_argv[i + 1] != NULL)
-		{
-			cmd->next = malloc(sizeof(t_cmd));
-			if (cmd->next == NULL)
-			{
-				free_split(piped_argv);
-				return ;
-			}
-			cmd = cmd->next;
-		}
-		else
-			cmd->next = NULL;
-		i++;
+		printf("Token: type=%d, value='%s'\n", tmp->type, tmp->value);
+		tmp = tmp->next;
 	}
-	free_split(piped_argv);
+
+	// メモリ解放(後で free_tokens 関数として分離)
+	while (tokens != NULL)
+	{
+		t_token *next = tokens->next;
+		free(tokens->value);
+		free(tokens);
+		tokens = next;
+	}
 }

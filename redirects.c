@@ -37,6 +37,8 @@ static int	handle_redirects(char *argv)
 {
 	if (ft_strcmp(argv, "<") == 0)
 		return (0);
+	else if (ft_strcmp(argv, "<<") == 0)
+		return (0);
 	else if (ft_strcmp(argv, ">") == 0)
 		return (0);
 	else if (ft_strcmp(argv, ">>") == 0)
@@ -52,6 +54,13 @@ static void	redirect_input(t_cmd *cmd, char *redir, char *filename)
 			free(cmd->infile);
 		cmd->infile = ft_strdup(filename);
 		cmd->type = REDIR_IN;
+	}
+	else if (ft_strcmp(redir, "<<") == 0)
+	{
+		if (cmd->infile != NULL)
+			free(cmd->infile);
+		cmd->infile = ft_strdup(filename);
+		cmd->type = HEREDOC;
 	}
 	else if (ft_strcmp(redir, ">") == 0)
 	{
