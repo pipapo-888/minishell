@@ -97,182 +97,11 @@ int	built_in_check(t_cmd *cmd, char **ev)
 	return (1);
 }
 
-int	skip_spaces(const char *input)
-{
-	int	i;
-
-	i = 0;
-	while (ft_isspace(input[i]) == 1)
-		i++;
-	return (i);
-}
-
-t_token	*extract_quoted_token(const char *input, int *len)
-{
-	t_token	*token;
-	int		end_quote;
-	char	c;
-
-	end_quote = 1;
-	c = input[0];
-	while (input[end_quote] != '\0' && input[end_quote] != c)
-		end_quote++;
-	if (input[end_quote] != c)
-		return (NULL);
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	token->type = WORD;
-	token->value = ft_substr(input, 1, end_quote - 1);
-	token->next = NULL;
-	*len = end_quote + 1;
-	return (token);
-}
-
-t_token	*extract_pipe_token(const char *input, int *len)
-{
-	t_token	*token;
-
-	if (input[0] != '|')
-		return (NULL);
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	token->type = PIPE;
-	token->value = ft_substr(input, 0, 1);
-	token->next = NULL;
-	*len = 1;
-	return (token);
-}
-
-t_token	*extract_redirect_token(const char *input, int *len)
-{
-	t_token	*token;
-
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	token->next = NULL;
-	if (input[0] == '<')
-	{
-		if (input[1] == '<')
-		{
-			token->type = HEREDOC;
-			token->value = ft_substr(input, 0, 2);
-			*len = 2;
-		}
-		else
-		{
-			token->type = REDIR_IN;
-			token->value = ft_substr(input, 0, 1);
-			*len = 1;
-		}
-	}
-	else if (input[0] == '>')
-	{
-		if (input[1] == '>')
-		{
-			token->type = REDIR_APPEND;
-			token->value = ft_substr(input, 0, 2);
-			*len = 2;
-		}
-		else
-		{
-			token->type = REDIR_OUT;
-			token->value = ft_substr(input, 0, 1);
-			*len = 1;
-		}
-	}
-	else
-	{
-		free(token);
-		return (NULL);
-	}
-	return (token);
-}
-
-t_token	*extract_word_token(const char *input, int *len)
-{
-	t_token	*token;
-	int		end;
-
-	end = 0;
-	while (input[end] != '\0' && ft_isspace(input[end]) == 0
-		&& input[end] != '|' && input[end] != '<' && input[end] != '>')
-		end++;
-	if (end == 0)
-		return (NULL);
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	token->type = WORD;
-	token->value = ft_substr(input, 0, end);
-	token->next = NULL;
-	*len = end;
-	return (token);
-}
-
-static t_token	*tokenize(const char *input)
-{
-	t_token	*head;
-	t_token	*current;
-	t_token	*new_token;
-	int		i;
-	int		len;
-
-	head = NULL;
-	current = NULL;
-	i = 0;
-	while (input[i] != '\0')
-	{
-		i += skip_spaces(&input[i]);
-		if (input[i] == '\0')
-			break ;
-		len = 0;
-		if (input[i] == '"' || input[i] == '\'')
-			new_token = extract_quoted_token(&input[i], &len);
-		else if (input[i] == '|')
-			new_token = extract_pipe_token(&input[i], &len);
-		else if (input[i] == '<' || input[i] == '>')
-			new_token = extract_redirect_token(&input[i], &len);
-		else
-			new_token = extract_word_token(&input[i], &len);
-		if (new_token == NULL)
-			break ;
-		if (head == NULL)
-			head = new_token;
-		else
-			current->next = new_token;
-		current = new_token;
-		i += len;
-	}
-	return (head);
-}
-
-void	free_tokens(t_token *tokens)
+void	put_in_cmd(t_cmd *cmd, t_token *tokens)
 {
 	t_token	*temp;
 
 	temp = tokens;
-	while (temp != NULL)
-	{
-		free(temp->value);
-		temp = temp->next;
-	}
-	free(tokens);
-}
-
-void	cmd_init(t_cmd *cmd, char *input, char **ev)
-{
-	t_token	*tokens;
-	t_token	*temp;
-	t_cmd	*head;
-
-	tokens = tokenize(input);
-	if (tokens == NULL)
-		return ;
-	temp = tokens;
-	head = cmd;
 	while (temp != NULL)
 	{
 		if (temp->type == WORD)
@@ -330,13 +159,29 @@ void	cmd_init(t_cmd *cmd, char *input, char **ev)
 		}
 		temp = temp->next;
 	}
-	free_tokens(tokens);
+}
 
-	// 各コマンドのpathを検索
+void	put_in_path(t_cmd *cmd, char **ev)
+{
+	t_cmd	*head;
+
+	head = cmd;
 	while (head != NULL)
 	{
 		if (head->argv != NULL && head->argv[0] != NULL)
 			head->path = search_path(head->argv[0], ev);
 		head = head->next;
 	}
+}
+
+void	cmd_init(t_cmd *cmd, char *input, char **ev)
+{
+	t_token	*tokens;
+
+	tokens = tokenize(input);
+	if (tokens == NULL)
+		return ;
+	put_in_cmd(cmd, tokens);
+	free_tokens(tokens);
+	put_in_path(cmd, ev);
 }

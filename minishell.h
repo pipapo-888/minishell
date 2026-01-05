@@ -61,11 +61,17 @@ char	*search_path(const char *cmd, char *const envp[]);
 char	**space_tab_split(const char *str);
 void	free_split(char **sp);
 char	*get_env_value(char *const envp[], const char *key);
-void	parse_redirects(t_cmd *cmd, char **argv);
 void	setup_redirects(t_cmd *cmd);
-char	**filter_redirects(char **argv);
 int		built_in_check(t_cmd *cmd, char **ev);
 void	cmd_init(t_cmd *cmd, char *input, char **ev);
-char	**filter_redirects(char **argv);
+
+t_token	*extract_quoted_token(const char *input, int *len);
+t_token	*extract_pipe_token(const char *input, int *len);
+t_token	*extract_redirect_token(const char *input, int *len);
+t_token	*extract_word_token(const char *input, int *len);
+t_token	*tokenize(const char *input);
+void	free_tokens(t_token *tokens);
+int		skip_spaces(const char *input);
+
 
 #endif
