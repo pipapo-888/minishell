@@ -73,5 +73,4 @@ t_token	*tokenize(const char *input);
 void	free_tokens(t_token *tokens);
 int		skip_spaces(const char *input);
 
-
 #endif
