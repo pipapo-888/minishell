@@ -2,31 +2,62 @@
 
 #define PATHNAME_SIZE 1024
 
+void	built_in_echo(t_cmd *cmd)
+{
+	int	i;
+	int	n_flag;
+	int	saved_stdout;
+
+	saved_stdout = -1;
+	i = 1;
+	n_flag = 0;
+	while (cmd->argv[i] && ft_strcmp(cmd->argv[i], "-n") == 0)
+	{
+		n_flag = 1;
+		i++;
+	}
+	if (cmd->type != NO_REDIR)
+	{
+
+		printf("aaaa%s", cmd->outfile);
+		saved_stdout = dup(STDOUT_FILENO);
+		setup_redirects(cmd);
+	}
+	while (cmd->argv[i])
+	{
+		printf("%s", cmd->argv[i]);
+		if (cmd->argv[i + 1])
+			printf(" ");
+		i++;
+	}
+	if (!n_flag)
+		printf("\n");
+	if (saved_stdout != -1)
+	{
+		dup2(saved_stdout, STDOUT_FILENO);
+		close(saved_stdout);
+	}
+	return ;
+}
+
 void	built_in_pwd(t_cmd *cmd)
 {
 	char	pathName[PATHNAME_SIZE];
 	int		saved_stdout;
 
-	// char	*res;
-	// res = getcwd(pathName, PATHNAME_SIZE);
-	// printf("res; %s\n", res);
-	// printf("pathname; %s\n", pathName);
+	saved_stdout = -1;
 	ft_memset(pathName, '\0', PATHNAME_SIZE);
-	if (cmd->type == NO_REDIR)
-	{
-		if (getcwd(pathName, PATHNAME_SIZE))
-			printf("%s\n", pathName);
-		else
-			perror("pwd");
-	}
-	else
+	if (cmd->type != NO_REDIR)
 	{
 		saved_stdout = dup(STDOUT_FILENO);
 		setup_redirects(cmd);
-		if (getcwd(pathName, PATHNAME_SIZE))
-			printf("%s\n", pathName);
-		else
-			perror("pwd");
+	}
+	if (getcwd(pathName, PATHNAME_SIZE))
+		printf("%s\n", pathName);
+	else
+		perror("pwd");
+	if (saved_stdout != -1)
+	{
 		dup2(saved_stdout, STDOUT_FILENO);
 		close(saved_stdout);
 	}
@@ -50,7 +81,7 @@ void	built_in_env(char **ev)
 int	built_in_check(t_cmd *cmd, char **ev)
 {
 	if (!ft_strcmp(cmd->argv[0], "echo"))
-		return (printf("echo実装前\n"), 0);
+		return (built_in_echo(cmd), 0);
 	if (!ft_strcmp(cmd->argv[0], "cd"))
 		return (chdir(cmd->argv[1]), 0);
 	if (!ft_strcmp(cmd->argv[0], "pwd"))
@@ -218,50 +249,94 @@ static t_token	*tokenize(const char *input)
 	return (head);
 }
 
-// 一時的にコメントアウト(後でトークンベースに書き直す)
-// static void	command_setup(t_cmd *cmd, char *argv, char **env)
-// {
-// 	char	**filtered_argv;
-// 	char	**temp;
+void	free_tokens(t_token *tokens)
+{
+	t_token	*temp;
 
-// 	if (cmd == NULL || argv == NULL || env == NULL)
-// 		return ;
-// 	temp = space_tab_split(argv);
-// 	if (temp == NULL)
-// 		return ;
-// 	parse_redirects(cmd, temp);
-// 	filtered_argv = filter_redirects(temp);
-// 	cmd->argv = filtered_argv;
-// 	cmd->path = search_path(cmd->argv[0], env);
-// 	free_split(temp);
-// }
+	temp = tokens;
+	while (temp != NULL)
+	{
+		free(temp->value);
+		temp = temp->next;
+	}
+	free(tokens);
+}
 
 void	cmd_init(t_cmd *cmd, char *input, char **ev)
 {
 	t_token	*tokens;
+	t_token	*temp;
+	t_cmd	*head;
 
 	tokens = tokenize(input);
 	if (tokens == NULL)
 		return ;
-	(void)ev;
-	(void)cmd;
-	// TODO: トークンリストから t_cmd 構造を構築
-	// 今はトークナイザのテストのみ実装
-
-	// デバッグ出力(後で削除)
-	t_token *tmp = tokens;
-	while (tmp != NULL)
+	temp = tokens;
+	head = cmd;
+	while (temp != NULL)
 	{
-		printf("Token: type=%d, value='%s'\n", tmp->type, tmp->value);
-		tmp = tmp->next;
+		if (temp->type == WORD)
+		{
+			int word_count = 0;
+			int i = 0;
+			t_token *counter = temp;
+
+			// 連続するWORD数を数える
+			while (counter != NULL && counter->type == WORD)
+			{
+				word_count++;
+				counter = counter->next;
+			}
+
+			// まとめてmallocする
+			cmd->argv = malloc(sizeof(char *) * (word_count + 1));
+			if (cmd->argv == NULL)
+				return ;
+
+			// WORDを詰めていく
+			while (temp != NULL && temp->type == WORD)
+			{
+				cmd->argv[i++] = ft_strdup(temp->value);
+				temp = temp->next;
+			}
+			cmd->argv[i] = NULL;
+			continue;  // tempは既に進んでいるのでループ末尾のtemp = temp->nextをスキップ
+		}
+		else if (temp->type == REDIR_IN || temp->type == HEREDOC)
+		{
+			cmd->type = temp->type;
+			temp = temp->next;
+			if (temp != NULL && temp == WORD)
+				cmd->infile = ft_strdup( temp->value);
+		}
+		else if (temp->type == REDIR_OUT || temp->type == REDIR_APPEND)
+		{
+			cmd->type = temp->type;
+			temp = temp->next;
+			if (temp != NULL && temp->type == WORD)
+				cmd->outfile = ft_strdup(temp->value);
+		}
+		else if (temp->type == PIPE)
+		{
+			cmd->next = malloc(sizeof(t_cmd));
+			if (cmd->next == NULL)
+				return ;
+			cmd = cmd->next;
+			cmd->argv = NULL;
+			cmd->infile = NULL;
+			cmd->outfile = NULL;
+			cmd->type = NO_REDIR;
+			cmd->next = NULL;
+		}
+		temp = temp->next;
 	}
+	free_tokens(tokens);
 
-	// メモリ解放(後で free_tokens 関数として分離)
-	while (tokens != NULL)
+	// 各コマンドのpathを検索
+	while (head != NULL)
 	{
-		t_token *next = tokens->next;
-		free(tokens->value);
-		free(tokens);
-		tokens = next;
+		if (head->argv != NULL && head->argv[0] != NULL)
+			head->path = search_path(head->argv[0], ev);
+		head = head->next;
 	}
 }

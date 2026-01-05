@@ -60,7 +60,7 @@ void	handler(int sig)
 	(void)sig;
 	write(1, "\n", 1);
 	rl_on_new_line();
-	rl_replace_line("", 0);
+	// rl_replace_line("", 0);  // TODO: readlineバージョン確認
 	rl_redisplay();
 }
 
