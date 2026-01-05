@@ -249,91 +249,94 @@ static t_token	*tokenize(const char *input)
 	return (head);
 }
 
-static void	setup_word(t_cmd *cmd, t_token *tokens)
+void	free_tokens(t_token *tokens)
 {
-	int		count;
-	int		i;
-	char	**argv;
+	t_token	*temp;
 
-	if (cmd == NULL || tokens == NULL || tokens->type != WORD)
-		return ;
-	while (tokens != NULL || tokens->type != WORD)
+	temp = tokens;
+	while (temp != NULL)
 	{
-		count++;
-		tokens = tokens->next;
+		free(temp->value);
+		temp = temp->next;
 	}
-	argv = malloc(sizeof(char *) * (count + 1));
-	if (argv == NULL)
-		return ;
-	i = 0;
-	while (tokens != NULL && tokens->type == WORD)
-	{
-		argv[i] = ft_strdup(tokens->value);
-		if (argv[i] == NULL)
-		{
-			free_split(argv);
-			return ;
-		}
-		i++;
-		tokens = tokens->next;
-	}
-	argv[i] = NULL;
-	cmd->argv = argv;
-}
-
-static void	command_setup(t_cmd *cmd, t_token *tokens)
-{
-	char	**temp;
-	size_t	count;
-
-	if (cmd == NULL || tokens == NULL || tokens->type != REDIR_IN
-		&& tokens->type != REDIR_OUT && tokens->type != REDIR_APPEND)
-		return ;
-	while (tokens != NULL)
-	{
-		if (tokens->type == REDIR_IN)
-		{
-			tokens = tokens->next;
-			if (tokens != NULL && tokens->type == WORD)
-			{
-				cmd->infile = ft_strdup(tokens->value);
-				tokens = tokens->next;
-			}
-		}
-		else if (tokens->type == REDIR_OUT || tokens->type == REDIR_APPEND)
-		{
-			tokens = tokens->next;
-			if (tokens != NULL && tokens->type == WORD)
-			{
-				cmd->outfile = ft_strdup(tokens->value);
-				tokens = tokens->next;
-			}
-		}
-		else
-			tokens = tokens->next;
-	}
+	free(tokens);
 }
 
 void	cmd_init(t_cmd *cmd, char *input, char **ev)
 {
 	t_token	*tokens;
+	t_token	*temp;
+	t_cmd	*head;
 
 	tokens = tokenize(input);
 	if (tokens == NULL)
 		return ;
-	while (tokens != NULL)
+	temp = tokens;
+	head = cmd;
+	while (temp != NULL)
 	{
-		setup_word(cmd, tokens);
-		command_setup(cmd, tokens);
-		tokens = tokens->next;
-	}
+		if (temp->type == WORD)
+		{
+			int word_count = 0;
+			int i = 0;
+			t_token *counter = temp;
 
-	// メモリ解放(後で free_tokens 関数として分離)
-	while (tokens != NULL)
+			// 連続するWORD数を数える
+			while (counter != NULL && counter->type == WORD)
+			{
+				word_count++;
+				counter = counter->next;
+			}
+
+			// まとめてmallocする
+			cmd->argv = malloc(sizeof(char *) * (word_count + 1));
+			if (cmd->argv == NULL)
+				return ;
+
+			// WORDを詰めていく
+			while (temp != NULL && temp->type == WORD)
+			{
+				cmd->argv[i++] = ft_strdup(temp->value);
+				temp = temp->next;
+			}
+			cmd->argv[i] = NULL;
+			continue;  // tempは既に進んでいるのでループ末尾のtemp = temp->nextをスキップ
+		}
+		else if (temp->type == REDIR_IN || temp->type == HEREDOC)
+		{
+			cmd->type = temp->type;
+			temp = temp->next;
+			if (temp != NULL && temp == WORD)
+				cmd->infile = ft_strdup( temp->value);
+		}
+		else if (temp->type == REDIR_OUT || temp->type == REDIR_APPEND)
+		{
+			cmd->type = temp->type;
+			temp = temp->next;
+			if (temp != NULL && temp->type == WORD)
+				cmd->outfile = ft_strdup(temp->value);
+		}
+		else if (temp->type == PIPE)
+		{
+			cmd->next = malloc(sizeof(t_cmd));
+			if (cmd->next == NULL)
+				return ;
+			cmd = cmd->next;
+			cmd->argv = NULL;
+			cmd->infile = NULL;
+			cmd->outfile = NULL;
+			cmd->type = NO_REDIR;
+			cmd->next = NULL;
+		}
+		temp = temp->next;
+	}
+	free_tokens(tokens);
+
+	// 各コマンドのpathを検索
+	while (head != NULL)
 	{
-		t_token *next = tokens->next;
-		free(tokens->value);
-		free(tokens);
-		tokens = next;
+		if (head->argv != NULL && head->argv[0] != NULL)
+			head->path = search_path(head->argv[0], ev);
+		head = head->next;
 	}
 }

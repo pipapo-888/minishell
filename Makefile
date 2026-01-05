@@ -1,6 +1,7 @@
 NAME = minishell
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -I/opt/homebrew/opt/readline/include
+LDFLAGS = -L/opt/homebrew/opt/readline/lib
 
 SRCS = main.c\
 		search.c\
@@ -16,7 +17,7 @@ LIBFT = libft/libft.a
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) -o $@ $^ -lreadline $(LIBFT)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ -lreadline $(LIBFT)
 
 $(LIBFT):
 	make -C libft all
