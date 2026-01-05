@@ -27,10 +27,8 @@ void	ft_execve(t_cmd *cmd, char **ev)
 	}
 }
 
-void	prompt(char **ev)
+void	prompt(char **ev, t_data data)
 {
-	t_data	data;
-
 	data.cmd = malloc(sizeof(t_cmd));
 	if (data.cmd == NULL)
 		return ;
@@ -39,8 +37,11 @@ void	prompt(char **ev)
 	{
 		free(data.input);
 		free(data.cmd);
+		if (data.input == NULL)
+			exit(1);
 		return ;
 	}
+	add_history(data.input);
 	cmd_init(data.cmd, data.input, ev);
 	if (data.cmd->argv == NULL)
 	{
@@ -64,9 +65,27 @@ void	handler(int sig)
 	rl_redisplay();
 }
 
+// void	env_init(t_data data, char **envp)
+// {
+// 	t_env	*head;
+// 	t_env	*new_node;
+// 	int		i;
+
+// 	i = 0;
+// 	head = NULL;
+
+// 	while(envp[i])
+// 	{
+// 		new_node = split_key_and_value(envp[i]);
+// 		ft_lstadd_back(&head, new_node); // 方が違う、使用不可
+// 		i++;
+// 	}
+// }
+
 int	main(int ac, char **av, char **envp)
 {
 	char	*program_name;
+	t_data	data;
 
 	// TODO:envpのコピー
 	(void)ac;
@@ -77,7 +96,7 @@ int	main(int ac, char **av, char **envp)
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
-		prompt(envp);
+		prompt(envp, data);
 	}
 	// exit(1);
 	return (0);
