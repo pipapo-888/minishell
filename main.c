@@ -61,7 +61,7 @@ void	handler(int sig)
 	(void)sig;
 	write(1, "\n", 1);
 	rl_on_new_line();
-	// rl_replace_line("", 0);  // TODO: readlineバージョン確認
+	rl_replace_line("", 0);
 	rl_redisplay();
 }
 
@@ -92,6 +92,9 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	(void)program_name;
 	(void)envp;
+	data.cmd = NULL;
+	data.env = NULL;
+	data.input = NULL;
 	signal(SIGINT, handler);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)

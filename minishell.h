@@ -54,8 +54,6 @@ typedef struct s_data
 
 }	t_data;
 
-
-
 void	prompt(char **ev, t_data data);
 int		main(int ac, char **av, char **ev);
 char	*search_path(const char *cmd, char *const envp[]);

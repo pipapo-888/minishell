@@ -120,36 +120,36 @@ int	built_in_check(t_cmd *cmd, char **ev)
 void	put_in_cmd(t_cmd *cmd, t_token *tokens)
 {
 	t_token	*temp;
+	t_token	*counter;
+	int		i;
+	int		word_count;
 
 	temp = tokens;
+	word_count = 0;
+	i = 0;
 	while (temp != NULL)
 	{
 		if (temp->type == WORD)
 		{
-			int word_count = 0;
-			int i = 0;
-			t_token *counter = temp;
+			counter = temp;
 
-			// 連続するWORD数を数える
 			while (counter != NULL && counter->type == WORD)
 			{
 				word_count++;
 				counter = counter->next;
 			}
 
-			// まとめてmallocする
 			cmd->argv = malloc(sizeof(char *) * (word_count + 1));
 			if (cmd->argv == NULL)
 				return ;
 
-			// WORDを詰めていく
 			while (temp != NULL && temp->type == WORD)
 			{
-				cmd->argv[i++] = ft_strdup(temp->value);
+				cmd->argv[i] = ft_strdup(temp->value);
+				i++;
 				temp = temp->next;
 			}
 			cmd->argv[i] = NULL;
-			continue;  // tempは既に進んでいるのでループ末尾のtemp = temp->nextをスキップ
 		}
 		else if (temp->type == REDIR_IN || temp->type == HEREDOC)
 		{
@@ -157,6 +157,7 @@ void	put_in_cmd(t_cmd *cmd, t_token *tokens)
 			temp = temp->next;
 			if (temp != NULL && temp == WORD)
 				cmd->infile = ft_strdup( temp->value);
+			temp = temp->next;
 		}
 		else if (temp->type == REDIR_OUT || temp->type == REDIR_APPEND)
 		{
@@ -164,6 +165,7 @@ void	put_in_cmd(t_cmd *cmd, t_token *tokens)
 			temp = temp->next;
 			if (temp != NULL && temp->type == WORD)
 				cmd->outfile = ft_strdup(temp->value);
+			temp = temp->next;
 		}
 		else if (temp->type == PIPE)
 		{
@@ -176,8 +178,8 @@ void	put_in_cmd(t_cmd *cmd, t_token *tokens)
 			cmd->outfile = NULL;
 			cmd->type = NO_REDIR;
 			cmd->next = NULL;
+			temp = temp->next;
 		}
-		temp = temp->next;
 	}
 }
 

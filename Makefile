@@ -17,7 +17,7 @@ LIBFT = libft/libft.a
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJS) $(LIBFT) -lreadline
+	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBFT) -lreadline
 
 $(LIBFT):
 	make -C libft all
