@@ -117,56 +117,93 @@ int	built_in_check(t_cmd *cmd, char **ev)
 	return (1);
 }
 
-static char	**piped_split(const char *str)
+void	put_in_cmd(t_cmd *cmd, t_token *tokens)
 {
-	char	**result;
+	t_token	*temp;
+	t_token	*counter;
+	int		i;
+	int		word_count;
 
-	result = ft_split(str, '|');
-	if (result == NULL)
-		return (NULL);
-	return (result);
+	temp = tokens;
+	word_count = 0;
+	i = 0;
+	while (temp != NULL)
+	{
+		if (temp->type == WORD)
+		{
+			counter = temp;
+
+			while (counter != NULL && counter->type == WORD)
+			{
+				word_count++;
+				counter = counter->next;
+			}
+
+			cmd->argv = malloc(sizeof(char *) * (word_count + 1));
+			if (cmd->argv == NULL)
+				return ;
+
+			while (temp != NULL && temp->type == WORD)
+			{
+				cmd->argv[i] = ft_strdup(temp->value);
+				i++;
+				temp = temp->next;
+			}
+			cmd->argv[i] = NULL;
+		}
+		else if (temp->type == REDIR_IN || temp->type == HEREDOC)
+		{
+			cmd->type = temp->type;
+			temp = temp->next;
+			if (temp != NULL && temp == WORD)
+				cmd->infile = ft_strdup( temp->value);
+			temp = temp->next;
+		}
+		else if (temp->type == REDIR_OUT || temp->type == REDIR_APPEND)
+		{
+			cmd->type = temp->type;
+			temp = temp->next;
+			if (temp != NULL && temp->type == WORD)
+				cmd->outfile = ft_strdup(temp->value);
+			temp = temp->next;
+		}
+		else if (temp->type == PIPE)
+		{
+			cmd->next = malloc(sizeof(t_cmd));
+			if (cmd->next == NULL)
+				return ;
+			cmd = cmd->next;
+			cmd->argv = NULL;
+			cmd->infile = NULL;
+			cmd->outfile = NULL;
+			cmd->type = NO_REDIR;
+			cmd->next = NULL;
+			temp = temp->next;
+		}
+	}
 }
 
-static void	command_setup(t_cmd *cmd, char *argv, char **env)
+void	put_in_path(t_cmd *cmd, char **ev)
 {
-	char	**filtered_argv;
-	char	**temp;
+	t_cmd	*head;
 
-	if (cmd == NULL || argv == NULL || env == NULL)
-		return ;
-	temp = space_tab_split(argv);
-	if (temp == NULL)
-		return ;
-	parse_redirects(cmd, temp);
-	filtered_argv = filter_redirects(temp);
-	cmd->argv = filtered_argv;
-	cmd->path = search_path(cmd->argv[0], env);
-	free_split(temp);
+	head = cmd;
+	while (head != NULL)
+	{
+		if (head->argv != NULL && head->argv[0] != NULL)
+			head->path = search_path(head->argv[0], ev);
+		head = head->next;
+	}
 }
 
 void	cmd_init(t_cmd *cmd, char *input, char **ev)
 {
-	char	**piped_argv;
-	int		i;
+	t_token	*tokens;
 
-	piped_argv = piped_split(input);
-	i = 0;
-	while (piped_argv != NULL && piped_argv[i] != NULL)
-	{
-		command_setup(cmd, piped_argv[i], ev);
-		if (piped_argv[i + 1] != NULL)
-		{
-			cmd->next = malloc(sizeof(t_cmd));
-			if (cmd->next == NULL)
-			{
-				free_split(piped_argv);
-				return ;
-			}
-			cmd = cmd->next;
-		}
-		else
-			cmd->next = NULL;
-		i++;
-	}
-	free_split(piped_argv);
+	tokens = tokenize(input);
+	if (tokens == NULL)
+		return ;
+	put_in_cmd(cmd, tokens);
+	free_tokens(tokens);
+	put_in_path(cmd, ev);
 }

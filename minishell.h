@@ -11,14 +11,23 @@
 # include "libft/libft.h"
 # include <fcntl.h>
 
-typedef enum e_redir_type
+typedef enum e_token_type
 {
+	WORD,
+	PIPE,
 	REDIR_IN,
 	REDIR_OUT,
 	REDIR_APPEND,
 	HEREDOC,
 	NO_REDIR
-}	t_redir_type;
+}	t_token_type;
+
+typedef struct s_token
+{
+	t_token_type		type;
+	char				*value;
+	struct s_token		*next;
+}	t_token;
 
 typedef struct s_cmd
 {
@@ -26,7 +35,7 @@ typedef struct s_cmd
 	char			*path;
 	char			*infile;
 	char			*outfile;
-	t_redir_type	type;
+	t_token_type	type;
 	struct s_cmd	*next;
 }	t_cmd;
 
@@ -45,19 +54,22 @@ typedef struct s_data
 
 }	t_data;
 
-
-
 void	prompt(char **ev, t_data data);
 int		main(int ac, char **av, char **ev);
 char	*search_path(const char *cmd, char *const envp[]);
 char	**space_tab_split(const char *str);
 void	free_split(char **sp);
 char	*get_env_value(char *const envp[], const char *key);
-void	parse_redirects(t_cmd *cmd, char **argv);
 void	setup_redirects(t_cmd *cmd);
-char	**filter_redirects(char **argv);
 int		built_in_check(t_cmd *cmd, char **ev);
 void	cmd_init(t_cmd *cmd, char *input, char **ev);
-char	**filter_redirects(char **argv);
+
+t_token	*extract_quoted_token(const char *input, int *len);
+t_token	*extract_pipe_token(const char *input, int *len);
+t_token	*extract_redirect_token(const char *input, int *len);
+t_token	*extract_word_token(const char *input, int *len);
+t_token	*tokenize(const char *input);
+void	free_tokens(t_token *tokens);
+int		skip_spaces(const char *input);
 
 #endif

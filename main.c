@@ -92,6 +92,9 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	(void)program_name;
 	(void)envp;
+	data.cmd = NULL;
+	data.env = NULL;
+	data.input = NULL;
 	signal(SIGINT, handler);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
