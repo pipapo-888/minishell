@@ -32,4 +32,7 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+test: all
+	./test.sh
+
+.PHONY: all clean fclean re test
