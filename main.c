@@ -11,7 +11,7 @@ void	ft_execve(t_cmd *cmd, char **ev)
 	if (built_in_check(cmd, ev) == 0)
 		return ;
 	pid = fork();
-	printf("%d\n", pid);
+	// printf("%d\n", pid);
 	if (pid == 0)
 	{
 		signal(SIGQUIT, SIG_DFL); // SIGQUIT
