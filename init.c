@@ -72,8 +72,6 @@ void	built_in_pwd(t_cmd *cmd)
 		ft_putstr_fd(pathName, 1);
 		write(1, "\n", 1);
 	}
-	if (getcwd(pathName, PATHNAME_SIZE))
-		printf("%s\n", pathName);
 	else
 		perror("pwd");
 	if (saved_stdout != -1)
@@ -84,21 +82,65 @@ void	built_in_pwd(t_cmd *cmd)
 	return ;
 }
 
-void	built_in_env(char **ev)
+void	built_in_env(t_env *env)
 {
-	int	i;
+	char	**arr;
+	int		i;
 
+	arr = env_to_array(env);
+	if (arr == NULL)
+		return ;
 	i = 0;
-	printf("自作env\n");
-	while (ev[i] != NULL)
+	while (arr[i])
 	{
-		printf("%s\n", ev[i]);
+		ft_putstr_fd(arr[i], 1);
+		write(1, "\n", 1);
 		i++;
 	}
-	return ;
+	free_split(arr);
 }
 
-int	built_in_check(t_cmd *cmd, char **ev)
+// static void	remove_env_node(t_data *data, t_env *prev, t_env *current)
+// {
+// 	if (prev == NULL)
+// 		data->env = current->next;
+// 	else
+// 		prev->next = current->next;
+// 	free(current->key);
+// 	free(current->value);
+// 	free(current);
+// }
+
+void	built_in_unset(t_data *data, char **argv)
+{
+	int		i;
+	t_env	*current;
+	// t_env	*prev;
+
+	i = 1;
+	while (argv[i])
+	{
+		current = data->env;
+		// prev = NULL;
+		while (current)
+		{
+			if (ft_strcmp(current->key, argv[i]) == 0)
+			{
+				// remove_env_node(data, prev, current);
+				current->type = DONT_SHOW;
+				// current->value = ft_strdup("");
+				free(current->value);
+				break ;
+
+			}
+			// prev = current;
+			current = current->next;
+		}
+		i++;
+	}
+}
+
+int	built_in_check(t_cmd *cmd, t_data *data)
 {
 	if (!ft_strcmp(cmd->argv[0], "echo"))
 		return (built_in_echo(cmd), 0);
@@ -109,9 +151,9 @@ int	built_in_check(t_cmd *cmd, char **ev)
 	if (!ft_strcmp(cmd->argv[0], "export"))
 		return (printf("export実装前\n"), 0);
 	if (!ft_strcmp(cmd->argv[0], "unset"))
-		return (printf("unset実装前\n"), 0);
+		return (built_in_unset(data, cmd->argv), 0);
 	if (!ft_strcmp(cmd->argv[0], "env"))
-		return (built_in_env(ev), 0);
+		return (built_in_env(data->env), 0);
 	if (!ft_strcmp(cmd->argv[0], "exit"))
 		exit(1);
 	return (1);

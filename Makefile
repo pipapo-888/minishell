@@ -1,6 +1,6 @@
 NAME = minishell
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -g -Wall -Wextra -Werror
 
 SRCS = main.c\
 		search.c\
@@ -8,7 +8,8 @@ SRCS = main.c\
 		redirects.c\
 		extract.c\
 		tokens.c\
-		init.c
+		init.c\
+		env_init.c
 OBJS = $(SRCS:.c=.o)
 
 LIBFT = libft/libft.a
