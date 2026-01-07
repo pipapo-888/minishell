@@ -6,8 +6,9 @@ SRCS = main.c\
 		search.c\
 		space_tab_split.c\
 		redirects.c\
-		init.c\
-		filter.c
+		extract.c\
+		tokens.c\
+		init.c
 OBJS = $(SRCS:.c=.o)
 
 LIBFT = libft/libft.a
@@ -16,7 +17,7 @@ LIBFT = libft/libft.a
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) -o $@ $^ -lreadline $(LIBFT)
+	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBFT) -lreadline
 
 $(LIBFT):
 	make -C libft all
