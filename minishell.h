@@ -79,6 +79,5 @@ t_token	*extract_redirect_token(const char *input, int *len);
 t_token	*extract_word_token(const char *input, int *len);
 t_token	*tokenize(const char *input);
 void	free_tokens(t_token *tokens);
-int		skip_spaces(const char *input);
 
 #endif
