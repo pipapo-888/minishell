@@ -10,6 +10,7 @@
 # include <readline/history.h>
 # include "libft/libft.h"
 # include <fcntl.h>
+#include <signal.h>
 
 typedef enum e_export_type
 {
@@ -67,12 +68,21 @@ char	**space_tab_split(const char *str);
 void	free_split(char **sp);
 char	*get_env_value(char *const envp[], const char *key);
 void	setup_redirects(t_cmd *cmd);
-int		built_in_check(t_cmd *cmd, t_data *data, char **ev);
-void	built_in_unset(t_data *data, char **argv);
-void	built_in_export(t_data *data, char **argv);
 void	cmd_init(t_cmd *cmd, char *input, char **ev);
 void	env_init(t_data *data, char **envp);
 char	**env_to_array(t_env *env);
+void	ft_execve(t_cmd *cmd, t_data *data, char **ev);
+int		open_infile(t_cmd *cmd);
+int		open_outfile(t_cmd *cmd);
+
+// Built-in functions
+int		built_in_check(t_cmd *cmd, t_data *data, char **ev);
+void	built_in_cd(t_cmd *cmd, char **ev);
+void	built_in_echo(t_cmd *cmd);
+void	built_in_env(t_env *env);
+void	built_in_export(t_data *data, char **argv);
+void	built_in_pwd(t_cmd *cmd);
+void	built_in_unset(t_data *data, char **argv);
 
 t_token	*extract_quoted_token(const char *input, int *len);
 t_token	*extract_pipe_token(const char *input, int *len);

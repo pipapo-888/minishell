@@ -9,7 +9,16 @@ SRCS = main.c\
 		tokens.c\
 		init.c\
 		free.c\
-		env_init.c
+		execve.c\
+		env_init.c\
+		prompt.c\
+		open_file.c\
+		built_in/cd.c\
+		built_in/echo.c\
+		built_in/env.c\
+		built_in/export.c\
+		built_in/pwd.c\
+		built_in/unset.c
 
 OBJS = $(SRCS:.c=.o)
 
