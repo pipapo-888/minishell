@@ -79,7 +79,7 @@ void	put_in_path(t_cmd *cmd, char **ev)
 	}
 }
 
-void	cmd_init(t_cmd *cmd, char *input, char **ev)
+void	cmd_setup(t_cmd *cmd, char *input, char **ev)
 {
 	t_token	*tokens;
 

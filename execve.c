@@ -23,13 +23,9 @@ void	ft_execve(t_cmd *cmd, t_data *data, char **ev)
 {
 	pid_t	pid;
 
-	// printf("PATH: %s\n", cmd->path);
-	// printf("ARGV[0]: %s\n", cmd->argv[0]);
-	// printf("ARGV[1]: %s\n", cmd->argv[1]);
 	if (built_in_check(cmd, data, ev) == 0)
 		return ;
 	pid = fork();
-	// printf("%d\n", pid);
 	if (pid == 0)
 	{
 		signal(SIGQUIT, SIG_DFL);

@@ -6,7 +6,7 @@
 /*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 11:59:45 by babe              #+#    #+#             */
-/*   Updated: 2025/09/28 11:59:43 by habe             ###   ########.fr       */
+/*   Updated: 2026/01/10 17:39:58 by habe             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,20 @@ static void	close_files(t_px *px)
 
 static int	cmd_all_set(t_px *px, char **cmd, char *const envp[])
 {
-	if (cmd_init(px->c1, cmd[0], envp) != 0)
+	if (cmd_setup(px->c1, cmd[0], envp) != 0)
 	{
 		free_all(px);
 		return (1);
 	}
 	else
 		px->c1->flag = 0;
-	if (cmd_init(px->c2, cmd[1], envp) != 0)
+	if (cmd_setup(px->c2, cmd[1], envp) != 0)
 	{
 		free_all(px);
 		return (1);
 	}
 	else
-		px->c1->flag = 0;
+		px->c2->flag = 0;
 	return (0);
 }
 
@@ -43,7 +43,7 @@ static int	px_init(t_px *px, char **argv)
 	if (px->c1 == NULL)
 		return (1);
 	px->c2 = malloc(sizeof(t_cmd));
-	if (px->c1 == NULL )
+	if (px->c2 == NULL)
 	{
 		free(px->c1);
 		return (1);

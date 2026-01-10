@@ -5,8 +5,8 @@ CFLAGS = -g -Wall -Wextra -Werror
 SRCS = main.c\
 		search.c\
 		redirects.c\
-		extract.c\
-		tokens.c\
+		token_extract/extract.c\
+		token_extract/tokens.c\
 		init.c\
 		free.c\
 		execve.c\
@@ -44,6 +44,7 @@ fclean: clean
 re: fclean all
 
 test: all
+	norminette $(SRCS) minishell.h | grep Error
 	./test.sh
 
 .PHONY: all clean fclean re test
