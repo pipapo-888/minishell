@@ -1,11 +1,11 @@
 #include "./minishell.h"
 
-int	skip_spaces(const char *input)
+static int	skip_spaces(const char *input)
 {
 	int	i;
 
 	i = 0;
-	while (ft_isspace(input[i]) == 1)
+	while (ft_isspace(input[i]) == 1 && input[i] != '\0')
 		i++;
 	return (i);
 }

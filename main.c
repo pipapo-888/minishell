@@ -1,14 +1,14 @@
 #include "./minishell.h"
 #include <signal.h>
 
-void	ft_execve(t_cmd *cmd, char **ev, t_data *data)
+void	ft_execve(t_cmd *cmd, t_data *data, char **ev)
 {
 	pid_t	pid;
 
 	// printf("PATH: %s\n", cmd->path);
 	// printf("ARGV[0]: %s\n", cmd->argv[0]);
 	// printf("ARGV[1]: %s\n", cmd->argv[1]);
-	if (built_in_check(cmd, data) == 0)
+	if (built_in_check(cmd, data, ev) == 0)
 		return ;
 	pid = fork();
 	// printf("%d\n", pid);
@@ -55,7 +55,7 @@ void	prompt(char **ev, t_data data)
 		free(data.cmd);
 		return ;
 	}
-	ft_execve(data.cmd, ev, &data);
+	ft_execve(data.cmd, &data, ev);
 	free_split(data.cmd->argv);
 	free(data.cmd->path);
 	free(data.cmd);

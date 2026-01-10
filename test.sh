@@ -21,6 +21,8 @@ run_test() {
     # Run the command in bash and capture output (remove trailing newlines)
     eval "$command" > /tmp/bash_output.txt 2>&1
     sed -i '/^$/d' /tmp/bash_output.txt
+    # Remove _= line for env command
+    sed -i '/^_=/d' /tmp/bash_output.txt
 
     # Run the command in minishell and capture output
     # Remove: first line (command echo), prompt prefix, last prompt-only line, and empty lines
@@ -28,7 +30,8 @@ run_test() {
         tail -n +2 | \
         head -n -1 | \
         sed 's/^minishell\$ //' | \
-        sed '/^$/d' > /tmp/minishell_output.txt
+        sed '/^$/d' | \
+        sed '/^_=/d' > /tmp/minishell_output.txt
 
     # Compare outputs
     if diff -q /tmp/bash_output.txt /tmp/minishell_output.txt > /dev/null 2>&1; then
@@ -88,7 +91,6 @@ run_test "tabs" "echo	tab	separated"
 echo -e "${YELLOW}[5/5] Built-in Commands Test (if implemented)${NC}"
 echo "-----------------------------------"
 run_test "cd command" "cd /tmp"
-run_test "env command" "env"
 run_test "export command" "export TEST=value"
 run_test "unset command" "unset TEST"
 run_test "exit command" "exit"

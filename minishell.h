@@ -15,7 +15,7 @@ typedef enum e_export_type
 {
 	SHOW,
 	DONT_SHOW
-} t_export_type;
+}	t_export_type;
 
 typedef enum e_token_type
 {
@@ -67,7 +67,7 @@ char	**space_tab_split(const char *str);
 void	free_split(char **sp);
 char	*get_env_value(char *const envp[], const char *key);
 void	setup_redirects(t_cmd *cmd);
-int		built_in_check(t_cmd *cmd, t_data *data);
+int		built_in_check(t_cmd *cmd, t_data *data, char **ev);
 void	built_in_unset(t_data *data, char **argv);
 void	built_in_export(t_data *data, char **argv);
 void	cmd_init(t_cmd *cmd, char *input, char **ev);
@@ -80,6 +80,5 @@ t_token	*extract_redirect_token(const char *input, int *len);
 t_token	*extract_word_token(const char *input, int *len);
 t_token	*tokenize(const char *input);
 void	free_tokens(t_token *tokens);
-int		skip_spaces(const char *input);
 
 #endif
