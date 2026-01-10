@@ -18,28 +18,33 @@ char	**env_to_array(t_env *env)
 	char	**arr;
 	char	*tmp;
 	int		size;
+	int		i;
 
 	size = env_list_size(env);
 	arr = malloc(sizeof(char *) * (size + 1));
-	if (arr == NULL)
+	if (!arr)
 		return (NULL);
-	while (env != NULL)
+	i = 0;
+	while (env)
 	{
-		if (env->type == SHOW)
+		if (env->type == DONT_SHOW || env->value == NULL)
 		{
-			if (env->value)
-			{
-				tmp = ft_strjoin(env->key, "=");
-				*arr = ft_strjoin(tmp, env->value);
-				free(tmp);
-			}
-			else
-				*arr = ft_strdup(env->key);
+			env = env->next;
+			continue ;
 		}
-		arr++;
+		if (env->value)
+		{
+			tmp = ft_strjoin(env->key, "=");
+			arr[i] = ft_strjoin(tmp, env->value);
+			free(tmp);
+		}
+		else
+			arr[i] = ft_strdup(env->key);
+		i++;
 		env = env->next;
 	}
-	return (*arr = NULL, arr);
+	arr[i] = NULL;
+	return (arr);
 }
 
 static t_env	*create_env_node(char *envp_line)
