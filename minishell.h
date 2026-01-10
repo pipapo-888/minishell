@@ -11,6 +11,12 @@
 # include "libft/libft.h"
 # include <fcntl.h>
 
+typedef enum e_export_type
+{
+	SHOW,
+	DONT_SHOW
+} t_export_type;
+
 typedef enum e_token_type
 {
 	WORD,
@@ -43,6 +49,7 @@ typedef struct s_env
 {
 	char			*key;
 	char			*value;
+	t_export_type	type;
 	struct s_env	*next;
 }	t_env;
 
@@ -55,14 +62,16 @@ typedef struct s_data
 }	t_data;
 
 void	prompt(char **ev, t_data data);
-int		main(int ac, char **av, char **ev);
 char	*search_path(const char *cmd, char *const envp[]);
 char	**space_tab_split(const char *str);
 void	free_split(char **sp);
 char	*get_env_value(char *const envp[], const char *key);
 void	setup_redirects(t_cmd *cmd);
-int		built_in_check(t_cmd *cmd, char **ev);
+int		built_in_check(t_cmd *cmd, t_data *data);
+void	built_in_unset(t_data *data, char **argv);
 void	cmd_init(t_cmd *cmd, char *input, char **ev);
+void	env_init(t_data *data, char **envp);
+char	**env_to_array(t_env *env);
 
 t_token	*extract_quoted_token(const char *input, int *len);
 t_token	*extract_pipe_token(const char *input, int *len);
