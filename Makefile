@@ -18,7 +18,8 @@ SRCS = main.c\
 		built_in/env.c\
 		built_in/export.c\
 		built_in/pwd.c\
-		built_in/unset.c
+		built_in/unset.c\
+		utils/fd_utils.c
 
 OBJS = $(SRCS:.c=.o)
 

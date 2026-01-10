@@ -62,7 +62,7 @@ typedef struct s_data
 
 }	t_data;
 
-void	prompt(char **ev, t_data data);
+void	prompt(t_data data);
 char	*search_path(const char *cmd, char *const envp[]);
 char	**space_tab_split(const char *str);
 void	free_split(char **sp);
@@ -81,7 +81,7 @@ void	free_split(char **sp);
 void	free_all(t_data *data);
 
 // Built-in functions
-int		built_in_check(t_cmd *cmd, t_data *data, char **ev);
+int		built_in_check(t_cmd *cmd, t_data *data);
 void	built_in_cd(t_cmd *cmd, char **ev);
 void	built_in_echo(t_cmd *cmd);
 void	built_in_env(t_env *env);
@@ -96,5 +96,9 @@ int		extract_redirect_token(const char *input, t_token **token);
 int		extract_word_token(const char *input, t_token **token);
 t_token	*tokenize(const char *input);
 void	free_tokens(t_token *tokens);
+
+// utils関係
+void dup2_and_close(int fd, int flag);
+
 
 #endif

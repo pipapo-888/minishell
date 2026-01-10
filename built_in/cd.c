@@ -19,25 +19,15 @@ void	built_in_cd(t_cmd *cmd, char **ev)
 		write(2, "minishell: cd: too many arguments\n", 34);
 		return ;
 	}
-	path = NULL;
-	if (cmd->argv[1] == NULL || ft_strcmp(cmd->argv[1], "~") == 0)
-	{
+	path = cmd->argv[1];
+	if (path == NULL || ft_strcmp(path, "~") == 0)
 		path = get_env_value(ev, "HOME");
-		if (path == NULL)
-			return (perror("cd: HOME not set"));
-	}
-	else if (ft_strcmp(cmd->argv[1], "-") == 0)
-	{
+	else if (ft_strcmp(path, "-") == 0)
 		path = get_env_value(ev, "OLDPWD");
-		if (path == NULL)
-			return (perror("cd: OLDPWD not set"));
-	}
-	if (path != NULL)
-	{
-		if (chdir(path) != 0)
-			return (perror("cd"));
-		return ;
-	}
-	if (chdir(cmd->argv[1]) != 0)
+	if (!path && (cmd->argv[1] == NULL || ft_strcmp(cmd->argv[1], "~") == 0))
+		return (perror("cd: HOME not set"));
+	if (!path)
+		return (perror("cd: OLDPWD not set"));
+	if (chdir(path) != 0)
 		return (perror("cd"));
 }

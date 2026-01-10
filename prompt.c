@@ -10,8 +10,11 @@ void	cmd_init(t_cmd *cmd)
 	cmd->next = NULL;
 }
 
-void	prompt(char **ev, t_data data)
+void	prompt(t_data data)
 {
+	char	**env;
+
+	env = env_to_array(data.env);
 	data.cmd = malloc(sizeof(t_cmd));
 	if (data.cmd == NULL)
 		return ;
@@ -25,7 +28,7 @@ void	prompt(char **ev, t_data data)
 		return ;
 	}
 	add_history(data.input);
-	cmd_setup(data.cmd, data.input, ev);
+	cmd_setup(data.cmd, data.input, env);
 	if (data.cmd->argv == NULL)
 	{
 		free_all(&data);

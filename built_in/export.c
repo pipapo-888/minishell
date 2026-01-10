@@ -45,13 +45,31 @@ static void	add_env_back(t_env **head, t_env *new_node)
 	tmp->next = new_node;
 }
 
+void if_existing(t_env *existing, char *value, char *key)
+{
+	free(existing->value);
+	existing->value = value;
+	existing->type = SHOW;
+	free(key);
+}
+
+static void	add_new_env(t_data *data, char *key, char *value)
+{
+	t_env	*new_node;
+
+	new_node = create_export_node(key, value);
+	add_env_back(&data->env, new_node);
+	free(key);
+	if (value)
+		free(value);
+}
+
 static void	export_one(t_data *data, char *arg)
 {
 	char	*equal_pos;
 	char	*key;
 	char	*value;
 	t_env	*existing;
-	t_env	*new_node;
 
 	equal_pos = ft_strchr(arg, '=');
 	if (equal_pos)
@@ -66,20 +84,9 @@ static void	export_one(t_data *data, char *arg)
 	}
 	existing = find_key(data->env, key);
 	if (existing)
-	{
-		free(existing->value);
-		existing->value = value;
-		existing->type = SHOW;
-		free(key);
-	}
+		if_existing(existing, value, key);
 	else
-	{
-		new_node = create_export_node(key, value);
-		add_env_back(&data->env, new_node);
-		free(key);
-		if (value)
-			free(value);
-	}
+		add_new_env(data, key, value);
 }
 
 void	built_in_export(t_data *data, char **argv)

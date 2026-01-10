@@ -1,11 +1,17 @@
 #include "./minishell.h"
 
-int	built_in_check(t_cmd *cmd, t_data *data, char **ev)
+int	built_in_check(t_cmd *cmd, t_data *data)
 {
+	char	**env;
+
+	env = NULL;
 	if (!ft_strcmp(cmd->argv[0], "echo"))
 		return (built_in_echo(cmd), 0);
 	if (!ft_strcmp(cmd->argv[0], "cd"))
-		return (built_in_cd(cmd, ev), 0);
+	{
+		env = env_to_array(data->env);
+		return (built_in_cd(cmd, env), 0);
+	}
 	if (!ft_strcmp(cmd->argv[0], "pwd"))
 		return (built_in_pwd(cmd), 0);
 	if (!ft_strcmp(cmd->argv[0], "export"))
@@ -19,11 +25,11 @@ int	built_in_check(t_cmd *cmd, t_data *data, char **ev)
 	return (1);
 }
 
-void	ft_execve(t_cmd *cmd, t_data *data, char **ev)
+void	ft_execve(t_cmd *cmd, t_data *data, char **env)
 {
 	pid_t	pid;
 
-	if (built_in_check(cmd, data, ev) == 0)
+	if (built_in_check(cmd, data) == 0)
 		return ;
 	pid = fork();
 	if (pid == 0)
@@ -31,7 +37,7 @@ void	ft_execve(t_cmd *cmd, t_data *data, char **ev)
 		signal(SIGQUIT, SIG_DFL);
 		signal(SIGINT, SIG_DFL);
 		setup_redirects(cmd);
-		execve(cmd->path, cmd->argv, ev);
+		execve(cmd->path, cmd->argv, env);
 		perror("execve");
 		exit(1);
 	}
