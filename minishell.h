@@ -15,7 +15,7 @@ typedef enum e_export_type
 {
 	SHOW,
 	DONT_SHOW
-} t_export_type;
+}	t_export_type;
 
 typedef enum e_token_type
 {

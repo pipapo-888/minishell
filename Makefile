@@ -4,12 +4,13 @@ CFLAGS = -g -Wall -Wextra -Werror
 
 SRCS = main.c\
 		search.c\
-		space_tab_split.c\
 		redirects.c\
 		extract.c\
 		tokens.c\
 		init.c\
+		free.c\
 		env_init.c
+
 OBJS = $(SRCS:.c=.o)
 
 LIBFT = libft/libft.a
