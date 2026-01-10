@@ -69,6 +69,7 @@ char	*get_env_value(char *const envp[], const char *key);
 void	setup_redirects(t_cmd *cmd);
 int		built_in_check(t_cmd *cmd, t_data *data);
 void	built_in_unset(t_data *data, char **argv);
+void	built_in_export(t_data *data, char **argv);
 void	cmd_init(t_cmd *cmd, char *input, char **ev);
 void	env_init(t_data *data, char **envp);
 char	**env_to_array(t_env *env);
