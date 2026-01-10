@@ -67,7 +67,7 @@ char	**space_tab_split(const char *str);
 void	free_split(char **sp);
 char	*get_env_value(char *const envp[], const char *key);
 void	setup_redirects(t_cmd *cmd);
-int		built_in_check(t_cmd *cmd, t_data *data);
+int		built_in_check(t_cmd *cmd, t_data *data, char **ev);
 void	built_in_unset(t_data *data, char **argv);
 void	cmd_init(t_cmd *cmd, char *input, char **ev);
 void	env_init(t_data *data, char **envp);
