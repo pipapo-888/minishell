@@ -1,7 +1,10 @@
 #include "./minishell.h"
 
-void	prompt(char **ev, t_data data)
+void	prompt(t_data data)
 {
+	char	**env;
+
+	env = env_to_array(data.env);
 	data.cmd = malloc(sizeof(t_cmd));
 	if (data.cmd == NULL)
 		return ;
@@ -21,14 +24,14 @@ void	prompt(char **ev, t_data data)
 		return ;
 	}
 	add_history(data.input);
-	cmd_init(data.cmd, data.input, ev);
+	cmd_init(data.cmd, data.input, env);
 	if (data.cmd->argv == NULL)
 	{
 		free(data.input);
 		free(data.cmd);
 		return ;
 	}
-	ft_execve(data.cmd, &data, ev);
+	ft_execve(data.cmd, &data, env);
 	free_split(data.cmd->argv);
 	free(data.cmd->path);
 	free(data.cmd);

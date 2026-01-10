@@ -25,7 +25,7 @@ int	main(int ac, char **av, char **envp)
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
-		prompt(envp, data);
+		prompt(data);
 	}
 	// exit(1);
 	return (0);

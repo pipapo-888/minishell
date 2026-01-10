@@ -27,7 +27,7 @@ char	**env_to_array(t_env *env)
 	i = 0;
 	while (env)
 	{
-		if (env->type == DONT_SHOW)
+		if (env->type == DONT_SHOW || env->value == NULL)
 		{
 			env = env->next;
 			continue ;

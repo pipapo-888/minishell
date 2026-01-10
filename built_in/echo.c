@@ -4,18 +4,12 @@ static int	is_n_flag(char *str)
 {
 	int	i;
 
-	if (str == NULL || str[0] != '-')
+	if (!str || str[0] != '-' || str[1] != 'n')
 		return (0);
 	i = 1;
-	if (str[i] == '\0')
-		return (0);
-	while(str[i])
-	{
-		if (str[i] != 'n')
-			return (0);
+	while (str[i] == 'n')
 		i++;
-	}
-	return (1);
+	return (str[i] == '\0');
 }
 
 void	built_in_echo(t_cmd *cmd)
@@ -25,30 +19,24 @@ void	built_in_echo(t_cmd *cmd)
 	int	saved_stdout;
 
 	saved_stdout = -1;
-	i = 1;
-	n_flag = 0;
-	while (cmd->argv[i] && is_n_flag(cmd->argv[i]))
-	{
-		n_flag = 1;
-		i++;
-	}
 	if (cmd->type != NO_REDIR)
 	{
 		saved_stdout = dup(STDOUT_FILENO);
-		setup_redirects(cmd);
+		if (saved_stdout >= 0)
+			setup_redirects(cmd);
 	}
+	i = 1;
+	while (cmd->argv[i] && is_n_flag(cmd->argv[i]))
+		i++;
+	n_flag = i > 1;
 	while (cmd->argv[i])
 	{
-		ft_putstr_fd(cmd->argv[i], 1);
-		if (cmd->argv[i + 1])
+		ft_putstr_fd(cmd->argv[i++], 1);
+		if (cmd->argv[i])
 			write(1, " ", 1);
-		i++;
 	}
 	if (!n_flag)
 		write(1, "\n", 1);
 	if (saved_stdout != -1)
-	{
-		dup2(saved_stdout, STDOUT_FILENO);
-		close(saved_stdout);
-	}
+		dup2_and_close(saved_stdout, STDOUT_FILENO);
 }
