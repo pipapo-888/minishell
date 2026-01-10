@@ -68,12 +68,17 @@ char	**space_tab_split(const char *str);
 void	free_split(char **sp);
 char	*get_env_value(char *const envp[], const char *key);
 void	setup_redirects(t_cmd *cmd);
-void	cmd_init(t_cmd *cmd, char *input, char **ev);
+void	cmd_setup(t_cmd *cmd, char *input, char **ev);
+void	cmd_init(t_cmd *cmd);
 void	env_init(t_data *data, char **envp);
 char	**env_to_array(t_env *env);
 void	ft_execve(t_cmd *cmd, t_data *data, char **ev);
 int		open_infile(t_cmd *cmd);
 int		open_outfile(t_cmd *cmd);
+
+// Free functions
+void	free_split(char **sp);
+void	free_all(t_data *data);
 
 // Built-in functions
 int		built_in_check(t_cmd *cmd, t_data *data);
@@ -84,10 +89,11 @@ void	built_in_export(t_data *data, char **argv);
 void	built_in_pwd(t_cmd *cmd);
 void	built_in_unset(t_data *data, char **argv);
 
-t_token	*extract_quoted_token(const char *input, int *len);
-t_token	*extract_pipe_token(const char *input, int *len);
-t_token	*extract_redirect_token(const char *input, int *len);
-t_token	*extract_word_token(const char *input, int *len);
+// Tokenizer functions
+int		extract_quoted_token(const char *input, t_token **token);
+int		extract_pipe_token(const char *input, t_token **token);
+int		extract_redirect_token(const char *input, t_token **token);
+int		extract_word_token(const char *input, t_token **token);
 t_token	*tokenize(const char *input);
 void	free_tokens(t_token *tokens);
 
