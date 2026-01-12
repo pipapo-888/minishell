@@ -44,7 +44,7 @@ static void	put_in_redir_out(t_cmd *cmd, t_token **tokens)
 {
 	int	fd;
 
-	fd = -1;
+	fd = 0;
 	if (*tokens != NULL && ((*tokens)->type == REDIR_OUT
 			|| (*tokens)->type == REDIR_APPEND))
 	{
@@ -54,7 +54,7 @@ static void	put_in_redir_out(t_cmd *cmd, t_token **tokens)
 		{
 			cmd->outfile = ft_strdup((*tokens)->value);
 			fd = open_outfile(cmd);
-			dup2_and_close(fd, STDOUT_FILENO);
+			close(fd);
 			*tokens = (*tokens)->next;
 		}
 	}

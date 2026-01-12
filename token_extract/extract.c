@@ -33,7 +33,8 @@ int	extract_pipe_token(const char *input, t_token **token)
 	return (1);
 }
 
-int	extract_redirect_token(const char *input, t_token **token)
+
+int	extract_redirect_in(const char *input, t_token **token)
 {
 	*token = malloc(sizeof(t_token));
 	if (!*token)
@@ -54,7 +55,17 @@ int	extract_redirect_token(const char *input, t_token **token)
 			return (1);
 		}
 	}
-	else if (input[0] == '>')
+	free(*token);
+	return (*token = NULL, 0);
+
+}
+
+int	extract_redirect_out(const char *input, t_token **token)
+{
+	*token = malloc(sizeof(t_token));
+	if (!*token)
+		return (0);
+	if (input[0] == '>')
 	{
 		if (input[1] == '>')
 		{
