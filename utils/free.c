@@ -32,10 +32,18 @@ static void	free_cmd(t_cmd *cmd)
 
 void	free_all(t_data *data)
 {
+	t_cmd	*cmd;
+	t_cmd	*next;
+
 	if (data == NULL)
 		return ;
-	if (data->cmd != NULL)
-		free_cmd(data->cmd);
+	cmd = data->cmd;
+	while (cmd != NULL)
+	{
+		next = cmd->next;
+		free_cmd(cmd);
+		cmd = next;
+	}
 	if (data->input != NULL)
 		free(data->input);
 	data->cmd = NULL;
