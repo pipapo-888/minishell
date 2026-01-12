@@ -42,11 +42,11 @@ static void	put_in_redir_in(t_cmd *cmd, t_token **tokens)
 
 static void	put_in_redir_out(t_cmd *cmd, t_token **tokens)
 {
-	int		fd;
+	int	fd;
 
 	fd = -1;
-	if (*tokens != NULL && ((*tokens)->type == REDIR_OUT || \
-				(*tokens)->type == REDIR_APPEND))
+	if (*tokens != NULL && ((*tokens)->type == REDIR_OUT
+			|| (*tokens)->type == REDIR_APPEND))
 	{
 		cmd->type = (*tokens)->type;
 		*tokens = (*tokens)->next;
@@ -60,17 +60,32 @@ static void	put_in_redir_out(t_cmd *cmd, t_token **tokens)
 	}
 }
 
-void	cmd_init(t_cmd *cmd)
+void	cmd_init(t_data *data)
 {
-	cmd->argv = NULL;
-	cmd->path = NULL;
-	cmd->infile = NULL;
-	cmd->outfile = NULL;
-	cmd->type = NO_REDIR;
-	cmd->next = NULL;
+	t_cmd	*new;
+	t_cmd	*temp;
+
+	new = malloc(sizeof(t_cmd));
+	if (new == NULL)
+		return ;
+	new->argv = NULL;
+	new->path = NULL;
+	new->infile = NULL;
+	new->outfile = NULL;
+	new->type = NO_REDIR;
+	new->next = NULL;
+	if (data->cmd == NULL)
+		data->cmd = new;
+	else
+	{
+		temp = data->cmd;
+		while (temp->next != NULL)
+			temp = temp->next;
+		temp->next = new;
+	}
 }
 
-void	put_in_cmd(t_cmd *cmd, t_token **tokens)
+void	put_in_cmd(t_data *data, t_cmd *cmd, t_token **tokens)
 {
 	t_token	*temp;
 
@@ -85,11 +100,7 @@ void	put_in_cmd(t_cmd *cmd, t_token **tokens)
 			put_in_redir_out(cmd, &temp);
 		else if (temp->type == PIPE)
 		{
-			cmd->next = malloc(sizeof(t_cmd));
-			if (cmd->next == NULL)
-				return ;
-			cmd = cmd->next;
-			cmd_init(cmd);
+			cmd_init(data);
 			temp = temp->next;
 		}
 		else

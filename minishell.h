@@ -58,6 +58,7 @@ typedef struct s_data
 {
 	t_cmd	*cmd;
 	t_env	*env;
+	// char	**env_array;
 	char	*input;
 
 }	t_data;
@@ -66,9 +67,9 @@ void	prompt(t_data data);
 char	*search_path(const char *cmd, char *const envp[]);
 char	*get_env_value(char *const envp[], const char *key);
 void	setup_redirects(t_cmd *cmd);
-void	cmd_setup(t_cmd *cmd, char *input, char **ev);
-void	cmd_init(t_cmd *cmd);
-void	put_in_cmd(t_cmd *cmd, t_token **tokens);
+void	cmd_setup(t_data *data, t_cmd *cmd, char *input, char **ev);
+void	cmd_init(t_data *data);
+void	put_in_cmd(t_data *data, t_cmd *cmd, t_token **tokens);
 void	env_init(t_data *data, char **envp);
 char	**env_to_array(t_env *env);
 void	ft_execve(t_cmd *cmd, t_data *data, char **ev);
