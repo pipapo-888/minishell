@@ -1,4 +1,4 @@
-#include "./minishell.h"
+#include "../minishell.h"
 
 int	open_infile(t_cmd *cmd)
 {
