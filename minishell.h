@@ -86,7 +86,8 @@ void	built_in_unset(t_data *data, char **argv);
 // Tokenizer functions
 int		extract_quoted_token(const char *input, t_token **token);
 int		extract_pipe_token(const char *input, t_token **token);
-int		extract_redirect_token(const char *input, t_token **token);
+int		extract_redirect_in(const char *input, t_token **token);
+int		extract_redirect_out(const char *input, t_token **token);
 int		extract_word_token(const char *input, t_token **token);
 t_token	*tokenize(const char *input);
 void	free_tokens(t_token *tokens);
