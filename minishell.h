@@ -64,21 +64,14 @@ typedef struct s_data
 
 void	prompt(t_data data);
 char	*search_path(const char *cmd, char *const envp[]);
-char	**space_tab_split(const char *str);
-void	free_split(char **sp);
 char	*get_env_value(char *const envp[], const char *key);
 void	setup_redirects(t_cmd *cmd);
 void	cmd_setup(t_cmd *cmd, char *input, char **ev);
 void	cmd_init(t_cmd *cmd);
+void	put_in_cmd(t_cmd *cmd, t_token **tokens);
 void	env_init(t_data *data, char **envp);
 char	**env_to_array(t_env *env);
 void	ft_execve(t_cmd *cmd, t_data *data, char **ev);
-int		open_infile(t_cmd *cmd);
-int		open_outfile(t_cmd *cmd);
-
-// Free functions
-void	free_split(char **sp);
-void	free_all(t_data *data);
 
 // Built-in functions
 int		built_in_check(t_cmd *cmd, t_data *data);
@@ -98,7 +91,12 @@ t_token	*tokenize(const char *input);
 void	free_tokens(t_token *tokens);
 
 // utils関係
-void dup2_and_close(int fd, int flag);
+void	dup2_and_close(int fd, int flag);
+int		open_infile(t_cmd *cmd);
+int		open_outfile(t_cmd *cmd);
 
+// Free functions
+void	free_split(char **sp);
+void	free_all(t_data *data);
 
 #endif

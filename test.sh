@@ -70,10 +70,10 @@ run_test "echo with quotes" "echo \"hello world\""
 
 echo -e "${YELLOW}[2/5] Redirection Test${NC}"
 echo "-----------------------------------"
-run_test "output redirection" "echo test > /tmp/minishell_test.txt"
-run_test "input redirection" "cat < /tmp/minishell_test.txt"
-run_test "append redirection" "echo append >> /tmp/minishell_test.txt"
-rm -f /tmp/minishell_test.txt
+run_test "output redirection" "echo test > minishell_test.txt && cat minishell_test.txt"
+run_test "input redirection" "cat < minishell_test.txt"
+run_test "append redirection" "echo append >> minishell_test.txt && cat minishell_test.txt"
+rm -f minishell_test.txt
 
 echo -e "${YELLOW}[3/5] Pipe Test${NC}"
 echo "-----------------------------------"

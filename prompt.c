@@ -1,15 +1,5 @@
 #include "./minishell.h"
 
-void	cmd_init(t_cmd *cmd)
-{
-	cmd->argv = NULL;
-	cmd->path = NULL;
-	cmd->infile = NULL;
-	cmd->outfile = NULL;
-	cmd->type = NO_REDIR;
-	cmd->next = NULL;
-}
-
 void	prompt(t_data data)
 {
 	char	**env;
@@ -34,6 +24,6 @@ void	prompt(t_data data)
 		free_all(&data);
 		return ;
 	}
-	ft_execve(data.cmd, &data, ev);
+	ft_execve(data.cmd, &data, env);
 	free_all(&data);
 }

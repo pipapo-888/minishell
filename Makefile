@@ -8,18 +8,19 @@ SRCS = main.c\
 		token_extract/extract.c\
 		token_extract/tokens.c\
 		init.c\
-		free.c\
+		put_in_cmd.c\
 		execve.c\
 		env_init.c\
 		prompt.c\
-		open_file.c\
 		built_in/cd.c\
 		built_in/echo.c\
 		built_in/env.c\
 		built_in/export.c\
 		built_in/pwd.c\
 		built_in/unset.c\
-		utils/fd_utils.c
+		utils/fd_utils.c\
+		utils/free.c\
+		utils/open_file.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -44,7 +45,7 @@ fclean: clean
 
 re: fclean all
 
-test: all
+test:
 	norminette $(SRCS) minishell.h | grep Error
 	./test.sh
 
