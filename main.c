@@ -27,6 +27,6 @@ int	main(int ac, char **av, char **envp)
 	{
 		prompt(data);
 	}
-	// exit(1);
 	return (0);
 }
+	

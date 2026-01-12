@@ -13,14 +13,14 @@ void	put_in_path(t_cmd *cmd, char **ev)
 	}
 }
 
-void	cmd_setup(t_cmd *cmd, char *input, char **ev)
+void	cmd_setup(t_data *data, t_cmd *cmd, char *input, char **ev)
 {
 	t_token	*tokens;
 
 	tokens = tokenize(input);
 	if (tokens == NULL)
 		return ;
-	put_in_cmd(cmd, &tokens);
+	put_in_cmd(data, cmd, &tokens);
 	free_tokens(tokens);
 	put_in_path(cmd, ev);
 }

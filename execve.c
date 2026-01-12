@@ -10,7 +10,9 @@ int	built_in_check(t_cmd *cmd, t_data *data)
 	if (!ft_strcmp(cmd->argv[0], "cd"))
 	{
 		env = env_to_array(data->env);
-		return (built_in_cd(cmd, env), 0);
+		built_in_cd(cmd, env);
+		free_split(env);
+		return (0);
 	}
 	if (!ft_strcmp(cmd->argv[0], "pwd"))
 		return (built_in_pwd(cmd), 0);
@@ -42,7 +44,5 @@ void	ft_execve(t_cmd *cmd, t_data *data, char **env)
 		exit(1);
 	}
 	else
-	{
 		wait(NULL);
-	}
 }

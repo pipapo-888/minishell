@@ -5,10 +5,7 @@ void	prompt(t_data data)
 	char	**env;
 
 	env = env_to_array(data.env);
-	data.cmd = malloc(sizeof(t_cmd));
-	if (data.cmd == NULL)
-		return ;
-	cmd_init(data.cmd);
+	cmd_init(&data);
 	data.input = readline("minishell$ ");
 	if (data.input == NULL || data.input[0] == '\0')
 	{
@@ -18,7 +15,7 @@ void	prompt(t_data data)
 		return ;
 	}
 	add_history(data.input);
-	cmd_setup(data.cmd, data.input, env);
+	cmd_setup(&data, data.cmd, data.input, env);
 	if (data.cmd->argv == NULL)
 	{
 		free_all(&data);
@@ -26,4 +23,5 @@ void	prompt(t_data data)
 	}
 	ft_execve(data.cmd, &data, env);
 	free_all(&data);
+	free_split(env);
 }
