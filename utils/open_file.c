@@ -1,31 +1,31 @@
 #include "../minishell.h"
 
-int	open_infile(t_cmd *cmd)
+int	open_infile(const char *infile)
 {
 	int	fd;
 
-	fd = open(cmd->infile, O_RDONLY);
+	fd = open(infile, O_RDONLY);
 	if (fd < 0)
 	{
-		perror(cmd->infile);
+		perror(infile);
 		return (-1);
 	}
 	return (fd);
 }
 
-int	open_outfile(t_cmd *cmd)
+int	open_outfile(const char *outfile, t_token_type type)
 {
 	int	fd;
 
-	if (cmd->type == REDIR_OUT)
-		fd = open(cmd->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	else if (cmd->type == REDIR_APPEND)
-		fd = open(cmd->outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (type == REDIR_OUT)
+		fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	else if (type == REDIR_APPEND)
+		fd = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else
 		fd = -1;
 	if (fd < 0)
 	{
-		perror(cmd->outfile);
+		perror(outfile);
 		return (-1);
 	}
 	return (fd);

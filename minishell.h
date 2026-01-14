@@ -64,24 +64,16 @@ typedef struct s_data
 }	t_data;
 
 void	prompt(t_data data);
-char	*search_path(const char *cmd, char *const envp[]);
-char	*get_env_value(char *const envp[], const char *key);
-void	setup_redirects(t_cmd *cmd);
+void	ft_execve(t_cmd *cmd, t_data *data, char **ev);
+
+// env
+void	env_init(t_data *data, char **envp);
+char	**env_to_array(t_env *env);
+
+// cmd_init/put_in_cmd.c
 void	cmd_setup(t_data *data, t_cmd *cmd, char *input, char **ev);
 void	cmd_init(t_data *data);
 void	put_in_cmd(t_data *data, t_cmd *cmd, t_token **tokens);
-void	env_init(t_data *data, char **envp);
-char	**env_to_array(t_env *env);
-void	ft_execve(t_cmd *cmd, t_data *data, char **ev);
-
-// Built-in functions
-int		built_in_check(t_cmd *cmd, t_data *data);
-void	built_in_cd(t_cmd *cmd, char **ev);
-void	built_in_echo(t_cmd *cmd);
-void	built_in_env(t_env *env);
-void	built_in_export(t_data *data, char **argv);
-void	built_in_pwd(t_cmd *cmd);
-void	built_in_unset(t_data *data, char **argv);
 
 // Tokenizer functions
 int		extract_quoted_token(const char *input, t_token **token);
@@ -92,10 +84,22 @@ int		extract_word_token(const char *input, t_token **token);
 t_token	*tokenize(const char *input);
 void	free_tokens(t_token *tokens);
 
+// Built-in functions
+int		built_in_check(t_cmd *cmd, t_data *data);
+void	built_in_cd(t_cmd *cmd, char **ev);
+void	built_in_echo(t_cmd *cmd);
+void	built_in_env(t_env *env);
+void	built_in_export(t_data *data, char **argv);
+void	built_in_pwd(t_cmd *cmd);
+void	built_in_unset(t_data *data, char **argv);
+
 // utils関係
 void	dup2_and_close(int fd, int flag);
-int		open_infile(t_cmd *cmd);
-int		open_outfile(t_cmd *cmd);
+int		open_infile(const char *infile);
+int		open_outfile(const char *outfile, t_token_type type);
+void	setup_redirects(t_cmd *cmd);
+char	*search_path(const char *cmd, char *const envp[]);
+char	*get_env_value(char *const envp[], const char *key);
 
 // Free functions
 void	free_split(char **sp);

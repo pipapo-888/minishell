@@ -28,36 +28,50 @@ static void	put_in_word(t_cmd *cmd, t_token **tokens)
 
 static void	put_in_redir_in(t_cmd *cmd, t_token **tokens)
 {
-	if ((*tokens)->type == REDIR_IN || (*tokens)->type == HEREDOC)
-	{
+	char		*infile;
+	int			fd;
+
+	if ((*tokens)->type != REDIR_IN && (*tokens)->type != HEREDOC)
+		return ;
+	if (cmd->type != REDIR_OUT && cmd->type != REDIR_APPEND)
 		cmd->type = (*tokens)->type;
-		*tokens = (*tokens)->next;
-		if (*tokens != NULL && (*tokens)->type == WORD)
-		{
-			cmd->infile = ft_strdup((*tokens)->value);
-			*tokens = (*tokens)->next;
-		}
+	*tokens = (*tokens)->next;
+	if (*tokens == NULL || (*tokens)->type != WORD)
+		return ;
+	infile = (*tokens)->value;
+	fd = open_infile(infile);
+	if (fd >= 0)
+		close(fd);
+	if (cmd->type != REDIR_OUT && cmd->type != REDIR_APPEND)
+	{
+		if (cmd->infile != NULL)
+			free(cmd->infile);
+		cmd->infile = ft_strdup(infile);
 	}
+	*tokens = (*tokens)->next;
 }
 
 static void	put_in_redir_out(t_cmd *cmd, t_token **tokens)
 {
-	int	fd;
+	char		*outfile;
+	int			fd;
 
-	fd = 0;
-	if (*tokens != NULL && ((*tokens)->type == REDIR_OUT
-			|| (*tokens)->type == REDIR_APPEND))
-	{
-		cmd->type = (*tokens)->type;
-		*tokens = (*tokens)->next;
-		if (*tokens != NULL && (*tokens)->type == WORD)
-		{
-			cmd->outfile = ft_strdup((*tokens)->value);
-			fd = open_outfile(cmd);
-			close(fd);
-			*tokens = (*tokens)->next;
-		}
-	}
+	if (*tokens == NULL)
+		return ;
+	if ((*tokens)->type != REDIR_OUT && (*tokens)->type != REDIR_APPEND)
+		return ;
+	cmd->type = (*tokens)->type;
+	*tokens = (*tokens)->next;
+	if (*tokens == NULL || (*tokens)->type != WORD)
+		return ;
+	outfile = (*tokens)->value;
+	fd = open_outfile(outfile, cmd->type);
+	if (fd >= 0)
+		close(fd);
+	if (cmd->outfile != NULL)
+		free(cmd->outfile);
+	cmd->outfile = ft_strdup(outfile);
+	*tokens = (*tokens)->next;
 }
 
 void	cmd_init(t_data *data)

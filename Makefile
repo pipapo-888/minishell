@@ -8,7 +8,7 @@ SRCS = main.c\
 		prompt.c\
 		cmd_init/extract.c\
 		cmd_init/tokens.c\
-		cmd_init/init.c\
+		cmd_init/cmd_setup.c\
 		cmd_init/put_in_cmd.c\
 		built_in/cd.c\
 		built_in/echo.c\
