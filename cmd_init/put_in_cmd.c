@@ -86,6 +86,7 @@ void	cmd_init(t_data *data)
 	new->path = NULL;
 	new->infile = NULL;
 	new->outfile = NULL;
+	new->heredoc_content = NULL;
 	new->type = NO_REDIR;
 	new->next = NULL;
 	if (data->cmd == NULL)
