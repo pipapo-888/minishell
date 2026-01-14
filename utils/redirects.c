@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 void	setup_redirects(t_cmd *cmd)
 {

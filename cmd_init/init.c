@@ -1,4 +1,4 @@
-#include "./minishell.h"
+#include "../minishell.h"
 
 void	put_in_path(t_cmd *cmd, char **ev)
 {

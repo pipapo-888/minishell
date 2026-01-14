@@ -1,4 +1,4 @@
-#include "./minishell.h"
+#include "../minishell.h"
 
 static void	put_in_word(t_cmd *cmd, t_token **tokens)
 {

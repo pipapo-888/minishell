@@ -3,15 +3,13 @@ CC = gcc
 CFLAGS = -g -Wall -Wextra -Werror
 
 SRCS = main.c\
-		search.c\
-		redirects.c\
-		token_extract/extract.c\
-		token_extract/tokens.c\
-		init.c\
-		put_in_cmd.c\
 		execve.c\
 		env_init.c\
 		prompt.c\
+		cmd_init/extract.c\
+		cmd_init/tokens.c\
+		cmd_init/init.c\
+		cmd_init/put_in_cmd.c\
 		built_in/cd.c\
 		built_in/echo.c\
 		built_in/env.c\
@@ -20,6 +18,8 @@ SRCS = main.c\
 		built_in/unset.c\
 		utils/fd_utils.c\
 		utils/free.c\
+		utils/search.c\
+		utils/redirects.c\
 		utils/open_file.c
 
 OBJS = $(SRCS:.c=.o)
