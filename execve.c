@@ -27,27 +27,27 @@ int	built_in_check(t_cmd *cmd, t_data *data)
 	return (1);
 }
 
-// void	ft_execve(t_cmd *cmd, t_data *data, char **env)
-// {
-// 	pid_t	pid;
+void	child_prosess(t_data *data, t_cmd *cmd, char **env, int pfd[2],
+		int prev_fd)
+{
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGINT, SIG_DFL);
+	if (prev_fd != -1)
+		dup2_and_close(prev_fd, STDIN_FILENO);
+	if (cmd->next != NULL)
+	{
+		close(pfd[0]);
+		dup2_and_close(pfd[1], STDOUT_FILENO);
+	}
+	setup_redirects(cmd);
+	if (built_in_check(cmd, data) == 0)
+		exit(0);
+	execve(cmd->path, cmd->argv, env);
+	perror("execve");
+	exit(1);
+}
 
-// 	if (built_in_check(cmd, data) == 0)
-// 		return ;
-// 	pid = fork();
-// 	if (pid == 0)
-// 	{
-// 		signal(SIGQUIT, SIG_DFL);
-// 		signal(SIGINT, SIG_DFL);
-// 		setup_redirects(cmd);
-// 		execve(cmd->path, cmd->argv, env);
-// 		perror("execve");
-// 		exit(1);
-// 	}
-// 	else
-// 		wait(NULL);
-// }
-
-void ft_execve(t_cmd *cmd, t_data *data, char **env)
+void	ft_execve(t_cmd *cmd, t_data *data, char **env)
 {
 	int		pfd[2];
 	int		prev_fd;
@@ -58,35 +58,11 @@ void ft_execve(t_cmd *cmd, t_data *data, char **env)
 		return ;
 	while (cmd != NULL)
 	{
-		// 次のコマンドがあればパイプ作成
 		if (cmd->next != NULL)
 			pipe(pfd);
 		pid = fork();
 		if (pid == 0)
-		{
-			signal(SIGQUIT, SIG_DFL);
-			signal(SIGINT, SIG_DFL);
-			// 前のパイプから読み取り（最初のコマンド以外）
-			if (prev_fd != -1)
-			{
-				dup2(prev_fd, STDIN_FILENO);
-				close(prev_fd);
-			}
-			// 次のパイプに書き込み（最後のコマンド以外）
-			if (cmd->next != NULL)
-			{
-				close(pfd[0]);
-				dup2(pfd[1], STDOUT_FILENO);
-				close(pfd[1]);
-			}
-			setup_redirects(cmd);
-			if (built_in_check(cmd, data) == 0)
-				exit(0);
-			execve(cmd->path, cmd->argv, env);
-			perror("execve");
-			exit(1);
-		}
-		// 親プロセス: fdを閉じて次へ（waitはまだしない！）
+			child_prosess(data, cmd, env, pfd, prev_fd);
 		if (prev_fd != -1)
 			close(prev_fd);
 		if (cmd->next != NULL)
@@ -96,7 +72,6 @@ void ft_execve(t_cmd *cmd, t_data *data, char **env)
 		}
 		cmd = cmd->next;
 	}
-	// 全ての子プロセスを待機（ループの外で！）
 	while (wait(NULL) > 0)
 		;
 }
