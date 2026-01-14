@@ -1,5 +1,53 @@
 #include "./minishell.h"
 
+static int	quote_unclosed(char *input)
+{
+	int		i;
+	char	quote;
+
+	i = 0;
+	while (input[i] != '\0')
+	{
+		if (input[i] == '\'' || input[i] == '\"')
+		{
+			quote = input[i];
+			i++;
+			while (input[i] != '\0' && input[i] != quote)
+				i++;
+			if (input[i] == '\0')
+				return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+char	*free_strjoin(char *str1, char *str2)
+{
+	char	*new_line;
+
+	if (str1 == NULL && str2 == NULL)
+		return (NULL);
+	new_line = ft_strjoin(str1, str2);
+	free(str1);
+	return (new_line);
+}
+
+void	ft_wait_input(t_data *data)
+{
+	char	*next_line;
+
+	while (quote_unclosed(data->input) != 0)
+	{
+		data->input = free_strjoin(data->input, "\n");
+		next_line = readline("> ");
+		if (next_line == NULL)
+			break ;
+		data->input = free_strjoin(data->input, next_line);
+		free(next_line);
+	}
+}
+
 void	prompt(t_data data)
 {
 	char	**env;
@@ -7,6 +55,7 @@ void	prompt(t_data data)
 	env = env_to_array(data.env);
 	cmd_init(&data);
 	data.input = readline("minishell$ ");
+	ft_wait_input(&data);
 	if (data.input == NULL || data.input[0] == '\0')
 	{
 		free_all(&data);
