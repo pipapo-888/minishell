@@ -99,22 +99,35 @@ void	cmd_init(t_data *data)
 	}
 }
 
+static t_cmd	*get_last_cmd(t_data *data)
+{
+	t_cmd	*temp;
+
+	temp = data->cmd;
+	while (temp->next != NULL)
+		temp = temp->next;
+	return (temp);
+}
+
 void	put_in_cmd(t_data *data, t_cmd *cmd, t_token **tokens)
 {
 	t_token	*temp;
+	t_cmd	*current_cmd;
 
 	temp = *tokens;
+	current_cmd = cmd;
 	while (temp != NULL)
 	{
 		if (temp->type == WORD)
-			put_in_word(cmd, &temp);
+			put_in_word(current_cmd, &temp);
 		else if (temp->type == REDIR_IN || temp->type == HEREDOC)
-			put_in_redir_in(cmd, &temp);
+			put_in_redir_in(current_cmd, &temp);
 		else if (temp->type == REDIR_OUT || temp->type == REDIR_APPEND)
-			put_in_redir_out(cmd, &temp);
+			put_in_redir_out(current_cmd, &temp);
 		else if (temp->type == PIPE)
 		{
 			cmd_init(data);
+			current_cmd = get_last_cmd(data);
 			temp = temp->next;
 		}
 		else
