@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 void	setup_redirects(t_cmd *cmd)
 {
@@ -8,13 +8,13 @@ void	setup_redirects(t_cmd *cmd)
 		return ;
 	if (cmd->infile != NULL)
 	{
-		fd = open_infile(cmd);
+		fd = open_infile(cmd->infile);
 		dup2(fd, STDIN_FILENO);
 		close(fd);
 	}
 	if (cmd->outfile != NULL)
 	{
-		fd = open_outfile(cmd);
+		fd = open_outfile(cmd->outfile, cmd->type);
 		if (fd < 0)
 		{
 			perror(cmd->outfile);
