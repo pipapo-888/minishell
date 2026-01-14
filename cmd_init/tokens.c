@@ -31,9 +31,11 @@ static int	extract_token(const char *input, t_token **token)
 	if (input[0] == '"' || input[0] == '\'')
 		return (extract_quoted_token(input, token));
 	else if (input[0] == '|')
-		return (extract_pipe_token(input, token));
-	else if (input[0] == '<')
-		return (extract_redirect_in(input, token));
+		return (extract_pipe_token(token));
+	else if (input[0] == '<' && input[1] != '<')
+		return (extract_redirect_in(token));
+	else if (input[0] == '<' && input[1] == '<')
+		return (extract_heredoc(token));
 	else if (input[0] == '>')
 		return (extract_redirect_out(input, token));
 	else

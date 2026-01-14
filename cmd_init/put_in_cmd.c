@@ -99,6 +99,32 @@ void	cmd_init(t_data *data)
 	}
 }
 
+void	ft_herdoc(t_cmd *cmd, char *key)
+{
+	char	*line;
+	char	*content;
+
+	content = ft_strdup("");
+	if (content == NULL)
+		return ;
+	while (1)
+	{
+		line = readline("> ");
+		if (line == NULL)
+			break ;
+		if (ft_strcmp(line, key) == 0)
+		{
+			free(line);
+			break ;
+		}
+		content = free_strjoin(content, line);
+		content = free_strjoin(content, "\n");
+		free(line);
+	}
+	cmd->heredoc_content = content;
+	cmd->type = HEREDOC;
+}
+
 void	put_in_cmd(t_data *data, t_cmd *cmd, t_token **tokens)
 {
 	t_token	*temp;
@@ -108,8 +134,17 @@ void	put_in_cmd(t_data *data, t_cmd *cmd, t_token **tokens)
 	{
 		if (temp->type == WORD)
 			put_in_word(cmd, &temp);
-		else if (temp->type == REDIR_IN || temp->type == HEREDOC)
+		else if (temp->type == REDIR_IN)
 			put_in_redir_in(cmd, &temp);
+		else if (temp->type == HEREDOC)
+		{
+			temp = temp->next;
+			if (temp != NULL && temp->type == WORD)
+			{
+				ft_herdoc(cmd, temp->value);
+				temp = temp->next;
+			}
+		}
 		else if (temp->type == REDIR_OUT || temp->type == REDIR_APPEND)
 			put_in_redir_out(cmd, &temp);
 		else if (temp->type == PIPE)

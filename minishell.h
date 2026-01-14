@@ -42,6 +42,7 @@ typedef struct s_cmd
 	char			*path;
 	char			*infile;
 	char			*outfile;
+	char			*heredoc_content;
 	t_token_type	type;
 	struct s_cmd	*next;
 }	t_cmd;
@@ -65,6 +66,7 @@ typedef struct s_data
 
 void	prompt(t_data data);
 void	ft_execve(t_cmd *cmd, t_data *data, char **ev);
+char	*free_strjoin(char *str1, char *str2);
 
 // env
 void	env_init(t_data *data, char **envp);
@@ -77,10 +79,11 @@ void	put_in_cmd(t_data *data, t_cmd *cmd, t_token **tokens);
 
 // Tokenizer functions
 int		extract_quoted_token(const char *input, t_token **token);
-int		extract_pipe_token(const char *input, t_token **token);
-int		extract_redirect_in(const char *input, t_token **token);
+int		extract_pipe_token(t_token **token);
+int		extract_redirect_in(t_token **token);
 int		extract_redirect_out(const char *input, t_token **token);
 int		extract_word_token(const char *input, t_token **token);
+int		extract_heredoc(t_token **token);
 t_token	*tokenize(const char *input);
 void	free_tokens(t_token *tokens);
 
