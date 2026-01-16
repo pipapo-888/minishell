@@ -38,6 +38,14 @@ char	*search_path(const char *cmd, char *const envp[])
 	char	*full;
 	int		i;
 
+	if (cmd == NULL)
+		return (NULL);
+	if (ft_strchr(cmd, '/') != NULL)
+	{
+		if (access(cmd, X_OK) == 0)
+			return (ft_strdup(cmd));
+		return (NULL);
+	}
 	path = get_env_value(envp, "PATH");
 	if (path == NULL)
 		return (NULL);
