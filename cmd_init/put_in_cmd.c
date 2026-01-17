@@ -146,15 +146,15 @@ void	put_in_cmd(t_data *data, t_cmd *cmd, t_token **tokens)
 	while (temp != NULL)
 	{
 		if (temp->type == WORD)
-			put_in_word(cmd, &temp);
+			put_in_word(current_cmd, &temp);
 		else if (temp->type == REDIR_IN)
-			put_in_redir_in(cmd, &temp);
+			put_in_redir_in(current_cmd, &temp);
 		else if (temp->type == HEREDOC)
 		{
 			temp = temp->next;
 			if (temp != NULL && temp->type == WORD)
 			{
-				ft_herdoc(cmd, temp->value);
+				ft_herdoc(current_cmd, temp->value);
 				temp = temp->next;
 			}
 		}
