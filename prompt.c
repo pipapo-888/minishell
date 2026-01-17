@@ -37,6 +37,8 @@ void	ft_wait_input(t_data *data)
 {
 	char	*next_line;
 
+	if (data->input == NULL)
+		return ;
 	while (quote_unclosed(data->input) != 0)
 	{
 		data->input = free_strjoin(data->input, "\n");

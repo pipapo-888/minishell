@@ -6,7 +6,7 @@
 #    By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/28 16:21:00 by habe              #+#    #+#              #
-#    Updated: 2025/12/28 15:24:18 by habe             ###   ########.fr        #
+#    Updated: 2026/01/17 11:01:29 by habe             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ SRC = \
 	ft_atoi.c\
 	ft_bzero.c\
 	ft_calloc.c\
+	ft_has_slash.c\
 	ft_isalnum.c\
 	ft_isalpha.c\
 	ft_isascii.c\
