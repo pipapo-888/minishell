@@ -122,8 +122,8 @@ void	ft_heredoc(t_cmd *cmd, char *key, int quoted, t_env *env)
 			free(line);
 			break ;
 		}
-		// if (quoted == 0)
-		// 	line = expand_variables(line, env);
+		if (quoted == 0)
+			line = expand_variables(line, env);
 		if (line == NULL)
 			line = ft_strdup("");
 		tmp = ft_strjoin(line, "\n");
