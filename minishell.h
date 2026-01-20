@@ -10,7 +10,7 @@
 # include <readline/history.h>
 # include "libft/libft.h"
 # include <fcntl.h>
-#include <signal.h>
+# include <signal.h>
 
 typedef enum e_export_type
 {
@@ -33,8 +33,15 @@ typedef struct s_token
 {
 	t_token_type		type;
 	char				*value;
+	int					quoted;
 	struct s_token		*next;
 }	t_token;
+
+typedef struct s_heredoc
+{
+	char				*content;
+	struct s_heredoc	*next;
+}	t_heredoc;
 
 typedef struct s_cmd
 {
@@ -42,7 +49,7 @@ typedef struct s_cmd
 	char			*path;
 	char			*infile;
 	char			*outfile;
-	char			*heredoc_content;
+	t_heredoc		*heredoc;
 	t_token_type	type;
 	struct s_cmd	*next;
 }	t_cmd;
@@ -103,6 +110,7 @@ int		open_outfile(const char *outfile, t_token_type type);
 void	setup_redirects(t_cmd *cmd);
 char	*search_path(const char *cmd, char *const envp[]);
 char	*get_env_value(char *const envp[], const char *key);
+char	*expand_variables(char *str, t_env *env);
 
 // Free functions
 void	free_split(char **sp);

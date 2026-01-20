@@ -20,7 +20,8 @@ SRCS = main.c\
 		utils/free.c\
 		utils/search.c\
 		utils/redirects.c\
-		utils/open_file.c
+		utils/open_file.c\
+		utils/expand_variables.c
 
 OBJS = $(SRCS:.c=.o)
 

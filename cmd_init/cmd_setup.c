@@ -7,7 +7,7 @@ void	put_in_path(t_cmd *cmd, char **ev)
 	head = cmd;
 	while (head != NULL)
 	{
-		if (ft_has_slash(head->argv[0]) != 0)
+		if (ft_strchr(head->argv[0], '/') != NULL)
 		{
 			if (access(head->argv[0], X_OK) == 0)
 				head->path = ft_strdup(head->argv[0]);
