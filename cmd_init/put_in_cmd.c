@@ -111,24 +111,32 @@ void	cmd_init(t_data *data)
 void	ft_heredoc(t_cmd *cmd, char *key, int quoted, t_env *env)
 {
 	char	*line;
+	char	*content;
 	char	*tmp;
 
 	cmd->heredoc->content = ft_strdup("");
 	while (1)
 	{
 		line = readline("> ");
+		if (line == NULL)
+			line = ft_strdup("");
 		if (ft_strcmp(line, key) == 0)
 		{
 			free(line);
 			break ;
 		}
-		if (quoted == 0)
-			line = expand_variables(line, env);
-		if (line == NULL)
-			line = ft_strdup("");
-		tmp = ft_strjoin(line, "\n");
+		if (quoted == 0 && ft_strchr(line, '$') != NULL)
+		{
+			content = expand_variables(line, env);
+			free(line);
+			if (content == NULL)
+				content = ft_strdup("");
+		}
+		else
+			content = line;
+		tmp = ft_strjoin(content, "\n");
 		cmd->heredoc->content = free_strjoin(cmd->heredoc->content, tmp);
-		free(line);
+		free(content);
 		free(tmp);
 	}
 	cmd->type = HEREDOC;
