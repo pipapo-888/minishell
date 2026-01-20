@@ -33,7 +33,7 @@ typedef struct s_token
 {
 	t_token_type		type;
 	char				*value;
-	// int					quoted; <-検討中...
+	int					quoted;
 	struct s_token		*next;
 }	t_token;
 
@@ -110,6 +110,7 @@ int		open_outfile(const char *outfile, t_token_type type);
 void	setup_redirects(t_cmd *cmd);
 char	*search_path(const char *cmd, char *const envp[]);
 char	*get_env_value(char *const envp[], const char *key);
+char	*expand_variables(char *str, t_env *env);
 
 // Free functions
 void	free_split(char **sp);

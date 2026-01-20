@@ -108,29 +108,29 @@ void	cmd_init(t_data *data)
 	}
 }
 
-void	ft_heredoc(t_cmd *cmd, char *key)
+void	ft_heredoc(t_cmd *cmd, char *key, int quoted, t_env *env)
 {
 	char	*line;
-	char	*content;
+	char	*tmp;
 
-	content = ft_strdup("");
-	if (content == NULL)
-		return ;
+	cmd->heredoc->content = ft_strdup("");
 	while (1)
 	{
 		line = readline("> ");
-		if (line == NULL)
-			break ;
 		if (ft_strcmp(line, key) == 0)
 		{
 			free(line);
 			break ;
 		}
-		content = free_strjoin(content, line);
-		content = free_strjoin(content, "\n");
+		// if (quoted == 0)
+		// 	line = expand_variables(line, env);
+		if (line == NULL)
+			line = ft_strdup("");
+		tmp = ft_strjoin(line, "\n");
+		cmd->heredoc->content = free_strjoin(cmd->heredoc->content, tmp);
 		free(line);
+		free(tmp);
 	}
-	cmd->heredoc->content = content;
 	cmd->type = HEREDOC;
 }
 
@@ -162,8 +162,13 @@ void	put_in_cmd(t_data *data, t_cmd *cmd, t_token **tokens)
 			temp = temp->next;
 			if (temp != NULL && temp->type == WORD)
 			{
-				ft_heredoc(current_cmd, temp->value);
+				ft_heredoc(current_cmd, temp->value, temp->quoted, data->env);
 				temp = temp->next;
+			}
+			else
+			{
+				write(2, "minishell: syntax error near unexpected token `newline'\n", 56);
+				return ;
 			}
 		}
 		else if (temp->type == REDIR_OUT || temp->type == REDIR_APPEND)
