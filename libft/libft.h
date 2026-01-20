@@ -6,7 +6,7 @@
 /*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 08:57:41 by habe              #+#    #+#             */
-/*   Updated: 2026/01/17 11:01:12 by habe             ###   ########.fr       */
+/*   Updated: 2026/01/20 11:48:38 by habe             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ int		ft_isascii(int c);
 int		ft_isdigit(int c);
 int		ft_isprint(int c);
 int		ft_isspace(char c);
-int		ft_has_slash(const char *str);
 char	*ft_itoa(int n);
 void	*ft_memchr(const void *s, int c, size_t n);
 int		ft_memcmp(const void *s1, const void *s2, size_t n);

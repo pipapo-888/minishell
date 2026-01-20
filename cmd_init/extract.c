@@ -16,6 +16,7 @@ int	extract_quoted_token(const char *input, t_token **token)
 		return (0);
 	(*token)->type = WORD;
 	(*token)->value = ft_substr(input, 1, end_quote - 1);
+	// (*token)->quoted = 1;
 	(*token)->next = NULL;
 	return (end_quote + 1);
 }

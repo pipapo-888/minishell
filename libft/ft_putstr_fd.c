@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: habe <@student.42tokyo.jp>                 +#+  +:+       +#+        */
+/*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:21:34 by habe              #+#    #+#             */
-/*   Updated: 2025/05/15 15:12:18 by habe             ###   ########.fr       */
+/*   Updated: 2026/01/17 12:07:39 by habe             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,12 @@
 
 void	ft_putstr_fd(char *s, int fd)
 {
+	int	len;
+
 	if (!s)
 		return ;
-	while (*s)
-	{
-		write(fd, s, 1);
-		s++;
-	}
+	len = ft_strlen(s);
+	write(fd, s, len);
 }
 
 // #include <unistd.h>

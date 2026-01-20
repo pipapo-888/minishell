@@ -1,20 +1,36 @@
 #include "../minishell.h"
 
+static void	heredoc(t_cmd *cmd)
+{
+	int		pipefd[2];
+	char	**split;
+	int		i;
+
+	split = ft_split(cmd->heredoc->content, '\n');
+	if (split == NULL)
+		return ;
+	i = 0;
+	pipe(pipefd);
+	while (split[i] != NULL)
+	{
+		ft_putstr_fd(split[i], pipefd[1]);
+		write(pipefd[1], "\n", 1);
+		i++;
+	}
+	free_split(split);
+	close(pipefd[1]);
+	dup2(pipefd[0], STDIN_FILENO);
+	close(pipefd[0]);
+}
+
 void	setup_redirects(t_cmd *cmd)
 {
 	int	fd;
-	int	pipefd[2];
 
 	if (cmd == NULL)
 		return ;
-	if (cmd->heredoc_content != NULL)
-	{
-		pipe(pipefd);
-		write(pipefd[1], cmd->heredoc_content, ft_strlen(cmd->heredoc_content));
-		close(pipefd[1]);
-		dup2(pipefd[0], STDIN_FILENO);
-		close(pipefd[0]);
-	}
+	if (cmd->heredoc->content != NULL)
+		heredoc(cmd);
 	else if (cmd->infile != NULL)
 	{
 		fd = open_infile(cmd->infile);

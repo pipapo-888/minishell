@@ -74,19 +74,27 @@ static void	put_in_redir_out(t_cmd *cmd, t_token **tokens)
 	*tokens = (*tokens)->next;
 }
 
+void	heredoc_init(t_cmd *cmd)
+{
+	cmd->heredoc = malloc(sizeof(t_heredoc));
+	if (cmd->heredoc == NULL)
+		return ;
+	cmd->heredoc->content = NULL;
+}
+
 void	cmd_init(t_data *data)
 {
 	t_cmd	*new;
 	t_cmd	*temp;
 
 	new = malloc(sizeof(t_cmd));
+	heredoc_init(new);
 	if (new == NULL)
 		return ;
 	new->argv = NULL;
 	new->path = NULL;
 	new->infile = NULL;
 	new->outfile = NULL;
-	new->heredoc_content = NULL;
 	new->type = NO_REDIR;
 	new->next = NULL;
 	if (data->cmd == NULL)
@@ -100,7 +108,7 @@ void	cmd_init(t_data *data)
 	}
 }
 
-void	ft_herdoc(t_cmd *cmd, char *key)
+void	ft_heredoc(t_cmd *cmd, char *key)
 {
 	char	*line;
 	char	*content;
@@ -122,7 +130,7 @@ void	ft_herdoc(t_cmd *cmd, char *key)
 		content = free_strjoin(content, "\n");
 		free(line);
 	}
-	cmd->heredoc_content = content;
+	cmd->heredoc->content = content;
 	cmd->type = HEREDOC;
 }
 
@@ -154,7 +162,7 @@ void	put_in_cmd(t_data *data, t_cmd *cmd, t_token **tokens)
 			temp = temp->next;
 			if (temp != NULL && temp->type == WORD)
 			{
-				ft_herdoc(current_cmd, temp->value);
+				ft_heredoc(current_cmd, temp->value);
 				temp = temp->next;
 			}
 		}
