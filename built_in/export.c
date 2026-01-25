@@ -1,16 +1,5 @@
 #include "../minishell.h"
 
-static t_env	*find_key(t_env *env, char *key)
-{
-	while (env)
-	{
-		if (ft_strcmp(env->key, key) == 0)
-			return (env);
-		env = env->next;
-	}
-	return (NULL);
-}
-
 static t_env	*create_export_node(char *key, char *value)
 {
 	t_env	*node;
@@ -45,10 +34,12 @@ static void	add_env_back(t_env **head, t_env *new_node)
 	tmp->next = new_node;
 }
 
-void if_existing(t_env *existing, char *value, char *key)
+void	if_existing(t_env *existing, char *value, char *key)
 {
-	free(existing->value);
-	existing->value = value;
+	if (existing->value && strcmp(key, "OLDPWD") != 0)
+		free(existing->value);
+	if (strcmp(key, "OLDPWD") != 0 && value == NULL)
+		existing->value = value;
 	existing->type = SHOW;
 	free(key);
 }
@@ -89,6 +80,36 @@ static void	export_one(t_data *data, char *arg)
 		add_new_env(data, key, value);
 }
 
+static int	is_valid_identifier(char *str)
+{
+	int	i;
+
+	if (!str || !*str)
+		return (0);
+	if (!ft_isalpha(str[0]) && str[0] != '_')
+		return (0);
+	i = 1;
+	while (str[i] && str[i] != '=')
+	{
+		if (!ft_isalnum(str[i]) && str[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	examine_argv(char *str)
+{
+	if (!is_valid_identifier(str))
+	{
+		ft_putstr_fd("minishell: export: `", 2);
+		ft_putstr_fd(str, 2);
+		ft_putstr_fd("': not a valid identifier\n", 2);
+		return (1);
+	}
+	return (0);
+}
+
 void	built_in_export(t_data *data, char **argv)
 {
 	int	i;
@@ -96,6 +117,7 @@ void	built_in_export(t_data *data, char **argv)
 	i = 1;
 	while (argv[i])
 	{
+		if (examine_argv(argv[i]) == 0)
 		export_one(data, argv[i]);
 		i++;
 	}

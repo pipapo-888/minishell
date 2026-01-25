@@ -15,6 +15,7 @@
 typedef enum e_export_type
 {
 	SHOW,
+	EXPAND,
 	DONT_SHOW
 }	t_export_type;
 
@@ -77,7 +78,7 @@ char	*free_strjoin(char *str1, char *str2);
 
 // env
 void	env_init(t_data *data, char **envp);
-char	**env_to_array(t_env *env);
+char	**env_to_array(t_env *env, t_export_type type);
 
 // cmd_init/put_in_cmd.c
 void	cmd_setup(t_data *data, t_cmd *cmd, char *input, char **ev);
@@ -96,7 +97,7 @@ void	free_tokens(t_token *tokens);
 
 // Built-in functions
 int		built_in_check(t_cmd *cmd, t_data *data);
-void	built_in_cd(t_cmd *cmd, char **ev);
+void	built_in_cd(t_cmd *cmd, char **ev, t_data *data);
 void	built_in_echo(t_cmd *cmd);
 void	built_in_env(t_env *env);
 void	built_in_export(t_data *data, char **argv);
@@ -105,6 +106,7 @@ void	built_in_unset(t_data *data, char **argv);
 
 // utils関係
 int		dup2_and_close(int fd, int flag);
+t_env	*find_key(t_env *env, char *key);
 int		open_infile(const char *infile);
 int		open_outfile(const char *outfile, t_token_type type);
 int		setup_redirects(t_cmd *cmd);
