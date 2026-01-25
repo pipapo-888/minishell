@@ -89,6 +89,36 @@ static void	export_one(t_data *data, char *arg)
 		add_new_env(data, key, value);
 }
 
+static int	is_valid_identifier(char *str)
+{
+	int	i;
+
+	if (!str || !*str)
+		return (0);
+	if (!ft_isalpha(str[0]) && str[0] != '_')
+		return (0);
+	i = 1;
+	while (str[i] && str[i] != '=')
+	{
+		if (!ft_isalnum(str[i]) && str[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	examine_argv(char *str)
+{
+	if (!is_valid_identifier(str))
+	{
+		ft_putstr_fd("minishell: export: `", 2);
+		ft_putstr_fd(str, 2);
+		ft_putstr_fd("': not a valid identifier\n", 2);
+		return (1);
+	}
+	return (0);
+}
+
 void	built_in_export(t_data *data, char **argv)
 {
 	int	i;
@@ -96,7 +126,8 @@ void	built_in_export(t_data *data, char **argv)
 	i = 1;
 	while (argv[i])
 	{
-		export_one(data, argv[i]);
+		if (examine_argv(argv[i]) == 0)
+			export_one(data, argv[i]);
 		i++;
 	}
 }

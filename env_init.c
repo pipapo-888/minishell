@@ -105,6 +105,6 @@ void	env_init(t_data *data, char **envp)
 		i++;
 	}
 	env_add_back(&data->env, create_env_node("?"));
-	// env_add_back(&data->env, create_env_node("PATH=asdfklasjfl/"));
+	env_add_back(&data->env, create_env_node("PATH=asdfklasjfl/"));
 
 }
