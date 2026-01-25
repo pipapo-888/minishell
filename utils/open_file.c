@@ -7,6 +7,7 @@ int	open_infile(const char *infile)
 	fd = open(infile, O_RDONLY);
 	if (fd < 0)
 	{
+		write(2, "minishell: ", 11);
 		perror(infile);
 		return (-1);
 	}
@@ -25,6 +26,7 @@ int	open_outfile(const char *outfile, t_token_type type)
 		fd = -1;
 	if (fd < 0)
 	{
+		write(2, "minishell: ", 11);
 		perror(outfile);
 		return (-1);
 	}

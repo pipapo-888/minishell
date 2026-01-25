@@ -39,7 +39,8 @@ void	child_prosess(t_data *data, t_cmd *cmd, char **env, int pfd[2],
 		close(pfd[0]);
 		dup2_and_close(pfd[1], STDOUT_FILENO);
 	}
-	setup_redirects(cmd);
+	if (setup_redirects(cmd) != 0)
+		exit(1);
 	if (built_in_check(cmd, data) == 0)
 		exit(0);
 	execve(cmd->path, cmd->argv, env);

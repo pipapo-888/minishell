@@ -70,9 +70,47 @@ run_test "echo with quotes" "echo \"hello world\""
 
 echo -e "${YELLOW}[2/5] Redirection Test${NC}"
 echo "-----------------------------------"
-run_test "output redirection" "echo test > minishell_test.txt && cat minishell_test.txt"
+
+# 出力リダイレクトのテスト（手動検証）
+rm -f minishell_test.txt
+echo "echo test > minishell_test.txt" | $MINISHELL 2>&1 > /dev/null
+echo -e "${YELLOW}[output redirection]${NC} echo test > minishell_test.txt"
+if [ -f minishell_test.txt ] && [ "$(cat minishell_test.txt)" = "test" ]; then
+    echo -e "${GREEN}✓ PASSED${NC}"
+    ((PASSED++))
+else
+    echo -e "${RED}✗ FAILED${NC}"
+    if [ -f minishell_test.txt ]; then
+        echo "Expected: test"
+        echo "Got: $(cat minishell_test.txt)"
+    else
+        echo "File was not created"
+    fi
+    ((FAILED++))
+fi
+echo ""
+
+# 入力リダイレクトのテスト
 run_test "input redirection" "cat < minishell_test.txt"
-run_test "append redirection" "echo append >> minishell_test.txt && cat minishell_test.txt"
+
+# 追記リダイレクトのテスト（手動検証）
+echo "echo append >> minishell_test.txt" | $MINISHELL 2>&1 > /dev/null
+echo -e "${YELLOW}[append redirection]${NC} echo append >> minishell_test.txt"
+expected=$'test\nappend'
+actual=$(cat minishell_test.txt)
+if [ "$actual" = "$expected" ]; then
+    echo -e "${GREEN}✓ PASSED${NC}"
+    ((PASSED++))
+else
+    echo -e "${RED}✗ FAILED${NC}"
+    echo "Expected:"
+    echo "$expected" | sed 's/^/  /'
+    echo "Got:"
+    echo "$actual" | sed 's/^/  /'
+    ((FAILED++))
+fi
+echo ""
+
 rm -f minishell_test.txt
 
 echo -e "${YELLOW}[3/5] Pipe Test${NC}"

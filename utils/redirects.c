@@ -23,29 +23,29 @@ static void	heredoc(t_cmd *cmd)
 	close(pipefd[0]);
 }
 
-void	setup_redirects(t_cmd *cmd)
+int	setup_redirects(t_cmd *cmd)
 {
 	int	fd;
 
 	if (cmd == NULL)
-		return ;
+		return (1);
 	if (cmd->heredoc->content != NULL)
 		heredoc(cmd);
 	else if (cmd->infile != NULL)
 	{
 		fd = open_infile(cmd->infile);
+		if (fd < 0)
+			return (1);
 		dup2(fd, STDIN_FILENO);
 		close(fd);
 	}
-	if (cmd->outfile != NULL)
+	else if (cmd->outfile != NULL)
 	{
 		fd = open_outfile(cmd->outfile, cmd->type);
 		if (fd < 0)
-		{
-			perror(cmd->outfile);
-			return ;
-		}
+			return (1);
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 	}
+	return (0);
 }
