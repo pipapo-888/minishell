@@ -104,7 +104,7 @@ void	built_in_pwd(t_cmd *cmd);
 void	built_in_unset(t_data *data, char **argv);
 
 // utils関係
-void	dup2_and_close(int fd, int flag);
+int		dup2_and_close(int fd, int flag);
 int		open_infile(const char *infile);
 int		open_outfile(const char *outfile, t_token_type type);
 int		setup_redirects(t_cmd *cmd);

@@ -12,6 +12,12 @@ void	built_in_pwd(t_cmd *cmd)
 	if (cmd->type != NO_REDIR)
 	{
 		saved_stdout = dup(STDOUT_FILENO);
+		if (saved_stdout < 0)
+		{
+			write(2, "minishell: ", 12);
+			perror("dup");
+			return ;
+		}
 		setup_redirects(cmd);
 	}
 	if (getcwd(pathName, PATHNAME_SIZE))
@@ -23,7 +29,11 @@ void	built_in_pwd(t_cmd *cmd)
 		perror("pwd");
 	if (saved_stdout != -1)
 	{
-		dup2(saved_stdout, STDOUT_FILENO);
+		if (dup2(saved_stdout, STDOUT_FILENO) < 0)
+		{
+			write(2, "minishell: ", 12);
+			perror("dup2");
+		}
 		close(saved_stdout);
 	}
 	return ;
