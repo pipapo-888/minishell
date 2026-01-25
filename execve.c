@@ -9,8 +9,8 @@ int	built_in_check(t_cmd *cmd, t_data *data)
 		return (built_in_echo(cmd), 0);
 	if (!ft_strcmp(cmd->argv[0], "cd"))
 	{
-		env = env_to_array(data->env);
-		built_in_cd(cmd, env);
+		env = env_to_array(data->env, DONT_SHOW);
+		built_in_cd(cmd, env, data);
 		free_split(env);
 		return (0);
 	}

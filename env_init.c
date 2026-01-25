@@ -13,7 +13,7 @@ static int	env_list_size(t_env *env)
 	return (count);
 }
 
-char	**env_to_array(t_env *env)
+char	**env_to_array(t_env *env, t_export_type NUM)
 {
 	char	**arr;
 	char	*tmp;
@@ -27,7 +27,7 @@ char	**env_to_array(t_env *env)
 	i = 0;
 	while (env)
 	{
-		if (env->type == DONT_SHOW || env->value == NULL)
+		if (env->type > NUM || env->value == NULL)
 		{
 			env = env->next;
 			continue ;
@@ -73,6 +73,20 @@ static t_env	*create_env_node(char *envp_line)
 	return (node);
 }
 
+static t_env	*create_exit_status_node(void)
+{
+	t_env	*node;
+
+	node = malloc(sizeof(t_env));
+	if (!node)
+		return (NULL);
+	node->key = ft_strdup("?");
+	node->value = ft_strdup("0");
+	node->type = EXPAND;
+	node->next = NULL;
+	return (node);
+}
+
 static void	env_add_back(t_env **head, t_env *new_node)
 {
 	t_env	*tmp;
@@ -104,7 +118,6 @@ void	env_init(t_data *data, char **envp)
 			env_add_back(&data->env, new_node);
 		i++;
 	}
-	env_add_back(&data->env, create_env_node("?"));
+	env_add_back(&data->env, create_exit_status_node());
 	// env_add_back(&data->env, create_env_node("PATH=asdfklasjfl/"));
-
 }

@@ -5,7 +5,7 @@ void	built_in_env(t_env *env)
 	char	**arr;
 	int		i;
 
-	arr = env_to_array(env);
+	arr = env_to_array(env, SHOW);
 	if (arr == NULL)
 		return ;
 	i = 0;

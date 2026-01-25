@@ -54,7 +54,7 @@ void	prompt(t_data data)
 {
 	char	**env;
 
-	env = env_to_array(data.env);
+	env = env_to_array(data.env, EXPAND);
 	cmd_init(&data);
 	data.input = readline("minishell$ ");
 	ft_wait_input(&data);
