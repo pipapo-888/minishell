@@ -107,7 +107,7 @@ void	built_in_unset(t_data *data, char **argv);
 void	dup2_and_close(int fd, int flag);
 int		open_infile(const char *infile);
 int		open_outfile(const char *outfile, t_token_type type);
-void	setup_redirects(t_cmd *cmd);
+int		setup_redirects(t_cmd *cmd);
 char	*search_path(const char *cmd, char *const envp[]);
 char	*get_env_value(char *const envp[], const char *key);
 char	*expand_variables(char *str, t_env *env);

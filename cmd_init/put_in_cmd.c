@@ -39,7 +39,7 @@ static void	put_in_redir_in(t_cmd *cmd, t_token **tokens)
 	if (*tokens == NULL || (*tokens)->type != WORD)
 		return ;
 	infile = (*tokens)->value;
-	fd = open_infile(infile);
+	fd = open(infile, O_RDONLY);
 	if (fd >= 0)
 		close(fd);
 	if (cmd->type != REDIR_OUT && cmd->type != REDIR_APPEND)
@@ -65,7 +65,10 @@ static void	put_in_redir_out(t_cmd *cmd, t_token **tokens)
 	if (*tokens == NULL || (*tokens)->type != WORD)
 		return ;
 	outfile = (*tokens)->value;
-	fd = open_outfile(outfile, cmd->type);
+	if (cmd->type == REDIR_OUT)
+		fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	else
+		fd = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd >= 0)
 		close(fd);
 	if (cmd->outfile != NULL)
