@@ -33,11 +33,15 @@ void	child_prosess(t_data *data, t_cmd *cmd, char **env, int pfd[2],
 	signal(SIGQUIT, SIG_DFL);
 	signal(SIGINT, SIG_DFL);
 	if (prev_fd != -1)
-		dup2_and_close(prev_fd, STDIN_FILENO);
+	{
+		if (dup2_and_close(prev_fd, STDIN_FILENO) < 0)
+			exit(1);
+	}
 	if (cmd->next != NULL)
 	{
 		close(pfd[0]);
-		dup2_and_close(pfd[1], STDOUT_FILENO);
+		if (dup2_and_close(pfd[1], STDOUT_FILENO) < 0)
+			exit(1);
 	}
 	if (setup_redirects(cmd) != 0)
 		exit(1);
