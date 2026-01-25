@@ -1,16 +1,5 @@
 #include "../minishell.h"
 
-static t_env	*find_key(t_env *env, char *key)
-{
-	while (env)
-	{
-		if (ft_strcmp(env->key, key) == 0)
-			return (env);
-		env = env->next;
-	}
-	return (NULL);
-}
-
 static t_env	*create_export_node(char *key, char *value)
 {
 	t_env	*node;
@@ -45,10 +34,12 @@ static void	add_env_back(t_env **head, t_env *new_node)
 	tmp->next = new_node;
 }
 
-void if_existing(t_env *existing, char *value, char *key)
+void	if_existing(t_env *existing, char *value, char *key)
 {
-	free(existing->value);
-	existing->value = value;
+	if (existing->value && strcmp(key, "OLDPWD") != 0)
+		free(existing->value);
+	if (strcmp(key, "OLDPWD") != 0 && value == NULL)
+		existing->value = value;
 	existing->type = SHOW;
 	free(key);
 }
@@ -127,7 +118,7 @@ void	built_in_export(t_data *data, char **argv)
 	while (argv[i])
 	{
 		if (examine_argv(argv[i]) == 0)
-			export_one(data, argv[i]);
+		export_one(data, argv[i]);
 		i++;
 	}
 }

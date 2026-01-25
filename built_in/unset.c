@@ -15,8 +15,8 @@ void	built_in_unset(t_data *data, char **argv)
 			{
 				current->type = DONT_SHOW;
 				free(current->value);
+				current->value = NULL;
 				break ;
-
 			}
 			current = current->next;
 		}

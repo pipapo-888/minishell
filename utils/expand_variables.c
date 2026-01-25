@@ -25,8 +25,8 @@ int	is_valid_variable_char(char c, int first)
 			return (1);
 		return (0);
 	}
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
-		|| (c >= '0' && c <= '9') || c == '_')
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0'
+			&& c <= '9') || c == '_')
 		return (1);
 	return (0);
 }
@@ -36,7 +36,10 @@ static char	*get_env_var(char *key, t_env *env)
 	while (env != NULL)
 	{
 		if (ft_strcmp(key, env->key) == 0)
-			return (ft_strdup(env->value));
+		{
+			if (env->value)
+				return (ft_strdup(env->value));
+		}
 		env = env->next;
 	}
 	return (ft_strdup(""));
@@ -64,6 +67,13 @@ static char	*expand_single_var(char *str, int *i, t_env *env)
 	{
 		(*i)--;
 		return (ft_strdup("$"));
+	}
+	if (str[*i] == '?')
+	{
+		key = ft_strdup("?");
+		value = get_env_var(key, env);
+		free(key);
+		return (value);
 	}
 	var_len = get_var_len(&str[*i]);
 	if (var_len == 0)
@@ -106,4 +116,3 @@ char	*expand_variables(char *str, t_env *env)
 	}
 	return (result);
 }
-
