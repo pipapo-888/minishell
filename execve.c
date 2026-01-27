@@ -27,6 +27,17 @@ int	built_in_check(t_cmd *cmd, t_data *data)
 	return (1);
 }
 
+void	handle_error(char *argv, char **env)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(argv, 2);
+	if (ft_strchr(argv, '/') != NULL || get_env_value(env, "PATH") == NULL)
+		ft_putstr_fd(": No such file or directory\n", 2);
+	else
+		ft_putstr_fd(": command not found\n", 2);
+	exit(127);
+}
+
 void	child_prosess(t_data *data, t_cmd *cmd, char **env, int pfd[2],
 		int prev_fd)
 {
@@ -48,14 +59,9 @@ void	child_prosess(t_data *data, t_cmd *cmd, char **env, int pfd[2],
 	if (built_in_check(cmd, data) == 0)
 		exit(0);
 	if (cmd->path == NULL)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(cmd->argv[0], 2);
-		ft_putstr_fd(": No such file or directory\n", 2);
-		exit(127);
-	}
+		handle_error(cmd->argv[0], env);
 	execve(cmd->path, cmd->argv, env);
-	perror("execve");
+	perror("minishell: execve:");
 	exit(1);
 }
 
