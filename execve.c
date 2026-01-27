@@ -47,6 +47,13 @@ void	child_prosess(t_data *data, t_cmd *cmd, char **env, int pfd[2],
 		exit(1);
 	if (built_in_check(cmd, data) == 0)
 		exit(0);
+	if (cmd->path == NULL)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(cmd->argv[0], 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+		exit(127);
+	}
 	execve(cmd->path, cmd->argv, env);
 	perror("execve");
 	exit(1);
