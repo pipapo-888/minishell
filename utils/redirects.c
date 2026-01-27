@@ -43,7 +43,7 @@ int	setup_redirects(t_cmd *cmd)
 		if (dup2_and_close(fd, STDIN_FILENO) < 0)
 			return (1);
 	}
-	else if (cmd->outfile != NULL)
+	if (cmd->outfile != NULL)
 	{
 		fd = open_outfile(cmd->outfile, cmd->type);
 		if (fd < 0)
@@ -52,4 +52,16 @@ int	setup_redirects(t_cmd *cmd)
 			return (1);
 	}
 	return (0);
+}
+
+int	save_and_redirects(t_cmd *cmd, int *saved_stdout)
+{
+	*saved_stdout = dup(STDOUT_FILENO);
+	if (*saved_stdout < 0)
+	{
+		write(2, "minishell: ", 12);
+		perror("dup");
+		return (-1);
+	}
+	return (setup_redirects(cmd));
 }
