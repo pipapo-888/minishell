@@ -7,6 +7,7 @@ void	handler(int sig)
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
+	// set_exit_status(data.env, SIG_INT_FAIL);
 }
 
 int	main(int ac, char **av, char **envp)

@@ -23,6 +23,7 @@ SRCS = main.c\
 		utils/open_file.c\
 		utils/expand_variables.c\
 		utils/env_utils.c\
+		utils/set_exit_status.c\
 
 OBJS = $(SRCS:.c=.o)
 

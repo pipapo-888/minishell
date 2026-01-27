@@ -23,6 +23,42 @@ static void	update_oldpwd(t_data *data, char *old_path)
 	}
 }
 
+static int	handle_cd_path(t_data *data, t_cmd *cmd, char *path)
+{
+	if (!path && (cmd->argv[1] == NULL || ft_strcmp(cmd->argv[1], "~") == 0))
+	{
+		set_exit_status(data->env, ERROR);
+		ft_putstr_fd("cd: HOME not set", 2);
+		return (1);
+	}
+	if (!path)
+	{
+		set_exit_status(data->env, ERROR);
+		ft_putstr_fd("cd: OLDPWD not set", 2);
+		return (1);
+	}
+	if (chdir(path) != 0)
+	{
+		set_exit_status(data->env, ERROR);
+		ft_putstr_fd("minishell: cd: ", 2);
+		perror(path);
+		return (1);
+	}
+	return (0);
+}
+// void	print_error(char *cmd, char *arg, char *msg)
+// {
+// 	ft_putstr_fd("minishell: ", 2);
+// 	ft_putstr_fd(cmd, 2);
+// 	ft_putstr_fd(": ", 2);
+// 	if (arg)
+// 	{
+// 		ft_putstr_fd(arg, 2);
+// 		ft_putstr_fd(": ", 2);
+// 	}
+// 	ft_putendl_fd(msg, 2);
+// }
+
 void	built_in_cd(t_cmd *cmd, char **ev, t_data *data)
 {
 	char	*path;
@@ -31,6 +67,7 @@ void	built_in_cd(t_cmd *cmd, char **ev, t_data *data)
 	if (argument_count(cmd->argv) > 2)
 	{
 		write(2, "minishell: cd: too many arguments\n", 34);
+		set_exit_status(data->env, ERROR);
 		return ;
 	}
 	if (getcwd(old_path, sizeof(old_path)) == NULL)
@@ -40,12 +77,9 @@ void	built_in_cd(t_cmd *cmd, char **ev, t_data *data)
 		path = get_env_value(ev, "HOME");
 	else if (ft_strcmp(path, "-") == 0)
 		path = get_env_value(ev, "OLDPWD");
-	if (!path && (cmd->argv[1] == NULL || ft_strcmp(cmd->argv[1], "~") == 0))
-		return (perror("cd: HOME not set"));
-	if (!path)
-		return (perror("cd: OLDPWD not set"));
-	if (chdir(path) != 0)
-		return (perror("cd"));
+	if (handle_cd_path(data, cmd, path) == 1)
+		return ;
+	set_exit_status(data->env, SUCCESS);
 	if (old_path[0] != '\0')
 		update_oldpwd(data, old_path);
 }
