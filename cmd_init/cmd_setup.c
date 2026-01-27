@@ -11,7 +11,6 @@ void	put_in_path(t_cmd *cmd, char **ev)
 		{
 			if (access(head->argv[0], X_OK) == 0)
 				head->path = ft_strdup(head->argv[0]);
-			return ;
 		}
 		else if (head->argv != NULL && head->argv[0] != NULL)
 			head->path = search_path(head->argv[0], ev);
