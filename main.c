@@ -12,14 +12,14 @@ void	handler(int sig)
 
 int	main(int ac, char **av, char **envp)
 {
-	char	*program_name;
 	t_data	data;
 
+	if (ac != 1 && av[1] != NULL)
+	{
+		ft_putstr_fd("Usage: ./minishell\n", 2);
+		return (1);
+	}
 	env_init(&data, envp);
-
-	(void)ac;
-	(void)av;
-	(void)program_name;
 	data.cmd = NULL;
 	data.input = NULL;
 	signal(SIGINT, handler);

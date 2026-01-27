@@ -19,18 +19,8 @@ void	built_in_echo(t_cmd *cmd)
 	int	saved_stdout;
 
 	saved_stdout = -1;
-	if (cmd->type != NO_REDIR)
-	{
-		saved_stdout = dup(STDOUT_FILENO);
-		if (saved_stdout < 0)
-		{
-			write(2, "minishell: ", 12);
-			perror("dup");
-			return ;
-		}
-		if (saved_stdout >= 0)
-			setup_redirects(cmd);
-	}
+	if (cmd->type != NO_REDIR && save_and_redirects(cmd, &saved_stdout) < 0)
+		return ;
 	i = 1;
 	while (cmd->argv[i] && is_n_flag(cmd->argv[i]))
 		i++;
