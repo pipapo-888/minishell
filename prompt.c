@@ -50,26 +50,43 @@ void	ft_wait_input(t_data *data)
 	}
 }
 
+static int	is_empty_input(char *input)
+{
+	int	i;
+
+	if (input == NULL || input[0] == '\0')
+		return (1);
+	i = 0;
+	while (input[i] != '\0')
+	{
+		if (ft_isspace(input[i]) == 0)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 void	prompt(t_data data)
 {
 	char	**env;
 
-	env = env_to_array(data.env, EXPAND);
-	cmd_init(&data);
 	data.input = readline("minishell$ ");
 	ft_wait_input(&data);
-	if (data.input == NULL || data.input[0] == '\0')
+	if (data.input == NULL)
+		exit(1);
+	if (is_empty_input(data.input) != 0)
 	{
-		free_all(&data);
-		if (data.input == NULL)
-			exit(1);
+		free(data.input);
 		return ;
 	}
 	add_history(data.input);
+	env = env_to_array(data.env, EXPAND);
+	cmd_init(&data);
 	cmd_setup(&data, data.cmd, data.input, env);
 	if (data.cmd->argv == NULL)
 	{
 		free_all(&data);
+		free_split(env);
 		return ;
 	}
 	ft_execve(data.cmd, &data, env);
