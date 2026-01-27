@@ -29,7 +29,6 @@ SRCS = main.c\
 		utils/search.c\
 		utils/redirects.c\
 		utils/open_file.c\
-		utils/expand_variables.c\
 		utils/set_exit_status.c\
 		utils/char_utils.c\
 
