@@ -18,20 +18,19 @@ void	put_in_path(t_cmd *cmd, char **ev)
 	}
 }
 
-void expand_tokens(t_token *token, t_env *env)
+void	expand_tokens(t_token *token, t_env *env)
 {
-	char *temp_value;
+	char	*temp_value;
 
-	while(1)
+	while (1)
 	{
 		temp_value = token->value;
 		token->value = expand_variables(token->value, env);
 		free(temp_value);
 		if (token->next == NULL)
-			break;
+			break ;
 		token = token->next;
 	}
-
 }
 
 void	cmd_setup(t_data *data, t_cmd *cmd, char *input, char **ev)

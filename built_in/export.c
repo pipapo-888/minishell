@@ -1,39 +1,5 @@
 #include "../minishell.h"
 
-static t_env	*create_export_node(char *key, char *value)
-{
-	t_env	*node;
-
-	node = malloc(sizeof(t_env));
-	if (!node)
-		return (NULL);
-	node->key = ft_strdup(key);
-	if (value)
-		node->value = ft_strdup(value);
-	else
-		node->value = NULL;
-	node->type = SHOW;
-	node->next = NULL;
-	return (node);
-}
-
-static void	add_env_back(t_env **head, t_env *new_node)
-{
-	t_env	*tmp;
-
-	if (!head || !new_node)
-		return ;
-	if (*head == NULL)
-	{
-		*head = new_node;
-		return ;
-	}
-	tmp = *head;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new_node;
-}
-
 void	if_existing(t_env *existing, char *value, char *key)
 {
 	if (existing->value && strcmp(key, "OLDPWD") != 0)
@@ -42,17 +8,6 @@ void	if_existing(t_env *existing, char *value, char *key)
 		existing->value = value;
 	existing->type = SHOW;
 	free(key);
-}
-
-static void	add_new_env(t_data *data, char *key, char *value)
-{
-	t_env	*new_node;
-
-	new_node = create_export_node(key, value);
-	add_env_back(&data->env, new_node);
-	free(key);
-	if (value)
-		free(value);
 }
 
 static void	export_one(t_data *data, char *arg)
@@ -118,7 +73,7 @@ void	built_in_export(t_data *data, char **argv)
 	while (argv[i])
 	{
 		if (examine_argv(argv[i]) == 0)
-		export_one(data, argv[i]);
+			export_one(data, argv[i]);
 		i++;
 	}
 }

@@ -77,82 +77,11 @@ static void	put_in_redir_out(t_cmd *cmd, t_token **tokens)
 	*tokens = (*tokens)->next;
 }
 
-void	heredoc_init(t_cmd *cmd)
+static void	handle_pipe(t_data *data, t_cmd **cmd, t_token **temp)
 {
-	cmd->heredoc = malloc(sizeof(t_heredoc));
-	if (cmd->heredoc == NULL)
-		return ;
-	cmd->heredoc->content = NULL;
-}
-
-void	cmd_init(t_data *data)
-{
-	t_cmd	*new;
-	t_cmd	*temp;
-
-	new = malloc(sizeof(t_cmd));
-	heredoc_init(new);
-	if (new == NULL)
-		return ;
-	new->argv = NULL;
-	new->path = NULL;
-	new->infile = NULL;
-	new->outfile = NULL;
-	new->type = NO_REDIR;
-	new->next = NULL;
-	if (data->cmd == NULL)
-		data->cmd = new;
-	else
-	{
-		temp = data->cmd;
-		while (temp->next != NULL)
-			temp = temp->next;
-		temp->next = new;
-	}
-}
-
-void	ft_heredoc(t_cmd *cmd, char *key, int quoted, t_env *env)
-{
-	char	*line;
-	char	*content;
-	char	*tmp;
-
-	cmd->heredoc->content = ft_strdup("");
-	while (1)
-	{
-		line = readline("> ");
-		if (line == NULL)
-			line = ft_strdup("");
-		if (ft_strcmp(line, key) == 0)
-		{
-			free(line);
-			break ;
-		}
-		if (quoted == 0 && ft_strchr(line, '$') != NULL)
-		{
-			content = expand_variables(line, env);
-			free(line);
-			if (content == NULL)
-				content = ft_strdup("");
-		}
-		else
-			content = line;
-		tmp = ft_strjoin(content, "\n");
-		cmd->heredoc->content = free_strjoin(cmd->heredoc->content, tmp);
-		free(content);
-		free(tmp);
-	}
-	cmd->type = HEREDOC;
-}
-
-static t_cmd	*get_last_cmd(t_data *data)
-{
-	t_cmd	*temp;
-
-	temp = data->cmd;
-	while (temp->next != NULL)
-		temp = temp->next;
-	return (temp);
+	cmd_init(data);
+	*cmd = get_last_cmd(data);
+	*temp = (*temp)->next;
 }
 
 void	put_in_cmd(t_data *data, t_cmd *cmd, t_token **tokens)
@@ -168,28 +97,13 @@ void	put_in_cmd(t_data *data, t_cmd *cmd, t_token **tokens)
 			put_in_word(current_cmd, &temp);
 		else if (temp->type == REDIR_IN)
 			put_in_redir_in(current_cmd, &temp);
-		else if (temp->type == HEREDOC)
-		{
-			temp = temp->next;
-			if (temp != NULL && temp->type == WORD)
-			{
-				ft_heredoc(current_cmd, temp->value, temp->quoted, data->env);
-				temp = temp->next;
-			}
-			else
-			{
-				write(2, "minishell: syntax error near unexpected token `newline'\n", 56);
-				return ;
-			}
-		}
+		else if (temp->type == HEREDOC && \
+				handle_heredoc(data, current_cmd, &temp))
+			return ;
 		else if (temp->type == REDIR_OUT || temp->type == REDIR_APPEND)
 			put_in_redir_out(current_cmd, &temp);
 		else if (temp->type == PIPE)
-		{
-			cmd_init(data);
-			current_cmd = get_last_cmd(data);
-			temp = temp->next;
-		}
+			handle_pipe(data, &current_cmd, &temp);
 		else
 			temp = temp->next;
 	}

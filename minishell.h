@@ -104,6 +104,36 @@ int						extract_word_token(const char *input, t_token **token);
 int						extract_heredoc(t_token **token);
 t_token					*tokenize(const char *input);
 void					free_tokens(t_token *tokens);
+void	env_init(t_data *data, char **envp);
+char	**env_to_array(t_env *env, t_export_type type);
+int		get_var_len(char *str);
+t_env	*find_key(t_env *env, char *key);
+int		is_valid_variable_char(char c, int first);
+char	*expand_variables(char *str, t_env *env);
+char	*expand_single_var(char *str, int *i, t_env *env);
+void	env_add_back(t_env **head, t_env *new_node);
+int		env_list_size(t_env *env);
+char	**env_to_array(t_env *env, t_export_type NUM);
+void	add_new_env(t_data *data, char *key, char *value);
+
+// cmd_init/put_in_cmd.c
+void	cmd_setup(t_data *data, t_cmd *cmd, char *input, char **ev);
+void	cmd_init(t_data *data);
+void	put_in_cmd(t_data *data, t_cmd *cmd, t_token **tokens);
+void	cmd_init(t_data *data);
+t_cmd	*get_last_cmd(t_data *data);
+
+// Tokenizer functions
+int		extract_quoted_token(const char *input, t_token **token);
+int		extract_pipe_token(t_token **token);
+int		extract_redirect_in(t_token **token);
+int		extract_redirect_out(const char *input, t_token **token);
+int		extract_word_token(const char *input, t_token **token);
+int		extract_heredoc(t_token **token);
+t_token	*tokenize(const char *input);
+void	free_tokens(t_token *tokens);
+void	ft_heredoc(t_cmd *cmd, char *key, int quoted, t_env *env);
+int		handle_heredoc(t_data *data, t_cmd *cmd, t_token **temp);
 
 // Built-in functions
 int						built_in_check(t_cmd *cmd, t_data *data);
@@ -124,6 +154,14 @@ int						setup_redirects(t_cmd *cmd);
 char					*search_path(const char *cmd, char *const envp[]);
 char					*get_env_value(char *const envp[], const char *key);
 char					*expand_variables(char *str, t_env *env);
+int		dup2_and_close(int fd, int flag);
+int		open_infile(const char *infile);
+int		open_outfile(const char *outfile, t_token_type type);
+int		setup_redirects(t_cmd *cmd);
+int		save_and_redirects(t_cmd *cmd, int *saved_stdout);
+char	*search_path(const char *cmd, char *const envp[]);
+char	*get_env_value(char *const envp[], const char *key);
+char	*ft_strjoin_char(char *str, char c);
 
 // Free functions
 void					free_split(char **sp);

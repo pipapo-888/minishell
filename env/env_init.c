@@ -1,51 +1,4 @@
-#include "minishell.h"
-
-static int	env_list_size(t_env *env)
-{
-	int	count;
-
-	count = 0;
-	while (env)
-	{
-		env = env->next;
-		count++;
-	}
-	return (count);
-}
-
-char	**env_to_array(t_env *env, t_export_type NUM)
-{
-	char	**arr;
-	char	*tmp;
-	int		size;
-	int		i;
-
-	size = env_list_size(env);
-	arr = malloc(sizeof(char *) * (size + 1));
-	if (!arr)
-		return (NULL);
-	i = 0;
-	while (env)
-	{
-		if (env->type > NUM || env->value == NULL)
-		{
-			env = env->next;
-			continue ;
-		}
-		if (env->value)
-		{
-			tmp = ft_strjoin(env->key, "=");
-			arr[i] = ft_strjoin(tmp, env->value);
-			free(tmp);
-		}
-		else
-			arr[i] = ft_strdup(env->key);
-		i++;
-		env = env->next;
-	}
-	arr[i] = NULL;
-	return (arr);
-}
+#include "../minishell.h"
 
 static t_env	*create_env_node(char *envp_line)
 {
@@ -87,23 +40,6 @@ static t_env	*create_exit_status_node(void)
 	return (node);
 }
 
-static void	env_add_back(t_env **head, t_env *new_node)
-{
-	t_env	*tmp;
-
-	if (!head || !new_node)
-		return ;
-	if (*head == NULL)
-	{
-		*head = new_node;
-		return ;
-	}
-	tmp = *head;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new_node;
-}
-
 static void	self_init_env(t_env **env)
 {
 	char	cwd[1024];
@@ -116,10 +52,10 @@ static void	self_init_env(t_env **env)
 		free(pwd_str);
 	}
 	env_add_back(env, create_env_node("SHLVL=1"));
-	env_add_back(env, create_env_node("PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"));
+	env_add_back(env, create_env_node \
+		("PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"));
 	env_add_back(env, create_env_node("_=/usr/bin/env"));
 	env_add_back(env, create_env_node("OLDPWD"));
-
 }
 
 void	env_init(t_data *data, char **envp)

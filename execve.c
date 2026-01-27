@@ -38,8 +38,7 @@ void	handle_error(char *argv, char **env)
 	exit(127);
 }
 
-void	child_prosess(t_data *data, t_cmd *cmd, char **env, int pfd[2],
-		int prev_fd)
+void	child_prosess(t_data *data, char **env, int pfd[2], int prev_fd)
 {
 	signal(SIGQUIT, SIG_DFL);
 	signal(SIGINT, SIG_DFL);
@@ -48,21 +47,33 @@ void	child_prosess(t_data *data, t_cmd *cmd, char **env, int pfd[2],
 		if (dup2_and_close(prev_fd, STDIN_FILENO) < 0)
 			exit(1);
 	}
-	if (cmd->next != NULL)
+	if (data->cmd->next != NULL)
 	{
 		close(pfd[0]);
 		if (dup2_and_close(pfd[1], STDOUT_FILENO) < 0)
 			exit(1);
 	}
-	if (setup_redirects(cmd) != 0)
+	if (setup_redirects(data->cmd) != 0)
 		exit(1);
-	if (built_in_check(cmd, data) == 0)
+	if (built_in_check(data->cmd, data) == 0)
 		exit(0);
-	if (cmd->path == NULL)
-		handle_error(cmd->argv[0], env);
-	execve(cmd->path, cmd->argv, env);
+	if (data->cmd->path == NULL)
+		handle_error(data->cmd->argv[0], env);
+	execve(data->cmd->path, data->cmd->argv, env);
 	perror("minishell: execve:");
 	exit(1);
+}
+
+static int	update_prev_fd(int pfd[2], int prev_fd, t_cmd *cmd)
+{
+	if (prev_fd != -1)
+		close(prev_fd);
+	if (cmd->next != NULL)
+	{
+		close(pfd[1]);
+		return (pfd[0]);
+	}
+	return (-1);
 }
 
 void	ft_execve(t_cmd *cmd, t_data *data, char **env)
@@ -76,18 +87,13 @@ void	ft_execve(t_cmd *cmd, t_data *data, char **env)
 		return ;
 	while (cmd != NULL)
 	{
+		data->cmd = cmd;
 		if (cmd->next != NULL)
 			pipe(pfd);
 		pid = fork();
 		if (pid == 0)
-			child_prosess(data, cmd, env, pfd, prev_fd);
-		if (prev_fd != -1)
-			close(prev_fd);
-		if (cmd->next != NULL)
-		{
-			close(pfd[1]);
-			prev_fd = pfd[0];
-		}
+			child_prosess(data, env, pfd, prev_fd);
+		prev_fd = update_prev_fd(pfd, prev_fd, cmd);
 		cmd = cmd->next;
 	}
 	while (wait(NULL) > 0)
