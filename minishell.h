@@ -94,6 +94,8 @@ int		extract_word_token(const char *input, t_token **token);
 int		extract_heredoc(t_token **token);
 t_token	*tokenize(const char *input);
 void	free_tokens(t_token *tokens);
+void	ft_heredoc(t_cmd *cmd, char *key, int quoted, t_env *env);
+int		handle_heredoc(t_data *data, t_cmd *cmd, t_token **temp);
 
 // Built-in functions
 int		built_in_check(t_cmd *cmd, t_data *data);
@@ -113,6 +115,8 @@ int		setup_redirects(t_cmd *cmd);
 char	*search_path(const char *cmd, char *const envp[]);
 char	*get_env_value(char *const envp[], const char *key);
 char	*expand_variables(char *str, t_env *env);
+void	cmd_init(t_data *data);
+t_cmd	*get_last_cmd(t_data *data);
 
 // Free functions
 void	free_split(char **sp);

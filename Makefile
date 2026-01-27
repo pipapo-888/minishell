@@ -6,7 +6,9 @@ SRCS = main.c\
 		execve.c\
 		env_init.c\
 		prompt.c\
-		cmd_init/extract.c\
+		cmd_init/extract_option.c\
+		cmd_init/extract_word.c\
+		cmd_init/heredoc.c\
 		cmd_init/tokens.c\
 		cmd_init/cmd_setup.c\
 		cmd_init/put_in_cmd.c\
@@ -23,6 +25,7 @@ SRCS = main.c\
 		utils/open_file.c\
 		utils/expand_variables.c\
 		utils/env_utils.c\
+		utils/cmd_utils.c\
 
 OBJS = $(SRCS:.c=.o)
 
