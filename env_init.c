@@ -104,6 +104,24 @@ static void	env_add_back(t_env **head, t_env *new_node)
 	tmp->next = new_node;
 }
 
+static void	self_init_env(t_env **env)
+{
+	char	cwd[1024];
+	char	*pwd_str;
+
+	if (getcwd(cwd, sizeof(cwd)) != NULL)
+	{
+		pwd_str = ft_strjoin("PWD=", cwd);
+		env_add_back(env, create_env_node(pwd_str));
+		free(pwd_str);
+	}
+	env_add_back(env, create_env_node("SHLVL=1"));
+	env_add_back(env, create_env_node("PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"));
+	env_add_back(env, create_env_node("_=/usr/bin/env"));
+	env_add_back(env, create_env_node("OLDPWD"));
+
+}
+
 void	env_init(t_data *data, char **envp)
 {
 	t_env	*new_node;
@@ -118,6 +136,7 @@ void	env_init(t_data *data, char **envp)
 			env_add_back(&data->env, new_node);
 		i++;
 	}
+	if (env_list_size(data->env) == 0)
+		self_init_env(&data->env);
 	env_add_back(&data->env, create_exit_status_node());
-	// env_add_back(&data->env, create_env_node("PATH=asdfklasjfl/"));
 }
