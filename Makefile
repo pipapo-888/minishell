@@ -4,7 +4,6 @@ CFLAGS = -g -Wall -Wextra -Werror
 
 SRCS = main.c\
 		execve.c\
-		env_init.c\
 		prompt.c\
 		cmd_init/extract_option.c\
 		cmd_init/extract_word.c\
@@ -12,6 +11,13 @@ SRCS = main.c\
 		cmd_init/tokens.c\
 		cmd_init/cmd_setup.c\
 		cmd_init/put_in_cmd.c\
+		cmd_init/cmd_utils.c\
+		env/env_to_array.c\
+		env/env_init.c\
+		env/env_utils.c\
+		env/env_utils2.c\
+		env/expand_single.c\
+		env/expand_variables.c\
 		built_in/cd.c\
 		built_in/echo.c\
 		built_in/env.c\
@@ -23,9 +29,7 @@ SRCS = main.c\
 		utils/search.c\
 		utils/redirects.c\
 		utils/open_file.c\
-		utils/expand_variables.c\
-		utils/env_utils.c\
-		utils/cmd_utils.c\
+		utils/char_utils.c\
 
 OBJS = $(SRCS:.c=.o)
 

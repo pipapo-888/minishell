@@ -15,7 +15,6 @@ int	main(int ac, char **av, char **envp)
 	t_data	data;
 
 	env_init(&data, envp);
-
 	(void)ac;
 	(void)av;
 	(void)program_name;
