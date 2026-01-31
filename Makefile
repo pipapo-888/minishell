@@ -1,6 +1,6 @@
 NAME = minishell
-CC = gcc
-CFLAGS = -g -Wall -Wextra -Werror
+CC = cc
+CFLAGS = -Wall -Wextra -Werror
 
 SRCS = main.c\
 		execve.c\
