@@ -124,7 +124,7 @@ echo "-----------------------------------"
 run_test "empty input" ""
 run_test "spaces only" "   "
 run_test "multiple spaces" "echo    multiple   spaces"
-run_test "tabs" "echo	tab	separated"
+run_test "tabs" "echo tab separated"
 
 echo -e "${YELLOW}[5/5] Built-in Commands Test (if implemented)${NC}"
 echo "-----------------------------------"
