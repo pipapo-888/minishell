@@ -29,7 +29,7 @@ static int	skip_spaces(const char *input)
 static int	extract_token(const char *input, t_token **token)
 {
 	if (input[0] == '"' || input[0] == '\'')
-		return (extract_quoted_token(input, token));
+		return (extract_word_token(input, token));
 	else if (input[0] == '|')
 		return (extract_pipe_token(token));
 	else if (input[0] == '<' && input[1] != '<')

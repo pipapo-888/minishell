@@ -41,7 +41,6 @@ typedef struct s_token
 {
 	t_token_type		type;
 	char				*value;
-	int					quoted;
 	struct s_token		*next;
 }						t_token;
 
@@ -102,10 +101,9 @@ void					cmd_setup(t_data *data, t_cmd *cmd, char *input,
 void					cmd_init(t_data *data);
 void					put_in_cmd(t_data *data, t_cmd *cmd, t_token **tokens);
 t_cmd					*get_last_cmd(t_data *data);
+int						is_special_char(char c);
 
 // tokenizer
-int						extract_quoted_token(const char *input,
-							t_token **token);
 int						extract_pipe_token(t_token **token);
 int						extract_redirect_in(t_token **token);
 int						extract_redirect_out(const char *input,
@@ -118,7 +116,8 @@ void					free_tokens(t_token *tokens);
 // heredoc
 void					ft_heredoc(t_cmd *cmd, char *key, int quoted,
 							t_env *env);
-int						handle_heredoc(t_data *data, t_cmd *cmd, t_token **temp);
+int						handle_heredoc(t_data *data, t_cmd *cmd,
+							t_token **temp);
 
 // built-in
 int						built_in_check(t_cmd *cmd, t_data *data);
