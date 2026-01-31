@@ -12,12 +12,12 @@ SRCS = main.c\
 		cmd_init/cmd_setup.c\
 		cmd_init/put_in_cmd.c\
 		cmd_init/cmd_utils.c\
+		cmd_init/expand_single.c\
+		cmd_init/expand_variables.c\
 		env/env_to_array.c\
 		env/env_init.c\
 		env/env_utils.c\
 		env/env_utils2.c\
-		env/expand_single.c\
-		env/expand_variables.c\
 		built_in/cd.c\
 		built_in/echo.c\
 		built_in/env.c\
