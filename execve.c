@@ -59,6 +59,17 @@ void	child_prosess(t_data *data, char **env, int pfd[2], int prev_fd)
 		exit(0);
 	if (data->cmd->path == NULL)
 		handle_error(data->cmd->argv[0], env);
+	{
+		struct stat	st;
+
+		if (stat(data->cmd->path, &st) == 0 && S_ISDIR(st.st_mode))
+		{
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(data->cmd->argv[0], 2);
+			ft_putstr_fd(": Is a directory\n", 2);
+			exit(ACCESS_DENY);
+		}
+	}
 	execve(data->cmd->path, data->cmd->argv, env);
 	perror("minishell: execve:");
 	exit(1);
