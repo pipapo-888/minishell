@@ -27,16 +27,22 @@ char	*expand_variables(char *str, t_env *env)
 {
 	char	*result;
 	int		i;
+	int		single_quote;
 
 	if (!str)
 		return (NULL);
 	result = ft_strdup("");
 	i = 0;
+	single_quote = 0;
 	while (str[i])
 	{
-		if (str[i] == '$')
+		if (str[i] == '\'' && single_quote == 0)
+			single_quote = 1;
+		else if (str[i] == '\'' && single_quote == 1)
+			single_quote = 0;
+		if (str[i] == '$' && single_quote == 0)
 			result = append_expanded(result, str, &i, env);
-		else
+		else if (str[i] != '\'' && str[i] != '\"')
 			result = append_char(result, str[i]);
 		i++;
 	}
