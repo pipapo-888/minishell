@@ -42,12 +42,17 @@ static void	check_is_directory(t_data *data)
 
 void	handle_error(char *argv, char **env)
 {
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(argv, 2);
 	if (ft_strchr(argv, '/') != NULL || get_env_value(env, "PATH") == NULL)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(argv, 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
+	}
 	else
+	{
+		ft_putstr_fd(argv, 2);
 		ft_putstr_fd(": command not found\n", 2);
+	}
 	exit(NO_COMMAND);
 }
 
