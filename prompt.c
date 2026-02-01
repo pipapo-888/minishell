@@ -22,18 +22,7 @@ static int	quote_unclosed(char *input)
 	return (0);
 }
 
-char	*free_strjoin(char *str1, char *str2)
-{
-	char	*new_line;
-
-	if (str1 == NULL && str2 == NULL)
-		return (NULL);
-	new_line = ft_strjoin(str1, str2);
-	free(str1);
-	return (new_line);
-}
-
-void	ft_wait_input(t_data *data)
+static void	ft_wait_input(t_data *data)
 {
 	char	*next_line;
 
@@ -83,7 +72,7 @@ void	prompt(t_data data)
 	env = env_to_array(data.env, EXPAND);
 	cmd_init(&data);
 	cmd_setup(&data, data.cmd, data.input, env);
-	if (data.cmd->argv == NULL)
+	if (data.cmd == NULL || data.cmd->argv == NULL)
 	{
 		free_all(&data);
 		free_split(env);

@@ -1,31 +1,5 @@
 #include "../minishell.h"
 
-static void	put_in_word(t_cmd *cmd, t_token **tokens)
-{
-	t_token	*counter;
-	int		word_count;
-	int		i;
-
-	counter = *tokens;
-	word_count = 0;
-	while (counter != NULL && counter->type == WORD)
-	{
-		word_count++;
-		counter = counter->next;
-	}
-	cmd->argv = malloc(sizeof(char *) * (word_count + 1));
-	if (cmd->argv == NULL)
-		return ;
-	i = 0;
-	while (*tokens != NULL && (*tokens)->type == WORD)
-	{
-		cmd->argv[i] = ft_strdup((*tokens)->value);
-		i++;
-		*tokens = (*tokens)->next;
-	}
-	cmd->argv[i] = NULL;
-}
-
 static void	put_in_redir_in(t_cmd *cmd, t_token **tokens)
 {
 	char		*infile;

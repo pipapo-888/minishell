@@ -16,3 +16,14 @@ char	*ft_strjoin_char(char *str, char c)
 	result[len + 1] = '\0';
 	return (result);
 }
+
+char	*free_strjoin(char *str1, char *str2)
+{
+	char	*new_line;
+
+	if (str1 == NULL && str2 == NULL)
+		return (NULL);
+	new_line = ft_strjoin(str1, str2);
+	free(str1);
+	return (new_line);
+}
