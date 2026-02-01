@@ -30,6 +30,7 @@ int	extract_word_token(const char *input, t_token **token)
 		return (0);
 	(*token)->type = WORD;
 	(*token)->value = ft_substr(input, 0, end);
+	(*token)->split = 0;
 	(*token)->next = NULL;
 	return (end);
 }

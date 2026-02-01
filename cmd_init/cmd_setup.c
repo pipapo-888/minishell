@@ -25,6 +25,10 @@ static void	expand_tokens(t_token *token, t_env *env)
 	while (1)
 	{
 		temp_value = token->value;
+		if (temp_value && (temp_value[0] == '"' || temp_value[0] == '\''))
+			token->split = 1;
+		else
+			token->split = 0;
 		token->value = expand_variables(token->value, env);
 		free(temp_value);
 		if (token->next == NULL)

@@ -10,7 +10,8 @@ SRCS = main.c\
 		cmd_init/heredoc.c\
 		cmd_init/tokens.c\
 		cmd_init/cmd_setup.c\
-		cmd_init/put_in_cmd.c\
+		cmd_init/put_in_option.c\
+		cmd_init/put_in_word.c\
 		cmd_init/cmd_utils.c\
 		cmd_init/expand_single.c\
 		cmd_init/expand_variables.c\
@@ -31,6 +32,7 @@ SRCS = main.c\
 		utils/open_file.c\
 		utils/set_exit_status.c\
 		utils/char_utils.c\
+		utils/space_tab_split.c\
 
 OBJS = $(SRCS:.c=.o)
 
