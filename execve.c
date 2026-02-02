@@ -6,7 +6,7 @@ int	built_in_check(t_cmd *cmd, t_data *data)
 
 	env = NULL;
 	if (!ft_strcmp(cmd->argv[0], "echo"))
-		return (built_in_echo(cmd), 0);
+		return (built_in_echo(data, cmd), 0);
 	if (!ft_strcmp(cmd->argv[0], "cd"))
 	{
 		env = env_to_array(data->env, DONT_SHOW);
@@ -15,13 +15,13 @@ int	built_in_check(t_cmd *cmd, t_data *data)
 		return (0);
 	}
 	if (!ft_strcmp(cmd->argv[0], "pwd"))
-		return (built_in_pwd(cmd), 0);
+		return (built_in_pwd(data, cmd), 0);
 	if (!ft_strcmp(cmd->argv[0], "export"))
 		return (built_in_export(data, cmd->argv), 0);
 	if (!ft_strcmp(cmd->argv[0], "unset"))
 		return (built_in_unset(data, cmd->argv), 0);
 	if (!ft_strcmp(cmd->argv[0], "env"))
-		return (built_in_env(data->env), 0);
+		return (built_in_env(data, cmd), 0);
 	if (!ft_strcmp(cmd->argv[0], "exit"))
 		exit(1);
 	return (1);

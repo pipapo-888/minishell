@@ -12,15 +12,18 @@ static int	is_n_flag(char *str)
 	return (str[i] == '\0');
 }
 
-void	built_in_echo(t_cmd *cmd)
+void	built_in_echo(t_data *data, t_cmd *cmd)
 {
 	int	i;
 	int	n_flag;
 	int	saved_stdout;
 
 	saved_stdout = -1;
-	if (cmd->type != NO_REDIR && save_and_redirects(cmd, &saved_stdout) < 0)
+	if (cmd->type != NO_REDIR && save_and_redirects(cmd, &saved_stdout) != 0)
+	{
+		set_exit_status(data->env, ERROR);
 		return ;
+	}
 	i = 1;
 	while (cmd->argv[i] && is_n_flag(cmd->argv[i]))
 		i++;
@@ -36,6 +39,10 @@ void	built_in_echo(t_cmd *cmd)
 	if (saved_stdout != -1)
 	{
 		if (dup2_and_close(saved_stdout, STDOUT_FILENO) < 0)
+		{
+			set_exit_status(data->env, ERROR); //　必要ならenv pwdでも実装する
 			return ;
+		}
 	}
+	set_exit_status(data->env, SUCCESS);
 }

@@ -123,10 +123,10 @@ int						handle_heredoc(t_data *data, t_cmd *cmd, t_token **temp);
 // built-in
 int						built_in_check(t_cmd *cmd, t_data *data);
 void					built_in_cd(t_cmd *cmd, char **ev, t_data *data);
-void					built_in_echo(t_cmd *cmd);
-void					built_in_env(t_env *env);
+void					built_in_echo(t_data *data, t_cmd *cmd);
+void					built_in_env(t_data *data, t_cmd *cmd);
 void					built_in_export(t_data *data, char **argv);
-void					built_in_pwd(t_cmd *cmd);
+void					built_in_pwd(t_data *data, t_cmd *cmd);
 void					built_in_unset(t_data *data, char **argv);
 
 // utils
