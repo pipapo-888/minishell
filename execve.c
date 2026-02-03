@@ -27,7 +27,7 @@ int	built_in_check(t_cmd *cmd, t_data *data)
 	return (1);
 }
 
-static void	check_is_directory(t_data *data)
+static void	check_access_deny(t_data *data)
 {
 	struct stat	st;
 
@@ -36,11 +36,19 @@ static void	check_is_directory(t_data *data)
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(data->cmd->argv[0], 2);
 		ft_putstr_fd(": Is a directory\n", 2);
-		exit(ACCESS_DENY);
 	}
+	else if (access(data->cmd->path, X_OK) != 0)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(data->cmd->argv[0], 2);
+		ft_putstr_fd(": Permission denied\n", 2);
+	}
+	else
+		return ;
+	exit(ACCESS_DENY);
 }
 
-void	handle_error(char *argv, char **env)
+static void	check_no_command(char *argv, char **env)
 {
 	if (ft_strchr(argv, '/') != NULL || get_env_value(env, "PATH") == NULL)
 	{
@@ -76,8 +84,8 @@ void	child_prosess(t_data *data, char **env, int pfd[2], int prev_fd)
 	if (built_in_check(data->cmd, data) == 0)
 		exit(SUCCESS);
 	if (data->cmd->path == NULL)
-		handle_error(data->cmd->argv[0], env);
-	check_is_directory(data);
+		check_no_command(data->cmd->argv[0], env);
+	check_access_deny(data);
 	execve(data->cmd->path, data->cmd->argv, env);
 	perror("minishell: execve:");
 	exit(ERROR);
