@@ -42,6 +42,7 @@ int	extract_redirect_out(const char *input, t_token **token)
 	if (!*token)
 		return (0);
 	(*token)->split = 0;
+	(*token)->next = NULL;
 	if (input[0] == '>')
 	{
 		if (input[1] == '>')
