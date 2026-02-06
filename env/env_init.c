@@ -6,6 +6,8 @@ static t_env	*create_env_node(char *envp_line)
 	char	*equal_pos;
 	int		key_len;
 
+	if (envp_line[0] == '?' && envp_line[1] == '=')
+		return (NULL);
 	node = malloc(sizeof(t_env));
 	if (!node)
 		return (NULL);
