@@ -19,6 +19,8 @@
 # define NO_COMMAND 127
 # define SIG_INT_FAIL 130
 
+extern volatile sig_atomic_t	g_sig;
+
 typedef enum e_export_type
 {
 	SHOW,
@@ -81,6 +83,10 @@ typedef struct s_data
 void					prompt(t_data data);
 void					ft_execve(t_cmd *cmd, t_data *data, char **ev);
 char					*free_strjoin(char *str1, char *str2);
+
+// signal
+void					handler(int sig);
+
 
 // env
 void					env_init(t_data *data, char **envp);

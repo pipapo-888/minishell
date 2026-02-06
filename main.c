@@ -1,14 +1,6 @@
 #include "./minishell.h"
 
-void	handler(int sig)
-{
-	(void)sig;
-	write(1, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-	// set_exit_status(data.env, SIG_INT_FAIL);
-}
+volatile sig_atomic_t	g_sig = 0;
 
 int	main(int ac, char **av, char **envp)
 {
@@ -25,7 +17,7 @@ int	main(int ac, char **av, char **envp)
 	signal(SIGINT, handler);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
-	{
+	{		
 		prompt(data);
 	}
 	return (0);
