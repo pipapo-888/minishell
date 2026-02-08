@@ -86,7 +86,7 @@ void	cmd_setup(t_data *data, t_cmd *cmd, char *input, char **ev)
 	if (is_syntax_error(tokens) != 0)
 	{
 		free_tokens(tokens);
-		data->cmd = NULL;
+		free_all(data);
 		set_exit_status(data->env, SHELL_ERROR);
 		return ;
 	}
