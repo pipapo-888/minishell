@@ -72,6 +72,8 @@ void	built_in_export(t_data *data, char **argv)
 
 	i = 1;
 	error_flag = 0;
+	// if (argv[1] == NULL)
+		
 	while (argv[i])
 	{
 		if (examine_argv(argv[i]) == 0)

@@ -20,7 +20,10 @@ void	built_in_echo(t_data *data, t_cmd *cmd)
 
 	saved_stdout = -1;
 	if (cmd->type != NO_REDIR && save_and_redirects(cmd, &saved_stdout) != 0)
-		return(set_exit_status(data->env, ERROR), NULL);
+	{
+		set_exit_status(data->env, ERROR);
+		return ;
+	}
 	i = 1;
 	while (cmd->argv[i] && is_n_flag(cmd->argv[i]))
 		i++;
