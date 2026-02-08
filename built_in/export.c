@@ -68,12 +68,22 @@ int	examine_argv(char *str)
 void	built_in_export(t_data *data, char **argv)
 {
 	int	i;
+	int	error_flag;
 
 	i = 1;
+	error_flag = 0;
+	// if (argv[1] == NULL)
+		
 	while (argv[i])
 	{
 		if (examine_argv(argv[i]) == 0)
 			export_one(data, argv[i]);
+		else 
+			error_flag = 1;
 		i++;
 	}
+	if (error_flag == 0)
+		set_exit_status(data->env, SUCCESS);
+	else
+		set_exit_status(data->env, ERROR);
 }

@@ -69,8 +69,12 @@ static int	is_empty_input(char *input)
 void	prompt(t_data data)
 {
 	char	**env;
-
 	data.input = readline("minishell$ ");
+	if (g_sig != 0)
+	{
+		set_exit_status(data.env, g_sig);
+		g_sig = 0;
+	}
 	ft_wait_input(&data);
 	if (data.input == NULL)
 		exit(1);

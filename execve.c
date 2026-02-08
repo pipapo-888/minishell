@@ -6,7 +6,7 @@ int	built_in_check(t_cmd *cmd, t_data *data)
 
 	env = NULL;
 	if (!ft_strcmp(cmd->argv[0], "echo"))
-		return (built_in_echo(cmd), 0);
+		return (built_in_echo(data, cmd), 0);
 	if (!ft_strcmp(cmd->argv[0], "cd"))
 	{
 		env = env_to_array(data->env, DONT_SHOW);
@@ -15,13 +15,13 @@ int	built_in_check(t_cmd *cmd, t_data *data)
 		return (0);
 	}
 	if (!ft_strcmp(cmd->argv[0], "pwd"))
-		return (built_in_pwd(cmd), 0);
+		return (built_in_pwd(data, cmd), 0);
 	if (!ft_strcmp(cmd->argv[0], "export"))
 		return (built_in_export(data, cmd->argv), 0);
 	if (!ft_strcmp(cmd->argv[0], "unset"))
 		return (built_in_unset(data, cmd->argv), 0);
 	if (!ft_strcmp(cmd->argv[0], "env"))
-		return (built_in_env(data->env), 0);
+		return (built_in_env(data, cmd), 0);
 	if (!ft_strcmp(cmd->argv[0], "exit"))
 		exit(1);
 	return (1);
@@ -76,15 +76,28 @@ static int	update_prev_fd(int pfd[2], int prev_fd, t_cmd *cmd)
 	return (-1);
 }
 
+void	set_status_child_process(t_data *data, int status)
+{
+	if (WIFEXITED(status)) 
+    		set_exit_status(data->env, WEXITSTATUS(status));
+	else if (WIFSIGNALED(status))
+	{
+		write(1, "\n", 1);
+    	set_exit_status(data->env, 128 + WTERMSIG(status));
+	}
+}
+
 void	ft_execve(t_cmd *cmd, t_data *data, char **env)
 {
 	int		pfd[2];
 	int		prev_fd;
 	pid_t	pid;
+	int		status;
 
 	prev_fd = -1;
 	if (cmd->next == NULL && built_in_check(cmd, data) == 0)
 		return ;
+	signal(SIGINT, SIG_IGN);
 	while (cmd != NULL)
 	{
 		data->cmd = cmd;
@@ -96,6 +109,8 @@ void	ft_execve(t_cmd *cmd, t_data *data, char **env)
 		prev_fd = update_prev_fd(pfd, prev_fd, cmd);
 		cmd = cmd->next;
 	}
-	while (wait(NULL) > 0)
+	while (wait(&status) > 0)
 		;
+	set_status_child_process(data, status);
+	signal(SIGINT, handler);
 }

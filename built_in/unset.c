@@ -22,4 +22,5 @@ void	built_in_unset(t_data *data, char **argv)
 		}
 		i++;
 	}
+	set_exit_status(data->env, SUCCESS);
 }

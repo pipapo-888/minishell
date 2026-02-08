@@ -46,18 +46,6 @@ static int	handle_cd_path(t_data *data, t_cmd *cmd, char *path)
 	}
 	return (0);
 }
-// void	print_error(char *cmd, char *arg, char *msg)
-// {
-// 	ft_putstr_fd("minishell: ", 2);
-// 	ft_putstr_fd(cmd, 2);
-// 	ft_putstr_fd(": ", 2);
-// 	if (arg)
-// 	{
-// 		ft_putstr_fd(arg, 2);
-// 		ft_putstr_fd(": ", 2);
-// 	}
-// 	ft_putendl_fd(msg, 2);
-// }
 
 void	built_in_cd(t_cmd *cmd, char **ev, t_data *data)
 {

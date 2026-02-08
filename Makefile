@@ -5,6 +5,7 @@ CFLAGS = -g -Wall -Wextra -Werror
 SRCS = main.c\
 		execve.c\
 		prompt.c\
+		signal.c\
 		cmd_init/extract_option.c\
 		cmd_init/extract_word.c\
 		cmd_init/heredoc.c\

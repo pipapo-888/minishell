@@ -19,6 +19,8 @@
 # define NO_COMMAND 127
 # define SIG_INT_FAIL 130
 
+extern volatile sig_atomic_t	g_sig;
+
 typedef enum e_export_type
 {
 	SHOW,
@@ -82,6 +84,10 @@ void					prompt(t_data data);
 void					ft_execve(t_cmd *cmd, t_data *data, char **ev);
 char					*free_strjoin(char *str1, char *str2);
 
+// signal
+void					handler(int sig);
+
+
 // env
 void					env_init(t_data *data, char **envp);
 char					**env_to_array(t_env *env, t_export_type type);
@@ -123,10 +129,10 @@ int						handle_heredoc(t_data *data, t_cmd *cmd, t_token **temp);
 // built-in
 int						built_in_check(t_cmd *cmd, t_data *data);
 void					built_in_cd(t_cmd *cmd, char **ev, t_data *data);
-void					built_in_echo(t_cmd *cmd);
-void					built_in_env(t_env *env);
+void					built_in_echo(t_data *data, t_cmd *cmd);
+void					built_in_env(t_data *data, t_cmd *cmd);
 void					built_in_export(t_data *data, char **argv);
-void					built_in_pwd(t_cmd *cmd);
+void					built_in_pwd(t_data *data, t_cmd *cmd);
 void					built_in_unset(t_data *data, char **argv);
 
 // utils
