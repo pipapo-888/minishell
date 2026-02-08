@@ -15,6 +15,13 @@ void	free_split(char **sp)
 	free(sp);
 }
 
+static void	free_heredoc(t_heredoc *heredoc)
+{
+	if (heredoc->content != NULL)
+		free(heredoc->content);
+	free(heredoc);
+}
+
 static void	free_cmd(t_cmd *cmd)
 {
 	if (cmd == NULL)
@@ -27,6 +34,8 @@ static void	free_cmd(t_cmd *cmd)
 		free(cmd->infile);
 	if (cmd->outfile != NULL)
 		free(cmd->outfile);
+	if (cmd->heredoc != NULL)
+		free_heredoc(cmd->heredoc);
 	free(cmd);
 }
 

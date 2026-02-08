@@ -39,26 +39,12 @@ void	ft_heredoc(t_cmd *cmd, char *key, int quoted, t_env *env)
 	cmd->type = HEREDOC;
 }
 
-static int	is_quoted(char *key)
-{
-	int	len;
-
-	len = ft_strlen(key);
-	if ((key[0] == '\'' && key[len - 1] == '\'') || (key[0] == '\"'
-			&& key[len - 1] == '\"'))
-		return (1);
-	return (0);
-}
-
 int	handle_heredoc(t_data *data, t_cmd *cmd, t_token **temp)
 {
-	int	quoted;
-
 	*temp = (*temp)->next;
 	if (*temp != NULL && (*temp)->type == WORD)
 	{
-		quoted = is_quoted((*temp)->value);
-		ft_heredoc(cmd, (*temp)->value, quoted, data->env);
+		ft_heredoc(cmd, (*temp)->value, (*temp)->quoted, data->env);
 		*temp = (*temp)->next;
 		return (0);
 	}

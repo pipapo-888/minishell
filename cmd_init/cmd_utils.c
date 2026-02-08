@@ -14,9 +14,9 @@ void	cmd_init(t_data *data)
 	t_cmd	*temp;
 
 	new = malloc(sizeof(t_cmd));
-	heredoc_init(new);
 	if (new == NULL)
 		return ;
+	heredoc_init(new);
 	new->argv = NULL;
 	new->path = NULL;
 	new->infile = NULL;

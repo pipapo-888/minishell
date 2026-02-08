@@ -10,19 +10,32 @@ int	end_quote(const char *input, char quote)
 	return (i);
 }
 
-int	extract_word_token(const char *input, t_token **token)
+static int	word_len(const char *input, int *quoted)
 {
-	int		end;
+	int	end;
 
 	end = 0;
 	while (input[end] != '\0' && ft_isspace(input[end]) == 0 \
 		&& is_special_char(input[end]) == 0)
 	{
 		if (input[end] == '\'' || input[end] == '\"')
+		{
 			end += end_quote(&input[end], input[end]) + 1;
+			*quoted = 1;
+		}
 		else
 			end++;
 	}
+	return (end);
+}
+
+int	extract_word_token(const char *input, t_token **token)
+{
+	int		end;
+	int		quoted;
+
+	quoted = 0;
+	end = word_len(input, &quoted);
 	if (end == 0)
 		return (*token = NULL, 0);
 	*token = malloc(sizeof(t_token));
@@ -31,6 +44,7 @@ int	extract_word_token(const char *input, t_token **token)
 	(*token)->type = WORD;
 	(*token)->value = ft_substr(input, 0, end);
 	(*token)->split = 0;
+	(*token)->quoted = quoted;
 	(*token)->next = NULL;
 	return (end);
 }

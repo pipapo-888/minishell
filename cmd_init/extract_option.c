@@ -8,6 +8,7 @@ int	extract_pipe_token(t_token **token)
 	(*token)->type = PIPE;
 	(*token)->value = ft_strdup("|");
 	(*token)->split = 0;
+	(*token)->quoted = 0;
 	(*token)->next = NULL;
 	return (1);
 }
@@ -17,10 +18,11 @@ int	extract_heredoc(t_token **token)
 	*token = malloc(sizeof(t_token));
 	if (!*token)
 		return (0);
-	(*token)->next = NULL;
 	(*token)->type = HEREDOC;
 	(*token)->value = ft_strdup("<<");
 	(*token)->split = 0;
+	(*token)->quoted = 0;
+	(*token)->next = NULL;
 	return (2);
 }
 
@@ -29,10 +31,11 @@ int	extract_redirect_in(t_token **token)
 	*token = malloc(sizeof(t_token));
 	if (!*token)
 		return (0);
-	(*token)->next = NULL;
 	(*token)->type = REDIR_IN;
 	(*token)->value = ft_strdup("<");
 	(*token)->split = 0;
+	(*token)->quoted = 0;
+	(*token)->next = NULL;
 	return (1);
 }
 
@@ -42,6 +45,8 @@ int	extract_redirect_out(const char *input, t_token **token)
 	if (!*token)
 		return (0);
 	(*token)->split = 0;
+	(*token)->quoted = 0;
+	(*token)->next = NULL;
 	if (input[0] == '>')
 	{
 		if (input[1] == '>')
