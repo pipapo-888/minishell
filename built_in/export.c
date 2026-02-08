@@ -65,6 +65,30 @@ int	examine_argv(char *str)
 	return (0);
 }
 
+void declare_x(t_data *data, t_env *env)
+{
+	(void)data;
+	// t_env *head = env;
+
+
+	t_env *copy = malloc(sizeof(t_env));
+	if (copy == NULL)
+		return ;
+
+
+
+
+	int len = env_list_size(env);
+
+	printf("%d", len);
+
+
+	// a->z
+	// env to array で表示
+	// index 通りの順番にもどす
+	return ;
+}
+
 void	built_in_export(t_data *data, char **argv)
 {
 	int	i;
@@ -72,7 +96,8 @@ void	built_in_export(t_data *data, char **argv)
 
 	i = 1;
 	error_flag = 0;
-	// if (argv[1] == NULL)
+	if (argv[1] == NULL)
+		declare_x(data, data->env);
 		
 	while (argv[i])
 	{

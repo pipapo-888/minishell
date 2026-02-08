@@ -23,7 +23,7 @@ int	built_in_check(t_cmd *cmd, t_data *data)
 	if (!ft_strcmp(cmd->argv[0], "env"))
 		return (built_in_env(data, cmd), 0);
 	if (!ft_strcmp(cmd->argv[0], "exit"))
-		exit(ERROR);
+		// exit(ERROR);
 	return (1);
 }
 

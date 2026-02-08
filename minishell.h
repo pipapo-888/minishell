@@ -87,6 +87,7 @@ char					*free_strjoin(char *str1, char *str2);
 
 // signal
 void					handler(int sig);
+void					heredoc_handler(int sig);
 
 
 // env
