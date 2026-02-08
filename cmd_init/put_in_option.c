@@ -71,9 +71,11 @@ void	put_in_cmd(t_data *data, t_cmd *cmd, t_token **tokens)
 			put_in_word(current_cmd, &temp);
 		else if (temp->type == REDIR_IN)
 			put_in_redir_in(current_cmd, &temp);
-		else if (temp->type == HEREDOC && \
-				handle_heredoc(data, current_cmd, &temp))
-			return ;
+		else if (temp->type == HEREDOC)
+		{
+			if (handle_heredoc(data, current_cmd, &temp) != 0)
+				return ;
+		}
 		else if (temp->type == REDIR_OUT || temp->type == REDIR_APPEND)
 			put_in_redir_out(current_cmd, &temp);
 		else if (temp->type == PIPE)
