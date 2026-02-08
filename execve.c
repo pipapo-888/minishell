@@ -23,19 +23,37 @@ int	built_in_check(t_cmd *cmd, t_data *data)
 	if (!ft_strcmp(cmd->argv[0], "env"))
 		return (built_in_env(data, cmd), 0);
 	if (!ft_strcmp(cmd->argv[0], "exit"))
-		exit(1);
+		exit(ERROR);
 	return (1);
+}
+
+static void	check_is_directory(t_data *data)
+{
+	struct stat	st;
+
+	if (stat(data->cmd->path, &st) == 0 && S_ISDIR(st.st_mode))
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(data->cmd->argv[0], 2);
+		ft_putstr_fd(": Is a directory\n", 2);
+		exit(ACCESS_DENY);
+	}
 }
 
 void	handle_error(char *argv, char **env)
 {
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(argv, 2);
 	if (ft_strchr(argv, '/') != NULL || get_env_value(env, "PATH") == NULL)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(argv, 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
+	}
 	else
+	{
+		ft_putstr_fd(argv, 2);
 		ft_putstr_fd(": command not found\n", 2);
-	exit(127);
+	}
+	exit(NO_COMMAND);
 }
 
 void	child_prosess(t_data *data, char **env, int pfd[2], int prev_fd)
@@ -45,23 +63,24 @@ void	child_prosess(t_data *data, char **env, int pfd[2], int prev_fd)
 	if (prev_fd != -1)
 	{
 		if (dup2_and_close(prev_fd, STDIN_FILENO) < 0)
-			exit(1);
+			exit(ERROR);
 	}
 	if (data->cmd->next != NULL)
 	{
 		close(pfd[0]);
 		if (dup2_and_close(pfd[1], STDOUT_FILENO) < 0)
-			exit(1);
+			exit(ERROR);
 	}
 	if (setup_redirects(data->cmd) != 0)
-		exit(1);
+		exit(ERROR);
 	if (built_in_check(data->cmd, data) == 0)
-		exit(0);
+		exit(SUCCESS);
 	if (data->cmd->path == NULL)
 		handle_error(data->cmd->argv[0], env);
+	check_is_directory(data);
 	execve(data->cmd->path, data->cmd->argv, env);
 	perror("minishell: execve:");
-	exit(1);
+	exit(ERROR);
 }
 
 static int	update_prev_fd(int pfd[2], int prev_fd, t_cmd *cmd)

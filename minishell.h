@@ -9,6 +9,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <sys/stat.h>
 # include <sys/wait.h>
 # include <unistd.h>
 
@@ -43,7 +44,7 @@ typedef struct s_token
 {
 	t_token_type		type;
 	char				*value;
-	int					quoted;
+	int					split;
 	struct s_token		*next;
 }						t_token;
 
@@ -107,11 +108,11 @@ void					cmd_setup(t_data *data, t_cmd *cmd, char *input,
 							char **ev);
 void					cmd_init(t_data *data);
 void					put_in_cmd(t_data *data, t_cmd *cmd, t_token **tokens);
+void					put_in_word(t_cmd *cmd, t_token **tokens);
 t_cmd					*get_last_cmd(t_data *data);
+int						is_special_char(char c);
 
 // tokenizer
-int						extract_quoted_token(const char *input,
-							t_token **token);
 int						extract_pipe_token(t_token **token);
 int						extract_redirect_in(t_token **token);
 int						extract_redirect_out(const char *input,
@@ -124,7 +125,8 @@ void					free_tokens(t_token *tokens);
 // heredoc
 void					ft_heredoc(t_cmd *cmd, char *key, int quoted,
 							t_env *env);
-int						handle_heredoc(t_data *data, t_cmd *cmd, t_token **temp);
+int						handle_heredoc(t_data *data, t_cmd *cmd,
+							t_token **temp);
 
 // built-in
 int						built_in_check(t_cmd *cmd, t_data *data);
@@ -145,6 +147,7 @@ int						save_and_redirects(t_cmd *cmd, int *saved_stdout);
 char					*search_path(const char *cmd, char *const envp[]);
 char					*get_env_value(char *const envp[], const char *key);
 char					*ft_strjoin_char(char *str, char c);
+char					**space_tab_split(const char *str);
 
 // free
 void					free_split(char **sp);

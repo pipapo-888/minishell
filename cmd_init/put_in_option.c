@@ -1,31 +1,5 @@
 #include "../minishell.h"
 
-static void	put_in_word(t_cmd *cmd, t_token **tokens)
-{
-	t_token	*counter;
-	int		word_count;
-	int		i;
-
-	counter = *tokens;
-	word_count = 0;
-	while (counter != NULL && counter->type == WORD)
-	{
-		word_count++;
-		counter = counter->next;
-	}
-	cmd->argv = malloc(sizeof(char *) * (word_count + 1));
-	if (cmd->argv == NULL)
-		return ;
-	i = 0;
-	while (*tokens != NULL && (*tokens)->type == WORD)
-	{
-		cmd->argv[i] = ft_strdup((*tokens)->value);
-		i++;
-		*tokens = (*tokens)->next;
-	}
-	cmd->argv[i] = NULL;
-}
-
 static void	put_in_redir_in(t_cmd *cmd, t_token **tokens)
 {
 	char		*infile;
@@ -97,9 +71,11 @@ void	put_in_cmd(t_data *data, t_cmd *cmd, t_token **tokens)
 			put_in_word(current_cmd, &temp);
 		else if (temp->type == REDIR_IN)
 			put_in_redir_in(current_cmd, &temp);
-		else if (temp->type == HEREDOC && \
-				handle_heredoc(data, current_cmd, &temp))
-			return ;
+		else if (temp->type == HEREDOC)
+		{
+			if (handle_heredoc(data, current_cmd, &temp) != 0)
+				return ;
+		}
 		else if (temp->type == REDIR_OUT || temp->type == REDIR_APPEND)
 			put_in_redir_out(current_cmd, &temp);
 		else if (temp->type == PIPE)

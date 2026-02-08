@@ -43,3 +43,10 @@ t_cmd	*get_last_cmd(t_data *data)
 		temp = temp->next;
 	return (temp);
 }
+
+int	is_special_char(char c)
+{
+	if (c == '|' || c == '<' || c == '>')
+		return (1);
+	return (0);
+}
