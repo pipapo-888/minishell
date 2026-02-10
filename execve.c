@@ -1,7 +1,6 @@
 #include "./minishell.h"
 
-
-static void	free_exit(t_data *data, char **env, int code)
+void	free_exit(t_data *data, char **env, int code)
 {
 	free_all(data);
 	free_split(env);
@@ -25,7 +24,7 @@ int	built_in_check(t_cmd *cmd, t_data *data, char **env)
 	if (!ft_strcmp(cmd->argv[0], "env"))
 		return (built_in_env(data, cmd), 0);
 	if (!ft_strcmp(cmd->argv[0], "exit"))
-		free_exit(data, env, ERROR);
+		built_in_exit(data, cmd, env);
 	return (1);
 }
 
