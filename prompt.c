@@ -76,6 +76,14 @@ void	prompt(t_data data)
 	env = env_to_array(data.env, EXPAND);
 	cmd_init(&data);
 	cmd_setup(&data, data.cmd, data.input, env);
+	if (g_sig == SIG_INT_FAIL)
+	{
+		set_exit_status(data.env, g_sig);
+		g_sig = 0;
+		free_all(&data);
+		free_split(env);
+		return ;
+	}
 	if (data.cmd == NULL || data.cmd->argv == NULL)
 	{
 		free_all(&data);

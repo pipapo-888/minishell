@@ -88,6 +88,7 @@ char					*free_strjoin(char *str1, char *str2);
 
 // signal
 void					handler(int sig);
+void					heredoc_handler(int sig);
 
 
 // env
@@ -124,7 +125,7 @@ t_token					*tokenize(const char *input);
 void					free_tokens(t_token *tokens);
 
 // heredoc
-void					ft_heredoc(t_cmd *cmd, char *key, int quoted,
+int						ft_heredoc(t_cmd *cmd, char *key, int quoted,
 							t_env *env);
 int						handle_heredoc(t_data *data, t_cmd *cmd,
 							t_token **temp);
