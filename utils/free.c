@@ -39,6 +39,20 @@ static void	free_cmd(t_cmd *cmd)
 	free(cmd);
 }
 
+void	free_env_list(t_env *env)
+{
+	t_env	*next;
+
+	while (env != NULL)
+	{
+		next = env->next;
+		free(env->key);
+		free(env->value);
+		free(env);
+		env = next;
+	}
+}
+
 void	free_all(t_data *data)
 {
 	t_cmd	*cmd;

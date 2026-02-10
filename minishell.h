@@ -131,7 +131,7 @@ int						handle_heredoc(t_data *data, t_cmd *cmd,
 							t_token **temp);
 
 // built-in
-int						built_in_check(t_cmd *cmd, t_data *data);
+int						built_in_check(t_cmd *cmd, t_data *data, char **env);
 void					built_in_cd(t_cmd *cmd, char **ev, t_data *data);
 void					built_in_echo(t_data *data, t_cmd *cmd);
 void					built_in_env(t_data *data, t_cmd *cmd);
@@ -154,5 +154,6 @@ char					**space_tab_split(const char *str);
 // free
 void					free_split(char **sp);
 void					free_all(t_data *data);
+void					free_env_list(t_env *env);
 
 #endif
