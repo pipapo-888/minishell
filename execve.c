@@ -107,19 +107,13 @@ void	set_status_child_process(t_data *data, int status)
 	}
 }
 
-void	ft_execve(t_cmd *cmd, t_data *data, char **env)
+static void	handle_process(t_data *data, t_cmd *cmd, char **env)
 {
 	int		pfd[2];
 	int		prev_fd;
 	pid_t	pid;
-	int		status;
-	t_cmd	*head;
 
 	prev_fd = -1;
-	head = cmd;
-	if (cmd->next == NULL && built_in_check(cmd, data, env) == 0)
-		return ;
-	signal(SIGINT, SIG_IGN);
 	while (cmd != NULL)
 	{
 		data->cmd = cmd;
@@ -131,6 +125,18 @@ void	ft_execve(t_cmd *cmd, t_data *data, char **env)
 		prev_fd = update_prev_fd(pfd, prev_fd, cmd);
 		cmd = cmd->next;
 	}
+}
+
+void	ft_execve(t_cmd *cmd, t_data *data, char **env)
+{
+	int		status;
+	t_cmd	*head;
+
+	head = cmd;
+	if (cmd->next == NULL && built_in_check(cmd, data, env) == 0)
+		return ;
+	signal(SIGINT, SIG_IGN);
+	handle_process(data, cmd, env);
 	data->cmd = head;
 	while (wait(&status) > 0)
 		;

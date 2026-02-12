@@ -19,6 +19,7 @@
 # define ACCESS_DENY 126
 # define NO_COMMAND 127
 # define SIG_INT_FAIL 130
+# define DONT_EXIT -1
 
 extern volatile sig_atomic_t	g_sig;
 
@@ -85,6 +86,10 @@ typedef struct s_data
 void					prompt(t_data data);
 void					ft_execve(t_cmd *cmd, t_data *data, char **ev);
 char					*free_strjoin(char *str1, char *str2);
+int						quote_unclosed(char *input);
+void					ft_wait_input(t_data *data);
+int						is_empty_input(char *input);
+
 
 // signal
 void					handler(int sig);
