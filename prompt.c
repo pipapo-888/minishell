@@ -49,10 +49,10 @@ void	prompt(t_data *data)
 	}
 	add_history(data->input);
 	env = env_to_array(data->env, EXPAND);
-	cmd_init(&data);
-	cmd_setup(&data, data->cmd, data->input, env);
-	if (check_early_return(&data, env) != 0)
+	cmd_init(data);
+	cmd_setup(data, data->cmd, data->input, env);
+	if (check_early_return(data, env) != 0)
 		return ;
-	ft_execve(data->cmd, &data, env);
-	free_exit(&data, env, DONT_EXIT);
+	ft_execve(data->cmd, data, env);
+	free_exit(data, env, DONT_EXIT);
 }
