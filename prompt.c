@@ -64,6 +64,7 @@ void is_input_null(t_data *data)
 	status = ft_atoi(status_str);
 	free(status_str);
 	free_all(data);
+	rl_clear_history();
 	exit(status);
 }
 
