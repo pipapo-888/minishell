@@ -72,7 +72,8 @@ void	built_in_export(t_data *data, char **argv)
 
 	i = 1;
 	error_flag = 0;
-	// if (argv[1] == NULL)
+	if (argv[1] == NULL)
+		declare_x(data, data->env);
 		
 	while (argv[i])
 	{
