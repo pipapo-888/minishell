@@ -10,3 +10,10 @@ void	handler(int sig)
 	rl_redisplay();
 }
 
+void	heredoc_handler(int sig)
+{
+	(void)sig;
+	g_sig = SIG_INT_FAIL;
+	write(1, "\n", 1);
+	close(STDIN_FILENO);
+}

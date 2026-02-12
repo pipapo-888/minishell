@@ -87,6 +87,7 @@ char					*free_strjoin(char *str1, char *str2);
 
 // signal
 void					handler(int sig);
+void					heredoc_handler(int sig);
 
 
 // env
@@ -134,6 +135,7 @@ void					built_in_cd(t_cmd *cmd, char **ev, t_data *data);
 void					built_in_echo(t_data *data, t_cmd *cmd);
 void					built_in_env(t_data *data, t_cmd *cmd);
 void					built_in_export(t_data *data, char **argv);
+void 					declare_x(t_data *data, t_env *env);
 void					built_in_pwd(t_data *data, t_cmd *cmd);
 void					built_in_unset(t_data *data, char **argv);
 
