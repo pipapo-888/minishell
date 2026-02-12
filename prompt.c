@@ -55,34 +55,48 @@ static int	is_empty_input(char *input)
 	return (1);
 }
 
-void	prompt(t_data data)
+void is_input_null(t_data *data)
+{
+	int status;
+	char *status_str;
+
+	status_str = ft_strdup(get_env_var("?", data->env));
+	status = ft_atoi(status_str);
+	free(status_str);
+	free_all(data);
+	exit(status);
+}
+
+
+
+void	prompt(t_data *data)
 {
 	char	**env;
-	data.input = readline("minishell$ ");
+	data->input = readline("minishell$ ");
 	if (g_sig != 0)
 	{
-		set_exit_status(data.env, g_sig);
+		set_exit_status(data->env, g_sig);
 		g_sig = 0;
 	}
-	ft_wait_input(&data);
-	if (data.input == NULL)
-		exit(1);
-	if (is_empty_input(data.input) != 0)
+	ft_wait_input(data);
+	if (data->input == NULL)
+		is_input_null(data);
+	if (is_empty_input(data->input) != 0)
 	{
-		free(data.input);
+		free(data->input);
 		return ;
 	}
-	add_history(data.input);
-	env = env_to_array(data.env, EXPAND);
-	cmd_init(&data);
-	cmd_setup(&data, data.cmd, data.input, env);
-	if (data.cmd == NULL || data.cmd->argv == NULL)
+	add_history(data->input);
+	env = env_to_array(data->env, EXPAND);
+	cmd_init(data);
+	cmd_setup(data, data->cmd, data->input, env);
+	if (data->cmd == NULL || data->cmd->argv == NULL)
 	{
-		free_all(&data);
+		free_all(data);
 		free_split(env);
 		return ;
 	}
-	ft_execve(data.cmd, &data, env);
-	free_all(&data);
+	ft_execve(data->cmd, data, env);
+	free_all(data);
 	free_split(env);
 }
