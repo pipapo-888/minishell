@@ -27,3 +27,17 @@ void	add_new_env(t_data *data, char *key, char *value)
 	if (value)
 		free(value);
 }
+
+char	*get_env_var(char *key, t_env *env)
+{
+	while (env != NULL)
+	{
+		if (ft_strcmp(key, env->key) == 0)
+		{
+			if (env->value)
+				return (ft_strdup(env->value));
+		}
+		env = env->next;
+	}
+	return (ft_strdup(""));
+}
