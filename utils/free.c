@@ -15,6 +15,13 @@ void	free_split(char **sp)
 	free(sp);
 }
 
+static void	free_heredoc(t_heredoc *heredoc)
+{
+	if (heredoc->content != NULL)
+		free(heredoc->content);
+	free(heredoc);
+}
+
 static void	free_cmd(t_cmd *cmd)
 {
 	if (cmd == NULL)
@@ -27,7 +34,23 @@ static void	free_cmd(t_cmd *cmd)
 		free(cmd->infile);
 	if (cmd->outfile != NULL)
 		free(cmd->outfile);
+	if (cmd->heredoc != NULL)
+		free_heredoc(cmd->heredoc);
 	free(cmd);
+}
+
+void	free_env_list(t_env *env)
+{
+	t_env	*next;
+
+	while (env != NULL)
+	{
+		next = env->next;
+		free(env->key);
+		free(env->value);
+		free(env);
+		env = next;
+	}
 }
 
 void	free_all(t_data *data)
@@ -48,4 +71,17 @@ void	free_all(t_data *data)
 		free(data->input);
 	data->cmd = NULL;
 	data->input = NULL;
+}
+
+void	free_exit(t_data *data, char **env, int status)
+{
+	if (data != NULL)
+		free_all(data);
+	if (env != NULL)
+		free_split(env);
+	// free_env_list(data->env);
+	rl_clear_history();
+	if (status == DONT_EXIT)
+		return ;
+	exit(status);
 }

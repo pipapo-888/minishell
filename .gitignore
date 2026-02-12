@@ -3,3 +3,4 @@ minishell
 infile
 outfile
 *.a
+readline.supp

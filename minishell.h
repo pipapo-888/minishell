@@ -19,6 +19,7 @@
 # define ACCESS_DENY 126
 # define NO_COMMAND 127
 # define SIG_INT_FAIL 130
+# define DONT_EXIT -1
 
 extern volatile sig_atomic_t	g_sig;
 
@@ -45,6 +46,7 @@ typedef struct s_token
 	t_token_type		type;
 	char				*value;
 	int					split;
+	int					quoted;
 	struct s_token		*next;
 }						t_token;
 
@@ -84,6 +86,10 @@ typedef struct s_data
 void					prompt(t_data *data);
 void					ft_execve(t_cmd *cmd, t_data *data, char **ev);
 char					*free_strjoin(char *str1, char *str2);
+int						quote_unclosed(char *input);
+void					ft_wait_input(t_data *data);
+int						is_empty_input(char *input);
+
 
 // signal
 void					handler(int sig);
@@ -125,13 +131,13 @@ t_token					*tokenize(const char *input);
 void					free_tokens(t_token *tokens);
 
 // heredoc
-void					ft_heredoc(t_cmd *cmd, char *key, int quoted,
+int						ft_heredoc(t_cmd *cmd, char *key, int quoted,
 							t_env *env);
 int						handle_heredoc(t_data *data, t_cmd *cmd,
 							t_token **temp);
 
 // built-in
-int						built_in_check(t_cmd *cmd, t_data *data);
+int						built_in_check(t_cmd *cmd, t_data *data, char **env);
 void					built_in_cd(t_cmd *cmd, char **ev, t_data *data);
 void					built_in_echo(t_data *data, t_cmd *cmd);
 void					built_in_env(t_data *data, t_cmd *cmd);
@@ -155,5 +161,7 @@ char					**space_tab_split(const char *str);
 // free
 void					free_split(char **sp);
 void					free_all(t_data *data);
+void					free_env_list(t_env *env);
+void					free_exit(t_data *data, char **env, int status);
 
 #endif
