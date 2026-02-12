@@ -102,5 +102,6 @@ void declare_x(t_data *data, t_env *env)
 	copy = copy_env_list(env);
 	sort_env_list(copy);
 	print_export(data, copy);
+	// ここにfree_env_listを追加してcopyおfreeする！
 	return ;
 }

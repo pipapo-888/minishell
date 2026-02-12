@@ -83,7 +83,7 @@ typedef struct s_data
 }						t_data;
 
 // prompt
-void					prompt(t_data data);
+void					prompt(t_data *data);
 void					ft_execve(t_cmd *cmd, t_data *data, char **ev);
 char					*free_strjoin(char *str1, char *str2);
 int						quote_unclosed(char *input);
@@ -103,6 +103,7 @@ void					env_add_back(t_env **head, t_env *new_node);
 int						env_list_size(t_env *env);
 void					add_new_env(t_data *data, char *key, char *value);
 t_env					*find_key(t_env *env, char *key);
+char					*get_env_var(char *key, t_env *env);
 
 // expand
 int						get_var_len(char *str);

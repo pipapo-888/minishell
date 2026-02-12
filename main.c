@@ -16,9 +16,9 @@ int	main(int ac, char **av, char **envp)
 	data.input = NULL;
 	signal(SIGINT, handler);
 	signal(SIGQUIT, SIG_IGN);
-	while (1)
+	while (1) 
 	{		
-		prompt(data);
+		prompt(&data);
 	}
 	return (0);
 }
