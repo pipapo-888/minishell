@@ -156,5 +156,6 @@ char					**space_tab_split(const char *str);
 void					free_split(char **sp);
 void					free_all(t_data *data);
 void					free_env_list(t_env *env);
+void					free_exit(t_data *data, char **env, int status);
 
 #endif

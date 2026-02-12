@@ -66,11 +66,7 @@ void	prompt(t_data data)
 	}
 	ft_wait_input(&data);
 	if (data.input == NULL)
-	{
-		free_env_list(data.env);
-		rl_clear_history();
-		exit(1);
-	}
+		free_exit(&data, NULL, 1);
 	if (is_empty_input(data.input) != 0)
 	{
 		free(data.input);
