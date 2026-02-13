@@ -1,5 +1,7 @@
 #include "../minishell.h"
 
+# define DEF_PATH "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/bin" //使うか
+
 static t_env	*create_env_node(char *envp_line)
 {
 	t_env	*node;
