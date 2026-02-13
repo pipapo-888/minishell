@@ -74,12 +74,11 @@ void	built_in_export(t_data *data, char **argv)
 	error_flag = 0;
 	if (argv[1] == NULL)
 		declare_x(data, data->env);
-		
 	while (argv[i])
 	{
 		if (examine_argv(argv[i]) == 0)
 			export_one(data, argv[i]);
-		else 
+		else
 			error_flag = 1;
 		i++;
 	}

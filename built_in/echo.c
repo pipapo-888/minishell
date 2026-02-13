@@ -37,9 +37,6 @@ void	built_in_echo(t_data *data, t_cmd *cmd)
 	if (!n_flag)
 		write(1, "\n", 1);
 	if (saved_stdout != -1)
-	{
-		if (dup2_and_close(saved_stdout, STDOUT_FILENO) < 0)
-			return ;
-	}
+		dup2_and_close(saved_stdout, STDOUT_FILENO);
 	set_exit_status(data->env, SUCCESS);
 }
