@@ -18,7 +18,8 @@ void	set_status_child_process(t_data *data, int status)
 		set_exit_status(data->env, WEXITSTATUS(status));
 	else if (WIFSIGNALED(status))
 	{
-		write(1, "\n", 1);
+		if (WTERMSIG(status) == SIGINT)
+			write(1, "\n", 1);
 		set_exit_status(data->env, 128 + WTERMSIG(status));
 	}
 }
