@@ -6,7 +6,7 @@
 /*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 13:56:01 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/14 15:17:25 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/14 16:16:44 by knomura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	is_input_null(t_data *data)
 	int		status;
 	char	*status_str;
 
-	status_str = ft_strdup(get_env_var("?", data->env));
+	status_str = get_env_var("?", data->env);
 	status = ft_atoi(status_str);
 	free(status_str);
 	free_all(data);
