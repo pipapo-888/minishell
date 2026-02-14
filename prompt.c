@@ -37,6 +37,7 @@ void	is_input_null(t_data *data)
 	status_str = get_env_var("?", data->env);
 	status = ft_atoi(status_str);
 	free(status_str);
+	free_env_list(data->env);
 	free_all(data);
 	rl_clear_history();
 	exit(status);
