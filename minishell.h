@@ -21,6 +21,9 @@
 # define SIG_INT_FAIL 130
 # define DONT_EXIT -1
 
+# define L_LLONG_MAX "9223372036854775807"
+# define L_LLONG_MIN "9223372036854775808"
+
 extern volatile sig_atomic_t	g_sig;
 
 typedef enum e_export_type
@@ -145,6 +148,7 @@ void					built_in_export(t_data *data, char **argv);
 void 					declare_x(t_data *data, t_env *env);
 void					built_in_pwd(t_data *data, t_cmd *cmd);
 void					built_in_unset(t_data *data, char **argv);
+void					built_in_exit(t_data *data, t_cmd *cmd, char **env);
 
 // utils
 int						dup2_and_close(int fd, int flag);
@@ -157,6 +161,8 @@ char					*search_path(const char *cmd, char *const envp[]);
 char					*get_env_value(char *const envp[], const char *key);
 char					*ft_strjoin_char(char *str, char c);
 char					**space_tab_split(const char *str);
+int						llong_check(const char *str);
+long long				ft_atoll(const char *str);
 
 // free
 void					free_split(char **sp);

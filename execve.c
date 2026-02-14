@@ -1,6 +1,5 @@
 #include "./minishell.h"
 
-
 int	built_in_check(t_cmd *cmd, t_data *data, char **env)
 {
 	if (!ft_strcmp(cmd->argv[0], "echo"))
@@ -16,7 +15,7 @@ int	built_in_check(t_cmd *cmd, t_data *data, char **env)
 	if (!ft_strcmp(cmd->argv[0], "env"))
 		return (built_in_env(data, cmd), 0);
 	if (!ft_strcmp(cmd->argv[0], "exit"))
-		free_exit(data, env, ERROR);
+		return (built_in_exit(data, cmd, env), 0);
 	return (1);
 }
 
@@ -75,7 +74,7 @@ void	child_prosess(t_data *data, char **env, int pfd[2], int prev_fd)
 	if (setup_redirects(data->cmd) != 0)
 		free_exit(data, env, ERROR);
 	if (built_in_check(data->cmd, data, env) == 0)
-		free_exit(data, env, SUCCESS);
+		free_exit(data, env, ft_atoi(get_env_var("?", data->env)));
 	if (data->cmd->path == NULL)
 		check_no_command(data, data->cmd->argv[0], env);
 	check_access_deny(data, env);
