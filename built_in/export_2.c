@@ -6,7 +6,7 @@
 /*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 13:50:25 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/14 13:50:26 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/14 14:40:34 by knomura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,6 @@ void	declare_x(t_data *data, t_env *env)
 	copy = copy_env_list(env);
 	sort_env_list(copy);
 	print_export(data, data->cmd, copy);
-	// ここにfree_env_listを追加してcopyおfreeする！
+	free_env_list(copy);
 	return ;
 }
