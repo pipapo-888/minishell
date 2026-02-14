@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/14 15:12:39 by knomura           #+#    #+#             */
+/*   Updated: 2026/02/14 15:15:59 by knomura          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -93,11 +105,9 @@ int						quote_unclosed(char *input);
 void					ft_wait_input(t_data *data);
 int						is_empty_input(char *input);
 
-
 // signal
 void					handler(int sig);
 void					heredoc_handler(int sig);
-
 
 // env
 void					env_init(t_data *data, char **envp);
@@ -146,7 +156,7 @@ void					built_in_cd(t_cmd *cmd, char **ev, t_data *data);
 void					built_in_echo(t_data *data, t_cmd *cmd);
 void					built_in_env(t_data *data, t_cmd *cmd);
 void					built_in_export(t_data *data, char **argv);
-void 					declare_x(t_data *data, t_env *env);
+void					declare_x(t_data *data, t_env *env);
 void					built_in_pwd(t_data *data, t_cmd *cmd);
 void					built_in_unset(t_data *data, char **argv);
 void					built_in_exit(t_data *data, t_cmd *cmd, char **env);

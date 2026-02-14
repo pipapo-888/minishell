@@ -30,6 +30,7 @@ SRCS = main.c\
 		built_in/exit.c\
 		utils/fd_utils.c\
 		utils/free.c\
+		utils/free_2.c\
 		utils/search.c\
 		utils/redirects.c\
 		utils/open_file.c\

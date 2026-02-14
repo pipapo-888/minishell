@@ -6,7 +6,7 @@
 /*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 13:56:01 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/14 13:56:02 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/14 15:17:25 by knomura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ static int	check_early_return(t_data *data, char **env)
 	return (0);
 }
 
-void is_input_null(t_data *data)
+void	is_input_null(t_data *data)
 {
-	int status;
-	char *status_str;
+	int		status;
+	char	*status_str;
 
 	status_str = ft_strdup(get_env_var("?", data->env));
 	status = ft_atoi(status_str);
@@ -45,6 +45,7 @@ void is_input_null(t_data *data)
 void	prompt(t_data *data)
 {
 	char	**env;
+
 	data->input = readline("minishell$ ");
 	if (g_sig != 0)
 	{
