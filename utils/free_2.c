@@ -6,7 +6,7 @@
 /*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 15:09:45 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/14 15:11:41 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/14 15:28:26 by knomura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ void	free_exit(t_data *data, char **env, int status)
 		free_all(data);
 	if (env != NULL)
 		free_split(env);
-	rl_clear_history();
 	if (status == DONT_EXIT)
 		return ;
+	rl_clear_history();
 	exit(status);
 }
