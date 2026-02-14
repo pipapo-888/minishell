@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cmd_setup.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/14 13:53:41 by knomura           #+#    #+#             */
+/*   Updated: 2026/02/14 14:27:01 by knomura          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static void	put_in_path(t_cmd *cmd, char **ev)
@@ -37,12 +49,12 @@ static void	expand_tokens(t_token *token, t_env *env)
 	}
 }
 
-static int	is_tokens_type(t_token_type type)
+static void	syntax_error(char *token)
 {
-	if (type == REDIR_IN || type == REDIR_OUT
-		|| type == REDIR_APPEND || type == HEREDOC)
-		return (1);
-	return (0);
+	write(2, "minishell: ", 11);
+	ft_putstr_fd("syntax error near unexpected token `", 2);
+	ft_putstr_fd(token, 2);
+	ft_putstr_fd("'\n", 2);
 }
 
 static int	is_syntax_error(t_token *tokens)
@@ -51,8 +63,7 @@ static int	is_syntax_error(t_token *tokens)
 		return (0);
 	if (tokens->type == PIPE)
 	{
-		write(2, "minishell: ", 11);
-		ft_putstr_fd("syntax error near unexpected token `|'\n", 2);
+		syntax_error("|");
 		return (1);
 	}
 	while (tokens != NULL)
@@ -60,15 +71,13 @@ static int	is_syntax_error(t_token *tokens)
 		if (is_tokens_type(tokens->type) && \
 			(tokens->next == NULL || tokens->next->type != WORD))
 		{
-			write(2, "minishell: ", 11);
-			ft_putstr_fd("syntax error near unexpected token `newline'\n", 2);
+			syntax_error("newline");
 			return (1);
 		}
 		if (tokens->type == PIPE && \
 			(tokens->next == NULL || tokens->next->type == PIPE))
 		{
-			write(2, "minishell: ", 11);
-			ft_putstr_fd("syntax error near unexpected token `|'\n", 2);
+			syntax_error("|");
 			return (1);
 		}
 		tokens = tokens->next;

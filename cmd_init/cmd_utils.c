@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cmd_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/14 13:53:46 by knomura           #+#    #+#             */
+/*   Updated: 2026/02/14 14:27:11 by knomura          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static void	heredoc_init(t_cmd *cmd)
@@ -47,6 +59,14 @@ t_cmd	*get_last_cmd(t_data *data)
 int	is_special_char(char c)
 {
 	if (c == '|' || c == '<' || c == '>')
+		return (1);
+	return (0);
+}
+
+int	is_tokens_type(t_token_type type)
+{
+	if (type == REDIR_IN || type == REDIR_OUT
+		|| type == REDIR_APPEND || type == HEREDOC)
 		return (1);
 	return (0);
 }

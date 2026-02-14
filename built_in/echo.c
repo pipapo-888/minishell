@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   echo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/14 13:50:08 by knomura           #+#    #+#             */
+/*   Updated: 2026/02/14 13:50:09 by knomura          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static int	is_n_flag(char *str)
@@ -37,9 +49,6 @@ void	built_in_echo(t_data *data, t_cmd *cmd)
 	if (!n_flag)
 		write(1, "\n", 1);
 	if (saved_stdout != -1)
-	{
-		if (dup2_and_close(saved_stdout, STDOUT_FILENO) < 0)
-			return ;
-	}
+		dup2_and_close(saved_stdout, STDOUT_FILENO);
 	set_exit_status(data->env, SUCCESS);
 }

@@ -1,6 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/14 13:50:35 by knomura           #+#    #+#             */
+/*   Updated: 2026/02/14 13:50:36 by knomura          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 #define PATHNAME_SIZE 1024
+
+void	set_pwd_exit_status(t_data *data, int error_flag)
+{
+	if (error_flag)
+		set_exit_status(data->env, ERROR);
+	else
+		set_exit_status(data->env, SUCCESS);
+}
 
 void	built_in_pwd(t_data *data, t_cmd *cmd)
 {
@@ -28,8 +48,5 @@ void	built_in_pwd(t_data *data, t_cmd *cmd)
 	}
 	if (saved_stdout != -1)
 		dup2_and_close(saved_stdout, STDOUT_FILENO);
-	if (error_flag)
-		set_exit_status(data->env, ERROR);
-	else
-		set_exit_status(data->env, SUCCESS);
+	set_pwd_exit_status(data, error_flag);
 }

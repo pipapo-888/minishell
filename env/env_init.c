@@ -1,4 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env_init.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/14 13:54:26 by knomura           #+#    #+#             */
+/*   Updated: 2026/02/14 15:01:40 by knomura          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
+
+#define DEF_PATH "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/bin"
 
 static t_env	*create_env_node(char *envp_line)
 {
@@ -54,8 +68,7 @@ static void	self_init_env(t_env **env)
 		free(pwd_str);
 	}
 	env_add_back(env, create_env_node("SHLVL=1"));
-	env_add_back(env, create_env_node \
-		("PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"));
+	env_add_back(env, create_env_node(DEF_PATH));
 	env_add_back(env, create_env_node("_=/usr/bin/env"));
 	env_add_back(env, create_env_node("OLDPWD"));
 }

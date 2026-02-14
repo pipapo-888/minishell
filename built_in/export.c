@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/14 13:50:31 by knomura           #+#    #+#             */
+/*   Updated: 2026/02/14 13:50:32 by knomura          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	if_existing(t_env *existing, char *value, char *key)
@@ -74,12 +86,11 @@ void	built_in_export(t_data *data, char **argv)
 	error_flag = 0;
 	if (argv[1] == NULL)
 		declare_x(data, data->env);
-		
 	while (argv[i])
 	{
 		if (examine_argv(argv[i]) == 0)
 			export_one(data, argv[i]);
-		else 
+		else
 			error_flag = 1;
 		i++;
 	}
