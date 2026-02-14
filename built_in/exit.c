@@ -6,11 +6,11 @@
 /*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 13:50:17 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/14 15:02:25 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/14 15:04:38 by knomura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 static void	put_numeric_error_exit(t_data *data, t_cmd *cmd, char **env)
 {
