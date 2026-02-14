@@ -72,3 +72,16 @@ void	free_all(t_data *data)
 	data->cmd = NULL;
 	data->input = NULL;
 }
+
+void	free_exit(t_data *data, char **env, int status)
+{
+	if (data != NULL)
+		free_all(data);
+	if (env != NULL)
+		free_split(env);
+	// free_env_list(data->env);
+	rl_clear_history();
+	if (status == DONT_EXIT)
+		return ;
+	exit(status);
+}

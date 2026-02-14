@@ -19,6 +19,9 @@
 # define ACCESS_DENY 126
 # define NO_COMMAND 127
 # define SIG_INT_FAIL 130
+# define DONT_EXIT -1
+# define NUMERIC 0
+# define TOO_MANY 1
 
 # define L_LLONG_MAX 9223372036854775807
 # define L_LLONG_MIN 9223372036854775807
@@ -85,9 +88,13 @@ typedef struct s_data
 }						t_data;
 
 // prompt
-void					prompt(t_data data);
+void					prompt(t_data *data);
 void					ft_execve(t_cmd *cmd, t_data *data, char **ev);
 char					*free_strjoin(char *str1, char *str2);
+int						quote_unclosed(char *input);
+void					ft_wait_input(t_data *data);
+int						is_empty_input(char *input);
+
 
 // signal
 void					handler(int sig);
@@ -101,6 +108,7 @@ void					env_add_back(t_env **head, t_env *new_node);
 int						env_list_size(t_env *env);
 void					add_new_env(t_data *data, char *key, char *value);
 t_env					*find_key(t_env *env, char *key);
+char					*get_env_var(char *key, t_env *env);
 
 // expand
 int						get_var_len(char *str);
@@ -139,6 +147,7 @@ void					built_in_cd(t_cmd *cmd, char **ev, t_data *data);
 void					built_in_echo(t_data *data, t_cmd *cmd);
 void					built_in_env(t_data *data, t_cmd *cmd);
 void					built_in_export(t_data *data, char **argv);
+void 					declare_x(t_data *data, t_env *env);
 void					built_in_pwd(t_data *data, t_cmd *cmd);
 void					built_in_unset(t_data *data, char **argv);
 void					built_in_exit(t_data *data, t_cmd *cmd, char **env);
@@ -161,6 +170,6 @@ long long				ft_atoll(const char *str);
 void					free_split(char **sp);
 void					free_all(t_data *data);
 void					free_env_list(t_env *env);
-void					free_exit(t_data *data, char **env, int code);
+void					free_exit(t_data *data, char **env, int status);
 
 #endif

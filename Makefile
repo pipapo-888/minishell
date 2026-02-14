@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -g -Wall -Wextra -Werror
 
 SRCS = main.c\
 		execve.c\
@@ -24,6 +24,7 @@ SRCS = main.c\
 		built_in/echo.c\
 		built_in/env.c\
 		built_in/export.c\
+		built_in/export_2.c\
 		built_in/pwd.c\
 		built_in/unset.c\
 		utils/fd_utils.c\
@@ -34,6 +35,7 @@ SRCS = main.c\
 		utils/set_exit_status.c\
 		utils/char_utils.c\
 		utils/space_tab_split.c\
+		utils/prompt_utils.c\
 
 OBJS = $(SRCS:.c=.o)
 

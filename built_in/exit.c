@@ -1,6 +1,4 @@
 #include "../minishell.h"
-#define numeric 2
-#define too_many 1
 
 void	put_error_exit(t_data *data, t_cmd *cmd, char **env, int type)
 {
