@@ -1,21 +1,12 @@
 #include "../minishell.h"
 
-void	put_error_exit(t_data *data, t_cmd *cmd, char **env, int type)
+static void	put_numeric_error_exit(t_data *data, t_cmd *cmd, char **env)
 {
 	ft_putstr_fd("minishell: exit: ", 2);
 	ft_putstr_fd(cmd->argv[1], 2);
-	if (type == numeric)
-	{
-		ft_putstr_fd(": numeric argument required\n", 2);
-		set_exit_status(data->env, ERROR);
-		free_exit(data, env, ERROR);
-	}
-	else if (type == too_many)
-	{
-		ft_putstr_fd(": too many arguments\n", 2);
-		set_exit_status(data->env, SHELL_ERROR);
-		free_exit(data, env, SHELL_ERROR);
-	}
+	ft_putstr_fd(": numeric argument required\n", 2);
+	set_exit_status(data->env, SHELL_ERROR);
+	free_exit(data, env, SHELL_ERROR);
 }
 
 static int	is_numeric_digit(char *arg)
@@ -50,17 +41,25 @@ static int	too_many_arguments(t_cmd *cmd)
 
 void	built_in_exit(t_data *data, t_cmd *cmd, char **env)
 {
-	long long	code;
+	long long	argv;
+	int			status;
 
 	ft_putstr_fd("exit\n", 2);
 	if (cmd->argv[1] == NULL)
 		free_exit(data, env, SUCCESS);
-	if (is_numeric_digit(cmd->argv[1]) != 0
-		|| llong_check_atoi(cmd->argv[1]) != 0)
-		put_error_exit(data, cmd, env, numeric);
-	if (too_many_arguments(cmd) != 0)
-		put_error_exit(data, cmd, env, too_many);
-	code = ft_atoll(cmd->argv[1]);
-	set_exit_status(data->env, (int)(code & 255));
-	free_exit(data, env, (int)(code & 255));
+	else if (is_numeric_digit(cmd->argv[1]) != 0
+		|| llong_check(cmd->argv[1]) != 0)
+		put_numeric_error_exit(data, cmd, env);
+	else if (too_many_arguments(cmd) != 0)
+	{
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		set_exit_status(data->env, ERROR);
+		return ;
+	}
+	argv = ft_atoll(cmd->argv[1]);
+	status = (int)(argv % 256);
+	if (status < 0)
+		status += 256;
+	set_exit_status(data->env, status);
+	free_exit(data, env, status);
 }

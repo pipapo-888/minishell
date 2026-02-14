@@ -27,6 +27,7 @@ SRCS = main.c\
 		built_in/export_2.c\
 		built_in/pwd.c\
 		built_in/unset.c\
+		built_in/exit.c\
 		utils/fd_utils.c\
 		utils/free.c\
 		utils/search.c\
@@ -36,6 +37,7 @@ SRCS = main.c\
 		utils/char_utils.c\
 		utils/space_tab_split.c\
 		utils/prompt_utils.c\
+		utils/llong_check.c\
 
 OBJS = $(SRCS:.c=.o)
 
