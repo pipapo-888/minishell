@@ -6,7 +6,7 @@
 /*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 13:53:41 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/14 13:53:42 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/14 14:27:01 by knomura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,6 @@ static void	expand_tokens(t_token *token, t_env *env)
 			break ;
 		token = token->next;
 	}
-}
-
-static int	is_tokens_type(t_token_type type)
-{
-	if (type == REDIR_IN || type == REDIR_OUT
-		|| type == REDIR_APPEND || type == HEREDOC)
-		return (1);
-	return (0);
 }
 
 static void	syntax_error(char *token)

@@ -119,6 +119,7 @@ void					put_in_cmd(t_data *data, t_cmd *cmd, t_token **tokens);
 void					put_in_word(t_cmd *cmd, t_token **tokens);
 t_cmd					*get_last_cmd(t_data *data);
 int						is_special_char(char c);
+int						is_tokens_type(t_token_type type);
 
 // tokenizer
 int						extract_pipe_token(t_token **token);
