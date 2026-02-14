@@ -88,6 +88,10 @@ typedef struct s_data
 // prompt
 void					prompt(t_data *data);
 void					ft_execve(t_cmd *cmd, t_data *data, char **ev);
+void					check_no_command(t_data *data, char *argv, char **env);
+void					check_access_deny(t_data *data, char **env);
+void					set_status_child_process(t_data *data, int status);
+
 char					*free_strjoin(char *str1, char *str2);
 int						quote_unclosed(char *input);
 void					ft_wait_input(t_data *data);

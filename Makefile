@@ -4,6 +4,7 @@ CFLAGS = -g -Wall -Wextra -Werror
 
 SRCS = main.c\
 		execve.c\
+		execve_utils.c\
 		prompt.c\
 		signal.c\
 		cmd_init/extract_option.c\

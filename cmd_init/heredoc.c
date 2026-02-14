@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 13:54:08 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/14 13:54:09 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/14 15:14:29 by habe             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,12 @@ static char	*expand_line(char *line, int quoted, t_env *env)
 	return (content);
 }
 
-int	ft_heredoc(t_cmd *cmd, char *key, int quoted, t_env *env)
+static void	wait_heredoc(t_cmd *cmd, t_env *env, char *key, int quoted)
 {
 	char	*line;
 	char	*content;
-	char	*tmp;
-	int		stdin_copy;
+	char	*temp;
 
-	stdin_copy = dup(STDIN_FILENO);
-	g_sig = 0;
-	signal(SIGINT, heredoc_handler);
-	cmd->heredoc->content = ft_strdup("");
 	while (1)
 	{
 		line = readline("> ");
@@ -50,11 +45,22 @@ int	ft_heredoc(t_cmd *cmd, char *key, int quoted, t_env *env)
 			break ;
 		}
 		content = expand_line(line, quoted, env);
-		tmp = ft_strjoin(content, "\n");
-		cmd->heredoc->content = free_strjoin(cmd->heredoc->content, tmp);
+		temp = ft_strjoin(content, "\n");
+		cmd->heredoc->content = free_strjoin(cmd->heredoc->content, temp);
 		free(content);
-		free(tmp);
+		free(temp);
 	}
+}
+
+int	ft_heredoc(t_cmd *cmd, char *key, int quoted, t_env *env)
+{
+	int		stdin_copy;
+
+	stdin_copy = dup(STDIN_FILENO);
+	g_sig = 0;
+	signal(SIGINT, heredoc_handler);
+	cmd->heredoc->content = ft_strdup("");
+	wait_heredoc(cmd, env, key, quoted);
 	dup2(stdin_copy, STDIN_FILENO);
 	close(stdin_copy);
 	signal(SIGINT, handler);

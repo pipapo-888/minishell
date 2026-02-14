@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execve.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 13:55:50 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/14 15:02:50 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/14 15:19:33 by habe             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,43 +29,6 @@ int	built_in_check(t_cmd *cmd, t_data *data, char **env)
 	if (!ft_strcmp(cmd->argv[0], "exit"))
 		return (built_in_exit(data, cmd, env), 0);
 	return (1);
-}
-
-static void	check_access_deny(t_data *data, char **env)
-{
-	struct stat	st;
-
-	if (stat(data->cmd->path, &st) == 0 && S_ISDIR(st.st_mode))
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(data->cmd->argv[0], 2);
-		ft_putstr_fd(": Is a directory\n", 2);
-	}
-	else if (access(data->cmd->path, X_OK) != 0)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(data->cmd->argv[0], 2);
-		ft_putstr_fd(": Permission denied\n", 2);
-	}
-	else
-		return ;
-	free_exit(data, env, ACCESS_DENY);
-}
-
-static void	check_no_command(t_data *data, char *argv, char **env)
-{
-	if (ft_strchr(argv, '/') != NULL || get_env_value(env, "PATH") == NULL)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(argv, 2);
-		ft_putstr_fd(": No such file or directory\n", 2);
-	}
-	else
-	{
-		ft_putstr_fd(argv, 2);
-		ft_putstr_fd(": command not found\n", 2);
-	}
-	free_exit(data, env, NO_COMMAND);
 }
 
 void	child_prosess(t_data *data, char **env, int pfd[2], int prev_fd)
@@ -105,17 +68,6 @@ static int	update_prev_fd(int pfd[2], int prev_fd, t_cmd *cmd)
 		return (pfd[0]);
 	}
 	return (-1);
-}
-
-void	set_status_child_process(t_data *data, int status)
-{
-	if (WIFEXITED(status))
-		set_exit_status(data->env, WEXITSTATUS(status));
-	else if (WIFSIGNALED(status))
-	{
-		write(1, "\n", 1);
-		set_exit_status(data->env, 128 + WTERMSIG(status));
-	}
 }
 
 static void	handle_process(t_data *data, t_cmd *cmd, char **env)
