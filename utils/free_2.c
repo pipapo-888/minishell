@@ -34,6 +34,8 @@ void	free_exit(t_data *data, char **env, int status)
 		free_split(env);
 	if (status == DONT_EXIT)
 		return ;
+	if (data != NULL)
+		free_env_list(data->env);
 	rl_clear_history();
 	exit(status);
 }
