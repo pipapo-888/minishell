@@ -6,13 +6,13 @@
 /*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 13:54:26 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/14 14:34:32 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/14 14:36:18 by knomura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-# define DEF_PATH "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/bin" //使うか
+#define DEF_PATH "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/bin"
 
 static t_env	*create_env_node(char *envp_line)
 {
