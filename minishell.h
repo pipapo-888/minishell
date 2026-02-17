@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 15:12:39 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/14 15:15:59 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/17 19:31:30 by habe             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,8 +125,11 @@ char					*get_env_var(char *key, t_env *env);
 // expand
 int						get_var_len(char *str);
 int						is_valid_variable_char(char c, int first);
+char					*append_expanded(char *result, char *str, int *i, \
+							t_env *env);
+char					*append_char(char *result, char c);
 char					*expand_variables(char *str, t_env *env);
-char					*expand_single_var(char *str, int *i, t_env *env);
+char					*expand_single_token(t_token *token, t_env *env);
 
 // cmd_init
 void					cmd_setup(t_data *data, t_cmd *cmd, char *input,
