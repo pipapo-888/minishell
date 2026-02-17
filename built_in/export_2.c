@@ -6,7 +6,7 @@
 /*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 13:50:25 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/17 19:11:06 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/17 19:38:54 by knomura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_env	*copy_env_list(t_env *env)
 		{
 			node = malloc(sizeof(t_env));
 			if (!node)
+			
 				return (NULL);
 			node->key = ft_strdup(env->key);
 			if (env->value)
@@ -100,7 +101,7 @@ void	print_export(t_data *data, t_cmd *cmd, t_env *copy)
 			ft_putstr_fd(copy->value, 1);
 			ft_putstr_fd("\"", 1);
 		}
-		ft_putstr_fd("\n", 1);	
+		ft_putstr_fd("\n", 1);
 		copy = copy->next;
 	}
 	if (saved_stdout != -1)
