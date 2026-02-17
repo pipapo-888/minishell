@@ -15,8 +15,8 @@ SRCS = main.c\
 		cmd_init/put_in_option.c\
 		cmd_init/put_in_word.c\
 		cmd_init/cmd_utils.c\
-		cmd_init/expand_single.c\
 		cmd_init/expand_variables.c\
+		cmd_init/expand_token.c\
 		env/env_to_array.c\
 		env/env_init.c\
 		env/env_utils.c\
@@ -65,7 +65,7 @@ fclean: clean
 re: fclean all
 
 test:
-	norminette $(SRCS) minishell.h | grep Error
+	@norminette $(SRCS) minishell.h | grep Error || echo "norminette: OK"
 	./test.sh
 
 .PHONY: all clean fclean re test
