@@ -6,7 +6,7 @@
 /*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 13:50:25 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/15 16:15:43 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/17 19:11:06 by knomura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,16 @@ t_env	*copy_env_list(t_env *env)
 	new = NULL;
 	while (env)
 	{
-		if (env->type == SHOW && env->value && ft_strcmp(env->key, "_"))
+		if (env->type == SHOW && ft_strcmp(env->key, "_"))
 		{
 			node = malloc(sizeof(t_env));
 			if (!node)
 				return (NULL);
 			node->key = ft_strdup(env->key);
-			node->value = ft_strdup(env->value);
+			if (env->value)
+				node->value = ft_strdup(env->value);
+			else
+				node->value = NULL;
 			node->type = env->type;
 			node->next = NULL;
 			if (!new)
@@ -77,8 +80,6 @@ void	sort_env_list(t_env *env)
 
 void	print_export(t_data *data, t_cmd *cmd, t_env *copy)
 {
-	char	**arr;
-	int		i;
 	int		saved_stdout;
 
 	saved_stdout = -1;
@@ -88,18 +89,20 @@ void	print_export(t_data *data, t_cmd *cmd, t_env *copy)
 		return ;
 	}
 	set_exit_status(data->env, SUCCESS);
-	arr = env_to_array(copy, SHOW);
-	if (arr == NULL)
-		return ;
-	i = 0;
-	while (arr[i])
+	while (copy)
 	{
 		ft_putstr_fd("declare -x ", 1);
-		ft_putstr_fd(arr[i], 1);
-		write(1, "\n", 1);
-		i++;
+		ft_putstr_fd(copy->key, 1);
+		if (copy->value)
+		{
+			ft_putstr_fd("=", 1);
+			ft_putstr_fd("\"", 1);
+			ft_putstr_fd(copy->value, 1);
+			ft_putstr_fd("\"", 1);
+		}
+		ft_putstr_fd("\n", 1);	
+		copy = copy->next;
 	}
-	free_split(arr);
 	if (saved_stdout != -1)
 		dup2_and_close(saved_stdout, STDOUT_FILENO);
 }
