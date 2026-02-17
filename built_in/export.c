@@ -6,7 +6,7 @@
 /*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 13:50:31 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/14 13:50:32 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/17 15:12:51 by knomura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,10 @@
 void	if_existing(t_env *existing, char *value, char *key)
 {
 	if (existing->value && strcmp(key, "OLDPWD") != 0)
+	{
 		free(existing->value);
+		existing->value = value;	
+	}
 	if (strcmp(key, "OLDPWD") != 0 && value == NULL)
 		existing->value = value;
 	existing->type = SHOW;
