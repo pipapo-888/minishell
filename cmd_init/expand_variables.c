@@ -3,16 +3,43 @@
 /*                                                        :::      ::::::::   */
 /*   expand_variables.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 13:53:56 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/14 13:53:57 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/17 18:45:12 by habe             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static char	*append_expanded(char *result, char *str, int *i, t_env *env)
+static char	*expand_single_var(char *str, int *i, t_env *env)
+{
+	char	*key;
+	char	*value;
+	int		var_len;
+
+	(*i)++;
+	if (str[*i] == '\0' || (!is_valid_variable_char(str[*i], 1)
+			&& str[*i] != '?'))
+	{
+		(*i)--;
+		return (ft_strdup("$"));
+	}
+	if (str[*i] == '?')
+	{
+		return (get_env_var("?", env));
+	}
+	var_len = get_var_len(&str[*i]);
+	if (var_len == 0)
+		return (ft_strdup(""));
+	key = ft_substr(str, *i, var_len);
+	value = get_env_var(key, env);
+	free(key);
+	*i += var_len - 1;
+	return (value);
+}
+
+char	*append_expanded(char *result, char *str, int *i, t_env *env)
 {
 	char	*temp;
 	char	*expanded;
@@ -25,7 +52,7 @@ static char	*append_expanded(char *result, char *str, int *i, t_env *env)
 	return (result);
 }
 
-static char	*append_char(char *result, char c)
+char	*append_char(char *result, char c)
 {
 	char	*temp;
 
@@ -39,22 +66,16 @@ char	*expand_variables(char *str, t_env *env)
 {
 	char	*result;
 	int		i;
-	int		single_quote;
 
 	if (!str)
 		return (NULL);
 	result = ft_strdup("");
 	i = 0;
-	single_quote = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'' && single_quote == 0)
-			single_quote = 1;
-		else if (str[i] == '\'' && single_quote == 1)
-			single_quote = 0;
-		if (str[i] == '$' && single_quote == 0)
+		if (str[i] == '$')
 			result = append_expanded(result, str, &i, env);
-		else if (str[i] != '\'' && str[i] != '\"')
+		else
 			result = append_char(result, str[i]);
 		i++;
 	}

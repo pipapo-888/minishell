@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_setup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 13:53:41 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/14 14:27:01 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/17 19:31:30 by habe             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,7 @@ static void	expand_tokens(t_token *token, t_env *env)
 	while (1)
 	{
 		temp_value = token->value;
-		if (temp_value && (temp_value[0] == '"' || temp_value[0] == '\''))
-			token->split = 1;
-		else
-			token->split = 0;
-		token->value = expand_variables(token->value, env);
+		token->value = expand_single_token(token, env);
 		free(temp_value);
 		if (token->next == NULL)
 			break ;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   put_in_word.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 13:54:17 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/14 13:54:18 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/17 19:16:34 by habe             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	count_total_words(t_token *tokens)
 	total = 0;
 	while (tokens != NULL && tokens->type == WORD)
 	{
-		if (tokens->split == 0 && ft_strchr(tokens->value, '=') == NULL)
+		if (tokens->split == 1 && ft_strchr(tokens->value, '=') == NULL)
 			total += count_words_in_str(tokens->value);
 		else
 			total++;
@@ -77,7 +77,7 @@ void	put_in_word(t_cmd *cmd, t_token **tokens)
 	i = 0;
 	while (*tokens != NULL && (*tokens)->type == WORD)
 	{
-		if ((*tokens)->split == 0 && ft_strchr((*tokens)->value, '=') == NULL)
+		if ((*tokens)->split == 1 && ft_strchr((*tokens)->value, '=') == NULL)
 			i += split_word(cmd, tokens, i);
 		else
 			cmd->argv[i++] = ft_strdup((*tokens)->value);
