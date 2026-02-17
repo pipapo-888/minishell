@@ -6,7 +6,7 @@
 /*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 13:55:33 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/14 13:55:34 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/17 19:24:07 by knomura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*get_env_value(char *const envp[], const char *key)
 	klen = ft_strlen(key);
 	while (envp[i] != NULL)
 	{
-		if (ft_strncmp(envp[i], key, klen) == 0)
+		if (ft_strncmp(envp[i], key, klen) == 0 && envp[i][klen] == '=')
 			return (&envp[i][klen + 1]);
 		i++;
 	}
