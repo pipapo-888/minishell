@@ -6,7 +6,7 @@
 /*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 13:49:57 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/14 13:50:00 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/17 15:43:26 by knomura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ static int	handle_cd_path(t_data *data, t_cmd *cmd, char *path)
 	if (!path && (cmd->argv[1] == NULL || ft_strcmp(cmd->argv[1], "~") == 0))
 	{
 		set_exit_status(data->env, ERROR);
-		ft_putstr_fd("cd: HOME not set", 2);
+		ft_putstr_fd("cd: HOME not set\n", 2);
 		return (1);
 	}
 	if (!path)
 	{
 		set_exit_status(data->env, ERROR);
-		ft_putstr_fd("cd: OLDPWD not set", 2);
+		ft_putstr_fd("cd: OLDPWD not set\n", 2);
 		return (1);
 	}
 	if (chdir(path) != 0)
