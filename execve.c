@@ -70,7 +70,7 @@ static int	update_prev_fd(int pfd[2], int prev_fd, t_cmd *cmd)
 	return (-1);
 }
 
-static void	handle_process(t_data *data, t_cmd *cmd, char **env)
+static pid_t	handle_process(t_data *data, t_cmd *cmd, char **env)
 {
 	int		pfd[2];
 	int		prev_fd;
@@ -88,21 +88,31 @@ static void	handle_process(t_data *data, t_cmd *cmd, char **env)
 		prev_fd = update_prev_fd(pfd, prev_fd, cmd);
 		cmd = cmd->next;
 	}
+	return (pid);
 }
 
 void	ft_execve(t_cmd *cmd, t_data *data, char **env)
 {
 	int		status;
+	int		last_status;
+	pid_t	last_pid;
+	pid_t	wpid;
 	t_cmd	*head;
 
 	head = cmd;
 	if (cmd->next == NULL && built_in_check(cmd, data, env) == 0)
 		return ;
 	signal(SIGINT, SIG_IGN);
-	handle_process(data, cmd, env);
+	last_pid = handle_process(data, cmd, env);
 	data->cmd = head;
-	while (wait(&status) > 0)
-		;
-	set_status_child_process(data, status);
+	last_status = 0;
+	wpid = wait(&status);
+	while (wpid > 0)
+	{
+		if (wpid == last_pid)
+			last_status = status;
+		wpid = wait(&status);
+	}
+	set_status_child_process(data, last_status);
 	signal(SIGINT, handler);
 }
