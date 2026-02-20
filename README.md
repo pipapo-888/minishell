@@ -33,7 +33,8 @@ Compile the project using:
 ### References
 
 - bash manual: ex. `man bash`
-  // HABE へここに参考にしたウェブサイトとか notion に上げてるやつでもいいから適当に２ −3 個追加しておいて
+
+// HABE へここに参考にしたウェブサイトとか notion に上げてるやつでもいいから適当に２ −3 個追加しておいて
 
 ### AI Usage
 
