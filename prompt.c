@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 13:56:01 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/14 16:16:44 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/21 14:35:29 by habe             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ void	is_input_null(t_data *data)
 
 	status_str = get_env_var("?", data->env);
 	status = ft_atoi(status_str);
-	free(status_str);
 	free_env_list(data->env);
 	free_all(data);
 	rl_clear_history();
