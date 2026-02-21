@@ -6,7 +6,7 @@
 /*   By: habe <habe@student.42tokyo.jp>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 08:57:41 by habe              #+#    #+#             */
-/*   Updated: 2026/01/20 11:48:38 by habe             ###   ########.fr       */
+/*   Updated: 2026/02/21 14:34:44 by habe             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ typedef struct s_list
 	struct s_list	*next;
 }				t_list;
 
-int		ft_atoi(const char *nptr);
+int		ft_atoi(char *nptr);
 void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t nmemb, size_t size);
 int		ft_isalnum(int c);
