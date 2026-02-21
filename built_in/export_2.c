@@ -6,7 +6,7 @@
 /*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 13:50:25 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/17 19:38:54 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/21 14:05:14 by knomura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,11 @@ t_env	*copy_env_list(t_env *env)
 		{
 			node = malloc(sizeof(t_env));
 			if (!node)
-			
 				return (NULL);
 			node->key = ft_strdup(env->key);
+			node->value = NULL;
 			if (env->value)
 				node->value = ft_strdup(env->value);
-			else
-				node->value = NULL;
 			node->type = env->type;
 			node->next = NULL;
 			if (!new)

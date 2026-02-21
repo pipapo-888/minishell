@@ -6,7 +6,7 @@
 /*   By: knomura <knomura@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 13:54:30 by knomura           #+#    #+#             */
-/*   Updated: 2026/02/14 13:54:31 by knomura          ###   ########.fr       */
+/*   Updated: 2026/02/21 14:08:21 by knomura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static char	*env_entry_to_str(t_env *env)
 	return (ft_strdup(env->key));
 }
 
-char	**env_to_array(t_env *env, t_export_type NUM)
+char	**env_to_array(t_env *env, t_export_type flag)
 {
 	char	**arr;
 	int		size;
@@ -40,7 +40,7 @@ char	**env_to_array(t_env *env, t_export_type NUM)
 	i = 0;
 	while (env)
 	{
-		if (env->type > NUM || env->value == NULL)
+		if (env->type > flag || env->value == NULL)
 		{
 			env = env->next;
 			continue ;
