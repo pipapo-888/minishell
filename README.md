@@ -33,8 +33,9 @@ Compile the project using:
 ### References
 
 - bash manual: ex. `man bash`
-
-// HABE へここに参考にしたウェブサイトとか notion に上げてるやつでもいいから適当に２ −3 個追加しておいて
+- Introduction to Computer Systems: https://www.momoyama-usagi.com/entry/info-calc-sys11
+- minishell implementation notes (Zenn): https://zenn.dev/grigri_grin/articles/54152e7b9e11f8
+- Writing a C Compiler: https://www.sigbus.info/compilerbook
 
 ### AI Usage
 
